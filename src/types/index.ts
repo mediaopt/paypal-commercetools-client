@@ -53,7 +53,6 @@ export type GeneralComponentsProps = {
   UseKount &
   LineItemsShipping;
 
-
 export type ClientTokenResponse = {
   clientToken: string;
   paymentVersion: number;
@@ -181,7 +180,6 @@ export type LoadingOverlayType = {
   loadingText?: string;
   textStyles?: string;
 };
-
 
 export type Shipping = {
   company?: string;
