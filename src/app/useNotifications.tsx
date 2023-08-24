@@ -49,7 +49,7 @@ export const NotificationsProvider: FC<React.PropsWithChildren> = ({
     return () => {
       clearTimeout(timeout);
     };
-  }, [notifications]);
+  }, [notifications, removeNotification]);
 
   const value = useMemo(() => {
     const notify = (type: NotificationType, text: string) => {
@@ -64,7 +64,7 @@ export const NotificationsProvider: FC<React.PropsWithChildren> = ({
       notify,
       notifications,
     };
-  }, [notifications, removeNotification]);
+  }, [notifications]);
 
   return (
     <NotificationContext.Provider value={value}>
