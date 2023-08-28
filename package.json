@@ -1,6 +1,6 @@
 {
   "name": "paypal-commercetools-client",
-  "version": "0.0.1",
+  "version": "0.0.21",
   "private": false,
   "type": "module",
   "license": "MIT",

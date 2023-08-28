@@ -1,0 +1,36 @@
+name: "publish npm"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+      - name: Install rimraf
+        run: npm i -g rimraf
+      - name: Install copyfiles
+        run: npm i -g copyfiles
+      - name: NPM Install
+        run: npm install
+        working-directory: .
+      - name: Run Tests
+        run: npm test
+        working-directory: .
+      - name: Prepare
+        run: npm run prepare
+        working-directory: .
+      - name: NPM publish
+        run: npm publish
+        working-directory: .
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
