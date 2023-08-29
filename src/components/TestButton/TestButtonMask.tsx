@@ -1,10 +1,10 @@
 import React from "react";
 
-import { usePayment } from "./app/usePayment";
-import { useNotifications } from "./app/useNotifications";
-import { NotificationType } from "./components/Notifications";
+import { usePayment } from "../../app/usePayment";
+import { useNotifications } from "../../app/useNotifications";
+import { NotificationType } from "../Notifications";
 
-export const TestButton: React.FC = () => {
+export const TestButtonMask: React.FC = () => {
   const { setSuccess } = usePayment();
   const { notify } = useNotifications();
 

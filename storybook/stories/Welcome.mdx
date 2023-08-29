@@ -1,0 +1,25 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Welcome" />
+
+# Get Started
+
+In order to start you need a running API hub, you can use your own API hub or use [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) as a test environment.
+
+The storybook stories have been integrated with [paypal-commercetools-client](https://www.npmjs.com/package/paypal-commercetools-client) components and in the official documentation of this package you can see the general properties and specific properties based on each component. In these stories, we have the same structure as shown there. So it would be great to read the [documentation](https://www.npmjs.com/package/paypal-commercetools-client) of this package before continuing with the storybook stories.
+
+## Payment Methods
+
+When you work with the stories you may see that the payment method is not enabled. This issue is happening because that payment method is not enabled in the PayPal dashboard. If you are working with your API hub, you need to enable them in your PayPAl dashboard or if you are using [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/), some components like ACH and Venmo will not work there.
+
+## General Properties
+
+These properties will be shown on all components and you can read more about them on the [paypal-commercetools-client](https://www.npmjs.com/package/paypal-commercetools-client) documentation.
+
+## sessionKey and sessionValue
+
+If you want to run the stories correctly you need sessionKey and sessionValue, if you testing from [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) you do not need to add them as there are default values in the stories. However, if you see the error for creating the patment you need to take a new token from [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/). However, if you are using your own API Hub you need to enter the sessionKey and sessionValue based on your structure and then we send them in the header for authorization.
+
+### Getting a new token value
+
+In order to get a new token from our API Hub you need to go to [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) and then add a product to the cart and on the network tab of the browser console copy the token and paste it in the storybook.
