@@ -1,14 +1,14 @@
 import React from "react";
 
 import { RenderTemplate } from "../RenderTemplate";
-import { TestButtonMask } from "./TestButtonMask";
+import { PayPalMask } from "./PayPalMask";
 
 import { GeneralComponentsProps } from "../../types";
 
-export const TestButton: React.FC<GeneralComponentsProps> = ({ clientId }) => {
+export const PayPal: React.FC<GeneralComponentsProps> = ({ clientId }) => {
   return (
     <RenderTemplate clientId={clientId}>
-      <TestButtonMask />
+      <PayPalMask />
     </RenderTemplate>
   );
 };

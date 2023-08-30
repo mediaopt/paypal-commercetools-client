@@ -1,18 +1,25 @@
 import { FC } from "react";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 import { NotificationsProvider } from "../../app/useNotifications";
 import { PaymentProvider } from "../../app/usePayment";
 import { LoaderProvider } from "../../app/useLoader";
 import { RenderPurchase } from "../RenderPurchase";
 
-export const RenderTemplate: FC<React.PropsWithChildren> = ({ children }) => {
+import { GeneralComponentsProps } from "../../types";
+
+export const RenderTemplate: FC<
+  React.PropsWithChildren<GeneralComponentsProps>
+> = ({ clientId, children }) => {
   return (
-    <NotificationsProvider>
-      <LoaderProvider>
-        <PaymentProvider>
-          <RenderPurchase>{children}</RenderPurchase>
-        </PaymentProvider>
-      </LoaderProvider>
-    </NotificationsProvider>
+    <PayPalScriptProvider options={{ clientId }}>
+      <NotificationsProvider>
+        <LoaderProvider>
+          <PaymentProvider>
+            <RenderPurchase>{children}</RenderPurchase>
+          </PaymentProvider>
+        </LoaderProvider>
+      </NotificationsProvider>
+    </PayPalScriptProvider>
   );
 };
