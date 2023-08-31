@@ -1,4 +1,3 @@
 export const params = {
-  test: ""
+  clientId: "test",
 };
-
