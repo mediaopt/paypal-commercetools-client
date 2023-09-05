@@ -6,7 +6,7 @@ import { PayPal } from "./components/PayPal";
 
 const COFE_IDENTIFIER: string = "majid";
 const COFE_SESSION_VALUE: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI3MGI1MzcwMS0wYjI4LTQ2OGQtYTY4MS0zZmE2MDlmNDI5NzMiLCJ3aXNobGlzdElkIjoiN2JlYWZjNDItZTM2ZS00NjgwLWIzZGQtODkzNjMxY2I1NDUyIn0.0YRwHap7ZqpoSv_wZ3P3mm6i4uFHMybnU-DM-8QoE-c";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJhOWFjZDZjYS0wM2FiLTRkYmQtYjQxZi1lMTA5MzA5NDQ1MjYiLCJ3aXNobGlzdElkIjoiYWM3MTQxZTctY2NkNC00ZjNlLTk3NDMtYTg3MTgxY2ZjMjAzIn0.O-Yt7Xyn7PPkmiVeTxaBgn7gSVIUpVS6ISJHR-mvkyU";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -46,7 +46,7 @@ function App() {
 
   const paymentMethods: { [index: string]: JSX.Element } = {
     TestButton: <TestButton {...params} />,
-    PayPal: <PayPal {...params} />,
+    PayPal: <PayPal {...params} fundingSource="paypal" />,
   };
 
   const changePaymentMethod = (e: React.ChangeEvent<HTMLInputElement>) => {

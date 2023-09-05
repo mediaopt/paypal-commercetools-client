@@ -3,16 +3,18 @@ import React from "react";
 import { RenderTemplate } from "../RenderTemplate";
 import { PayPalButton } from "./PayPalButton";
 
-import { GeneralComponentsProps } from "../../types";
+import { SmartComponentsProps } from "../../types";
 
-export const PayPal: React.FC<GeneralComponentsProps> = ({
+export const PayPal: React.FC<SmartComponentsProps> = ({
   clientId,
   createPaymentUrl,
   sessionKey,
   sessionValue,
   shippingMethodId,
   cartInformation,
+  ...restProps
 }) => {
+  const buttonProps = restProps ?? undefined;
   return (
     <RenderTemplate
       clientId={clientId}
@@ -22,7 +24,7 @@ export const PayPal: React.FC<GeneralComponentsProps> = ({
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >
-      <PayPalButton />
+      <PayPalButton {...buttonProps} />
     </RenderTemplate>
   );
 };

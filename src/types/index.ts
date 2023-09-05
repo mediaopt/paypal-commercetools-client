@@ -1,3 +1,5 @@
+import { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
+
 export type LoadingOverlayType = {
   loadingText?: string;
   textStyles?: string;
@@ -10,6 +12,9 @@ export type GeneralComponentsProps = {
   sessionValue: string;
   shippingMethodId?: string;
 } & CartInformationProps;
+
+export type SmartComponentsProps = PayPalButtonsComponentProps &
+  GeneralComponentsProps;
 
 export type CartInformation = {
   account: {
