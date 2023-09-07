@@ -1,14 +1,30 @@
 import React from "react";
 
 import { RenderTemplate } from "../RenderTemplate";
-import { PayPalMask } from "./PayPalMask";
+import { PayPalButton } from "./PayPalButton";
 
-import { GeneralComponentsProps } from "../../types";
+import { SmartComponentsProps } from "../../types";
 
-export const PayPal: React.FC<GeneralComponentsProps> = ({ clientId }) => {
+export const PayPal: React.FC<SmartComponentsProps> = ({
+  clientId,
+  createPaymentUrl,
+  sessionKey,
+  sessionValue,
+  shippingMethodId,
+  cartInformation,
+  ...restProps
+}) => {
+  const buttonProps = restProps ?? undefined;
   return (
-    <RenderTemplate clientId={clientId}>
-      <PayPalMask />
+    <RenderTemplate
+      clientId={clientId}
+      createPaymentUrl={createPaymentUrl}
+      sessionKey={sessionKey}
+      sessionValue={sessionValue}
+      shippingMethodId={shippingMethodId}
+      cartInformation={cartInformation}
+    >
+      <PayPalButton {...buttonProps} />
     </RenderTemplate>
   );
 };

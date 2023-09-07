@@ -10,12 +10,27 @@ import { GeneralComponentsProps } from "../../types";
 
 export const RenderTemplate: FC<
   React.PropsWithChildren<GeneralComponentsProps>
-> = ({ clientId, children }) => {
+> = ({
+  children,
+  clientId,
+  createPaymentUrl,
+  sessionKey,
+  sessionValue,
+  shippingMethodId,
+  cartInformation,
+}) => {
   return (
     <PayPalScriptProvider options={{ clientId }}>
       <NotificationsProvider>
         <LoaderProvider>
-          <PaymentProvider>
+          <PaymentProvider
+            clientId={clientId}
+            createPaymentUrl={createPaymentUrl}
+            sessionKey={sessionKey}
+            sessionValue={sessionValue}
+            shippingMethodId={shippingMethodId}
+            cartInformation={cartInformation}
+          >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>
         </LoaderProvider>
