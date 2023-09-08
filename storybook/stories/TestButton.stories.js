@@ -1,5 +1,5 @@
 import { TestButton } from "../../src/components/TestButton";
-import { params } from "./constants";
+import { params, options } from "./constants";
 
 export default {
   title: "Components/TestButton",
@@ -9,5 +9,6 @@ export default {
 export const Main = {
   args: {
     ...params,
+    ...options,
   },
 };

@@ -1,4 +1,7 @@
-import { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
+import {
+  PayPalButtonsComponentProps,
+  ReactPayPalScriptOptions,
+} from "@paypal/react-paypal-js";
 
 export type LoadingOverlayType = {
   loadingText?: string;
@@ -6,7 +9,8 @@ export type LoadingOverlayType = {
 };
 
 export type GeneralComponentsProps = {
-  clientId: string;
+  options: ReactPayPalScriptOptions;
+
   createPaymentUrl: string;
   sessionKey: string;
   sessionValue: string;

@@ -6,7 +6,8 @@ import { PayPalButton } from "./PayPalButton";
 import { SmartComponentsProps } from "../../types";
 
 export const PayPal: React.FC<SmartComponentsProps> = ({
-  clientId,
+  options,
+
   createPaymentUrl,
   sessionKey,
   sessionValue,
@@ -17,7 +18,7 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
   const buttonProps = restProps ?? undefined;
   return (
     <RenderTemplate
-      clientId={clientId}
+      options={options}
       createPaymentUrl={createPaymentUrl}
       sessionKey={sessionKey}
       sessionValue={sessionValue}

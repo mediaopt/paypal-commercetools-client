@@ -6,8 +6,6 @@ In here we explain how to use the client app and get payment methods to work.
 
 Each payment component takes a set of props that will be the same for everything. They are as follows:
 
-- **clientId**: `string`  
-  The client Id from PayPal.
 - **createPaymentUrl**: `string`  
   _POST_-Request - we get a [_CreatePaymentResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
@@ -23,27 +21,30 @@ Each payment component takes a set of props that will be the same for everything
 
   ```
   account: {
-  email: string;
+    email: string;
   };
   billing: {
-  firstName: string;
-  lastName: string;
-  streetName: string;
-  streetNumber: string;
-  city: string;
-  country: string;
-  postalCode: string;
+    firstName: string;
+    lastName: string;
+    streetName: string;
+    streetNumber: string;
+    city: string;
+    country: string;
+    postalCode: string;
   };
   shipping: {
-  firstName: string;
-  lastName: string;
-  streetName: string;
-  streetNumber: string;
-  city: string;
-  country: string;
-  postalCode: string;
+    firstName: string;
+    lastName: string;
+    streetName: string;
+    streetNumber: string;
+    city: string;
+    country: string;
+    postalCode: string;
   };
   ```
+
+- **options**: `object`  
+  options will pass to PayPalScriptProvider component and you can see the structure on PayPal documentation. [_ReactPayPalScriptOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/types/scriptProviderTypes.ts).
 
 ## Payment specific properties
 
@@ -51,4 +52,8 @@ In addition, each payment component comes with its own specific properties.
 
 ### PayPal
 
-PayPal components props are based on PayPal props and you can see them on PayPal official documentations [_PayPalButtonsComponentOptions_](https://developer.paypal.com/sdk/js/reference/#buttons).
+PayPal components props are based on PayPal props and you can see them on PayPal official documentation [_PayPalButtonsComponentOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/types/paypalButtonTypes.ts).
+
+### PayPalMessages
+
+PayPal messages props are based on PayPalMessages props and you can see them on PayPal official documentation [_PayPalMessagesComponentOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/components/PayPalMessages.tsx).

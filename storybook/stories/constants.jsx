@@ -22,11 +22,12 @@ const cartInformation = {
   },
 };
 
+export const options = { clientId: "test" };
+
 export const params = {
-  clientId: "test",
   createPaymentUrl: `https://poc-mediaopt.frontastic.io/frontastic/action/payment/createPayment`,
   sessionKey: "frontastic-session",
   sessionValue:
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiMzZiNzFlYTktNzk1OC00NzY0LWJmMGYtYjQ1Y2QwMzY3YzIxIiwiY2FydElkIjoiNjE0ZDQ4ZjItY2U0ZC00NTU0LTljMmQtMDI4MWJiMTQxZjI5In0.QJ-s757kFbm_ZZ8wpt_2wqw2AZCnHj2RTxiv8aMFNgo",
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjZDNiYjhmOS1jOTQzLTRmMGUtYmZiZS04Y2I5ZmUyMDExYTYiLCJ3aXNobGlzdElkIjoiZmYwODI3OGYtMzdjOC00YmJkLTgzZmItYmQ1NjFkNTQ5YTcyIn0.YefiGWoAm2sEDCth2BdbSm_K2AAETog1keX6ycoEvAk",
   cartInformation: cartInformation,
 };
