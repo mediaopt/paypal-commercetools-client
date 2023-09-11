@@ -1,5 +1,5 @@
 import { PayPal } from "../../src/components/PayPal";
-import { params } from "./constants";
+import { params, options } from "./constants";
 
 export default {
   title: "Components/PayPal",
@@ -14,13 +14,15 @@ export default {
 export const Main = {
   args: {
     ...params,
+    ...options,
+    fundingSource: "paypal",
+
     createOrder: () => Promise < string > {},
     onApprove: () => void {},
     onCancel: () => void {},
     onClick: () => void {},
     onError: () => void {},
     onInit: () => void {},
-    fundingSource: "paypal",
     style: {
       color: "gold",
       height: 55,

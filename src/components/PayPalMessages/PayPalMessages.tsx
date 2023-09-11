@@ -1,18 +1,26 @@
 import React from "react";
+import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
 
 import { RenderTemplate } from "../RenderTemplate";
-import { TestButtonMask } from "./TestButtonMask";
+import { PayPalMessagesButton } from "./PayPalMessagesButton";
 
 import { GeneralComponentsProps } from "../../types";
 
-export const TestButton: React.FC<GeneralComponentsProps> = ({
+export const PayPalMessages: React.FC<
+  GeneralComponentsProps & PayPalMessagesComponentProps
+> = ({
   options,
+
   createPaymentUrl,
   sessionKey,
   sessionValue,
   shippingMethodId,
   cartInformation,
+
+  ...restProps
 }) => {
+  const buttonProps = restProps ?? undefined;
+
   return (
     <RenderTemplate
       options={options}
@@ -22,7 +30,7 @@ export const TestButton: React.FC<GeneralComponentsProps> = ({
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >
-      <TestButtonMask />
+      <PayPalMessagesButton {...buttonProps} />
     </RenderTemplate>
   );
 };
