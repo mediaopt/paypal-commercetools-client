@@ -1,18 +1,20 @@
 import { makeRequest } from "../api";
 
-import { CreatePaymentResponse, CartInformation } from "../types";
+import {
+  CreatePaymentResponse,
+  CartInformation,
+  RequestHeader,
+} from "../types";
 
 export const createPayment = async (
-  sessionKey: string,
-  sessionValue: string,
+  requestHeader: RequestHeader,
   url: string,
   cartInformation: CartInformation,
   shippingMethodId?: string
 ) => {
   try {
     const result = await makeRequest<CreatePaymentResponse, {}>(
-      sessionKey,
-      sessionValue,
+      requestHeader,
       url,
       "POST",
       { ...cartInformation, shippingMethodId: shippingMethodId }

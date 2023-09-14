@@ -6,9 +6,9 @@ import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 
-const COFE_IDENTIFIER: string = "majid";
-const COFE_SESSION_VALUE: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjZDNiYjhmOS1jOTQzLTRmMGUtYmZiZS04Y2I5ZmUyMDExYTYiLCJ3aXNobGlzdElkIjoiZmYwODI3OGYtMzdjOC00YmJkLTgzZmItYmQ1NjFkNTQ5YTcyIn0.YefiGWoAm2sEDCth2BdbSm_K2AAETog1keX6ycoEvAk";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
+const FRONTASTIC_SESSION: string =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJhMDBkZjRlMy1kZmZlLTRkODQtYTVjNy0xZjE3ZTg4NmE2YzQiLCJ3aXNobGlzdElkIjoiOWJmZTI5NGYtYjdkMC00NTQzLWJhYjEtNzg1MDhlN2NhN2Q1In0._71Asf9PEMQw0T2uy9GAdOsYq7dmc8D0Aoe9X-7n1Vk";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -37,10 +37,13 @@ function App() {
     },
   };
 
+  const requestHeader = {
+    "Frontastic-Session": FRONTASTIC_SESSION,
+    "Commercetools-Frontend-Extension-Version": CC_FRONTEND_EXTENSION_VERSION,
+  };
+
   const params = {
-    createPaymentUrl: `https://poc-${COFE_IDENTIFIER}-mediaopt.frontastic.dev/frontastic/action/payment/createPayment`,
-    sessionKey: "frontastic-session",
-    sessionValue: COFE_SESSION_VALUE,
+    createPaymentUrl: `https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
   };
@@ -48,14 +51,28 @@ function App() {
   const options = { clientId: "test" };
 
   const paymentMethods: { [index: string]: JSX.Element } = {
-    TestButton: <TestButton {...params} options={options} />,
-    AllSmartButtons: (
-      <PayPal {...params} options={{ ...options, enableFunding: "paylater" }} />
+    TestButton: (
+      <TestButton {...params} requestHeader={requestHeader} options={options} />
     ),
-    PayPal: <PayPal {...params} options={options} fundingSource="paypal" />,
+    AllSmartButtons: (
+      <PayPal
+        {...params}
+        requestHeader={requestHeader}
+        options={{ ...options, enableFunding: "paylater" }}
+      />
+    ),
+    PayPal: (
+      <PayPal
+        {...params}
+        requestHeader={requestHeader}
+        options={options}
+        fundingSource="paypal"
+      />
+    ),
     PayPalLater: (
       <PayPal
         {...params}
+        requestHeader={requestHeader}
         options={{ ...options, enableFunding: "paylater" }}
         fundingSource="paylater"
       />
@@ -63,6 +80,7 @@ function App() {
     PayPalMessages: (
       <PayPalMessages
         {...params}
+        requestHeader={requestHeader}
         amount="100.00"
         currency="USD"
         style={{
