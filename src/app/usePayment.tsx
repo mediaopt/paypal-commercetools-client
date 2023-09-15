@@ -6,6 +6,7 @@ import {
   PaymentInfo,
   CartInformationInitial,
   CreatePaymentResponse,
+  RequestHeader,
 } from "../types";
 import { createPayment } from "../services";
 
@@ -27,16 +28,14 @@ const PaymentInfoInitialObject = {
 type PaymentContextT = {
   setSuccess: () => void;
   paymentInfo: PaymentInfo;
-  sessionKey: string;
-  sessionValue: string;
+  requestHeader: RequestHeader;
   handleCreatePayment: () => void;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
   setSuccess: () => {},
   paymentInfo: PaymentInfoInitialObject,
-  sessionKey: "",
-  sessionValue: "",
+  requestHeader: {},
   handleCreatePayment: () => {},
 });
 
@@ -45,8 +44,8 @@ export const PaymentProvider: FC<
 > = ({
   children,
   createPaymentUrl,
-  sessionKey,
-  sessionValue,
+  requestHeader,
+
   shippingMethodId,
   cartInformation,
 }) => {
@@ -71,8 +70,7 @@ export const PaymentProvider: FC<
 
       const createPaymentEndpoint = createPaymentUrl;
       const createPaymentResult = (await createPayment(
-        sessionKey,
-        sessionValue,
+        requestHeader,
         createPaymentEndpoint,
         cartInformation,
         shippingMethodId
@@ -101,8 +99,7 @@ export const PaymentProvider: FC<
 
     return {
       setSuccess,
-      sessionValue,
-      sessionKey,
+      requestHeader,
       paymentInfo,
       handleCreatePayment,
     };

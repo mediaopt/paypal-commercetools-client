@@ -9,8 +9,7 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
   options,
 
   createPaymentUrl,
-  sessionKey,
-  sessionValue,
+  requestHeader,
   shippingMethodId,
   cartInformation,
   ...restProps
@@ -20,8 +19,7 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
     <RenderTemplate
       options={options}
       createPaymentUrl={createPaymentUrl}
-      sessionKey={sessionKey}
-      sessionValue={sessionValue}
+      requestHeader={requestHeader}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >
