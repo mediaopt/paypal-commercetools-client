@@ -7,8 +7,9 @@ import {
   CartInformationInitial,
   CreatePaymentResponse,
   RequestHeader,
+  GetSettingsResponse,
 } from "../types";
-import { createPayment } from "../services";
+import { createPayment, getSettings } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
@@ -30,6 +31,7 @@ type PaymentContextT = {
   paymentInfo: PaymentInfo;
   requestHeader: RequestHeader;
   handleCreatePayment: () => void;
+  settings?: GetSettingsResponse;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -37,6 +39,7 @@ const PaymentContext = createContext<PaymentContextT>({
   paymentInfo: PaymentInfoInitialObject,
   requestHeader: {},
   handleCreatePayment: () => {},
+  settings: {},
 });
 
 export const PaymentProvider: FC<
@@ -44,8 +47,8 @@ export const PaymentProvider: FC<
 > = ({
   children,
   createPaymentUrl,
+  getSettingsUrl,
   requestHeader,
-
   shippingMethodId,
   cartInformation,
 }) => {
@@ -55,6 +58,8 @@ export const PaymentProvider: FC<
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
   );
+  const [settings, setSettings] = useState<GetSettingsResponse>();
+
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
 
@@ -68,10 +73,16 @@ export const PaymentProvider: FC<
     const handleCreatePayment = async () => {
       isLoading(true);
 
-      const createPaymentEndpoint = createPaymentUrl;
+      const getSettingsResult = (await getSettings(
+        requestHeader,
+        getSettingsUrl
+      )) as GetSettingsResponse;
+
+      setSettings(getSettingsResult);
+
       const createPaymentResult = (await createPayment(
         requestHeader,
-        createPaymentEndpoint,
+        createPaymentUrl,
         cartInformation,
         shippingMethodId
       )) as CreatePaymentResponse;
@@ -102,8 +113,9 @@ export const PaymentProvider: FC<
       requestHeader,
       paymentInfo,
       handleCreatePayment,
+      settings,
     };
-  }, [paymentInfo]);
+  }, [paymentInfo, settings]);
 
   return (
     <PaymentContext.Provider value={value}>

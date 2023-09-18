@@ -43,7 +43,10 @@ function App() {
   };
 
   const params = {
-    createPaymentUrl: `https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment`,
+    createPaymentUrl:
+      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment",
+    getSettingsUrl:
+      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/settings/getPayPalSettings",
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
   };
