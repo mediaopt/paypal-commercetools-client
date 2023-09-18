@@ -12,6 +12,8 @@ export const PayPalMessages: React.FC<
   options,
 
   createPaymentUrl,
+  getSettingsUrl,
+
   requestHeader,
   shippingMethodId,
   cartInformation,
@@ -24,6 +26,7 @@ export const PayPalMessages: React.FC<
     <RenderTemplate
       options={options}
       createPaymentUrl={createPaymentUrl}
+      getSettingsUrl={getSettingsUrl}
       requestHeader={requestHeader}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}

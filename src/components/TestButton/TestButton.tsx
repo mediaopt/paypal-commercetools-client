@@ -7,7 +7,10 @@ import { GeneralComponentsProps } from "../../types";
 
 export const TestButton: React.FC<GeneralComponentsProps> = ({
   options,
+
   createPaymentUrl,
+  getSettingsUrl,
+
   requestHeader,
   shippingMethodId,
   cartInformation,
@@ -17,6 +20,7 @@ export const TestButton: React.FC<GeneralComponentsProps> = ({
       options={options}
       requestHeader={requestHeader}
       createPaymentUrl={createPaymentUrl}
+      getSettingsUrl={getSettingsUrl}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >

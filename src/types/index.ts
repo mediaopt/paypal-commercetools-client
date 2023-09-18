@@ -15,6 +15,7 @@ export type GeneralComponentsProps = {
   requestHeader: RequestHeader;
 
   createPaymentUrl: string;
+  getSettingsUrl: string;
   shippingMethodId?: string;
 } & CartInformationProps;
 
@@ -92,4 +93,8 @@ export type CreatePaymentResponse = {
   shippingMethod: object; // @todo add better types maybe?
   braintreeCustomerId: string;
   customerVersion?: number;
+};
+
+export type GetSettingsResponse = {
+  [key: string]: string;
 };
