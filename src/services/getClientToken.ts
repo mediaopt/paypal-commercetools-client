@@ -1,10 +1,13 @@
 import { makeRequest } from "../api";
 
-import { ClientTokenResponse, ClientTokenRequest } from "../types";
+import {
+  ClientTokenResponse,
+  ClientTokenRequest,
+  RequestHeader,
+} from "../types";
 
 export const getClientToken = async (
-  sessionKey: string,
-  sessionValue: string,
+  requestHeader: RequestHeader,
   url: string,
   paymentId: string,
   paymentVersion: number,
@@ -20,8 +23,7 @@ export const getClientToken = async (
     };
 
     const result = await makeRequest<ClientTokenResponse, ClientTokenRequest>(
-      sessionKey,
-      sessionValue,
+      requestHeader,
       url,
       "POST",
       data

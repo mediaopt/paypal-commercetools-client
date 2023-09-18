@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useState, useMemo } from "react";
+import React, { FC, createContext, useContext, useState, useMemo } from "react";
 import { Result } from "../components/Result";
 
 import {
@@ -98,7 +98,7 @@ export const PaymentProvider: FC<
         return;
       }
 
-      const clientTokenresult = (await getClientToken(
+      const clientTokenResult = (await getClientToken(
         requestHeader,
         "https://poc-jye-mediaopt.frontastic.dev/frontastic/action/payment/getClientToken",
         createPaymentResult.id,
@@ -110,7 +110,7 @@ export const PaymentProvider: FC<
 
       setPaymentInfo({
         id: createPaymentResult.id,
-        version: clientTokenresult.paymentVersion,
+        version: clientTokenResult.paymentVersion,
         amount: amountPlanned.centAmount / 100,
         currency: amountPlanned.currencyCode,
         lineItems: lineItems,
@@ -118,7 +118,7 @@ export const PaymentProvider: FC<
         cartInformation: cartInformation,
       });
 
-      setClientToken(clientTokenresult.clientToken);
+      setClientToken(clientTokenResult.clientToken);
 
       isLoading(false);
     };

@@ -6,10 +6,10 @@ import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
-
-const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
-const COFE_SESSION_VALUE: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjZDNiYjhmOS1jOTQzLTRmMGUtYmZiZS04Y2I5ZmUyMDExYTYiLCJ3aXNobGlzdElkIjoiZmYwODI3OGYtMzdjOC00YmJkLTgzZmItYmQ1NjFkNTQ5YTcyIn0.YefiGWoAm2sEDCth2BdbSm_K2AAETog1keX6ycoEvAk";
+import {
+  CC_FRONTEND_EXTENSION_VERSION,
+  FRONTASTIC_SESSION,
+} from "../dev_constants";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -99,6 +99,7 @@ function App() {
     ),
     HostedFields: (
       <HostedFields
+        requestHeader={requestHeader}
         {...params}
         options={{
           ...options,
