@@ -6,11 +6,13 @@ import {
   PaymentInfo,
   CartInformationInitial,
   CreatePaymentResponse,
+  ClientTokenResponse,
 } from "../types";
 import { createPayment } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
+import { getClientToken } from "../services/getClientToken";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -30,6 +32,7 @@ type PaymentContextT = {
   sessionKey: string;
   sessionValue: string;
   handleCreatePayment: () => void;
+  clientToken: string;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -38,6 +41,7 @@ const PaymentContext = createContext<PaymentContextT>({
   sessionKey: "",
   sessionValue: "",
   handleCreatePayment: () => {},
+  clientToken: "",
 });
 
 export const PaymentProvider: FC<
@@ -50,6 +54,7 @@ export const PaymentProvider: FC<
   shippingMethodId,
   cartInformation,
 }) => {
+  const [clientToken, setClientToken] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
@@ -84,17 +89,28 @@ export const PaymentProvider: FC<
         return;
       }
 
+      const clientTokenresult = (await getClientToken(
+        sessionKey,
+        sessionValue,
+        "https://poc-jye-mediaopt.frontastic.dev/frontastic/action/payment/getClientToken",
+        createPaymentResult.id,
+        createPaymentResult.version,
+        createPaymentResult.braintreeCustomerId
+      )) as ClientTokenResponse;
+
       const { amountPlanned, lineItems, shippingMethod } = createPaymentResult;
 
       setPaymentInfo({
         id: createPaymentResult.id,
-        version: createPaymentResult.version,
+        version: clientTokenresult.paymentVersion,
         amount: amountPlanned.centAmount / 100,
         currency: amountPlanned.currencyCode,
         lineItems: lineItems,
         shippingMethod: shippingMethod,
         cartInformation: cartInformation,
       });
+
+      setClientToken(clientTokenresult.clientToken);
 
       isLoading(false);
     };
@@ -105,6 +121,7 @@ export const PaymentProvider: FC<
       sessionKey,
       paymentInfo,
       handleCreatePayment,
+      clientToken,
     };
   }, [paymentInfo]);
 

@@ -17,6 +17,10 @@ export type GeneralComponentsProps = {
   shippingMethodId?: string;
 } & CartInformationProps;
 
+export type HostedFieldsProps = {
+  options: ReactPayPalScriptOptions;
+};
+
 export type SmartComponentsProps = PayPalButtonsComponentProps &
   GeneralComponentsProps;
 
@@ -91,4 +95,16 @@ export type CreatePaymentResponse = {
   shippingMethod: object; // @todo add better types maybe?
   braintreeCustomerId: string;
   customerVersion?: number;
+};
+
+export type ClientTokenResponse = {
+  clientToken: string;
+  paymentVersion: number;
+};
+
+export type ClientTokenRequest = {
+  paymentId: string;
+  paymentVersion: number;
+  braintreeCustomerId?: string;
+  merchantAccountId?: string;
 };

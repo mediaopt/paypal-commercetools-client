@@ -5,10 +5,11 @@ import "./App.css";
 import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
+import { HostedFields } from "./components/HostedFields";
 
-const COFE_IDENTIFIER: string = "majid";
+const COFE_IDENTIFIER: string = "jye";
 const COFE_SESSION_VALUE: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjZDNiYjhmOS1jOTQzLTRmMGUtYmZiZS04Y2I5ZmUyMDExYTYiLCJ3aXNobGlzdElkIjoiZmYwODI3OGYtMzdjOC00YmJkLTgzZmItYmQ1NjFkNTQ5YTcyIn0.YefiGWoAm2sEDCth2BdbSm_K2AAETog1keX6ycoEvAk";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5ZTA0ZjMwOS1lYWU1LTQ2ZjItYWIwNC1hN2QxYTgzMGM2YTcifQ.SEvxi_9RonH_kxKR6cHo26YucSkal3B3yg61RFmpFyo";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -38,14 +39,19 @@ function App() {
   };
 
   const params = {
-    createPaymentUrl: `https://poc-${COFE_IDENTIFIER}-mediaopt.frontastic.dev/frontastic/action/payment/createPayment`,
+    //createPaymentUrl: `https://poc-${COFE_IDENTIFIER}-mediaopt.frontastic.dev/frontastic/action/payment/createPayment`,
+    createPaymentUrl:
+      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment",
     sessionKey: "frontastic-session",
     sessionValue: COFE_SESSION_VALUE,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
   };
 
-  const options = { clientId: "test" };
+  const options = {
+    clientId:
+      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
+  };
 
   const paymentMethods: { [index: string]: JSX.Element } = {
     TestButton: <TestButton {...params} options={options} />,
@@ -70,6 +76,16 @@ function App() {
         }}
         placement="product"
         options={{ ...options, components: "messages" }}
+      />
+    ),
+    HostedFields: (
+      <HostedFields
+        {...params}
+        options={{
+          ...options,
+          components: "hosted-fields,buttons",
+          vault: false,
+        }}
       />
     ),
   };
