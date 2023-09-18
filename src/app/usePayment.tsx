@@ -6,9 +6,11 @@ import {
   PaymentInfo,
   CartInformationInitial,
   CreatePaymentResponse,
+  RequestHeader,
+  GetSettingsResponse,
   ClientTokenResponse,
 } from "../types";
-import { createPayment } from "../services";
+import { createPayment, getSettings } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
@@ -29,19 +31,19 @@ const PaymentInfoInitialObject = {
 type PaymentContextT = {
   setSuccess: () => void;
   paymentInfo: PaymentInfo;
-  sessionKey: string;
-  sessionValue: string;
+  requestHeader: RequestHeader;
   handleCreatePayment: () => void;
   clientToken: string;
+  settings?: GetSettingsResponse;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
   setSuccess: () => {},
   paymentInfo: PaymentInfoInitialObject,
-  sessionKey: "",
-  sessionValue: "",
+  requestHeader: {},
   handleCreatePayment: () => {},
   clientToken: "",
+  settings: {},
 });
 
 export const PaymentProvider: FC<
@@ -49,8 +51,8 @@ export const PaymentProvider: FC<
 > = ({
   children,
   createPaymentUrl,
-  sessionKey,
-  sessionValue,
+  getSettingsUrl,
+  requestHeader,
   shippingMethodId,
   cartInformation,
 }) => {
@@ -61,6 +63,8 @@ export const PaymentProvider: FC<
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
   );
+  const [settings, setSettings] = useState<GetSettingsResponse>();
+
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
 
@@ -74,11 +78,16 @@ export const PaymentProvider: FC<
     const handleCreatePayment = async () => {
       isLoading(true);
 
-      const createPaymentEndpoint = createPaymentUrl;
+      const getSettingsResult = (await getSettings(
+        requestHeader,
+        getSettingsUrl
+      )) as GetSettingsResponse;
+
+      setSettings(getSettingsResult);
+
       const createPaymentResult = (await createPayment(
-        sessionKey,
-        sessionValue,
-        createPaymentEndpoint,
+        requestHeader,
+        createPaymentUrl,
         cartInformation,
         shippingMethodId
       )) as CreatePaymentResponse;
@@ -90,8 +99,7 @@ export const PaymentProvider: FC<
       }
 
       const clientTokenresult = (await getClientToken(
-        sessionKey,
-        sessionValue,
+        requestHeader,
         "https://poc-jye-mediaopt.frontastic.dev/frontastic/action/payment/getClientToken",
         createPaymentResult.id,
         createPaymentResult.version,
@@ -117,13 +125,13 @@ export const PaymentProvider: FC<
 
     return {
       setSuccess,
-      sessionValue,
-      sessionKey,
+      requestHeader,
       paymentInfo,
       handleCreatePayment,
       clientToken,
+      settings,
     };
-  }, [paymentInfo]);
+  }, [paymentInfo, settings]);
 
   return (
     <PaymentContext.Provider value={value}>

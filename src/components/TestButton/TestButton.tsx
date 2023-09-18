@@ -7,18 +7,20 @@ import { GeneralComponentsProps } from "../../types";
 
 export const TestButton: React.FC<GeneralComponentsProps> = ({
   options,
+
   createPaymentUrl,
-  sessionKey,
-  sessionValue,
+  getSettingsUrl,
+
+  requestHeader,
   shippingMethodId,
   cartInformation,
 }) => {
   return (
     <RenderTemplate
       options={options}
+      requestHeader={requestHeader}
       createPaymentUrl={createPaymentUrl}
-      sessionKey={sessionKey}
-      sessionValue={sessionValue}
+      getSettingsUrl={getSettingsUrl}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >

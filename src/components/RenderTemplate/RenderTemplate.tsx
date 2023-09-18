@@ -12,10 +12,11 @@ export const RenderTemplate: FC<
   React.PropsWithChildren<GeneralComponentsProps>
 > = ({
   options,
+  requestHeader,
 
   createPaymentUrl,
-  sessionKey,
-  sessionValue,
+  getSettingsUrl,
+
   shippingMethodId,
   cartInformation,
 
@@ -28,8 +29,8 @@ export const RenderTemplate: FC<
           <PaymentProvider
             options={options}
             createPaymentUrl={createPaymentUrl}
-            sessionKey={sessionKey}
-            sessionValue={sessionValue}
+            getSettingsUrl={getSettingsUrl}
+            requestHeader={requestHeader}
             shippingMethodId={shippingMethodId}
             cartInformation={cartInformation}
           >

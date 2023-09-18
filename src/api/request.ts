@@ -1,12 +1,13 @@
+import { RequestHeader } from "../types";
+
 export const makeRequest = <ResponseType, T>(
-  sessionKey: string,
-  sessionValue: string,
+  requestHeader: RequestHeader,
   url: string,
   method?: string,
   data?: T
 ) => {
   let headers: Headers = new Headers({
-    [sessionKey]: sessionValue,
+    ...requestHeader,
     "Content-Type": "application/json",
   });
 

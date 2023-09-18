@@ -8,12 +8,14 @@ export type LoadingOverlayType = {
   textStyles?: string;
 };
 
+export type RequestHeader = { [key: string]: string };
+
 export type GeneralComponentsProps = {
   options: ReactPayPalScriptOptions;
+  requestHeader: RequestHeader;
 
   createPaymentUrl: string;
-  sessionKey: string;
-  sessionValue: string;
+  getSettingsUrl: string;
   shippingMethodId?: string;
 } & CartInformationProps;
 
@@ -107,4 +109,8 @@ export type ClientTokenRequest = {
   paymentVersion: number;
   braintreeCustomerId?: string;
   merchantAccountId?: string;
+};
+
+export type GetSettingsResponse = {
+  [key: string]: string;
 };
