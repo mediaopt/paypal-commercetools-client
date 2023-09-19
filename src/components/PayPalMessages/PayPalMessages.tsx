@@ -13,6 +13,8 @@ export const PayPalMessages: React.FC<
 
   createPaymentUrl,
   getSettingsUrl,
+  createOrderUrl,
+  onApproveUrl,
 
   requestHeader,
   shippingMethodId,
@@ -27,6 +29,8 @@ export const PayPalMessages: React.FC<
       options={options}
       createPaymentUrl={createPaymentUrl}
       getSettingsUrl={getSettingsUrl}
+      createOrderUrl={createOrderUrl}
+      onApproveUrl={onApproveUrl}
       requestHeader={requestHeader}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}

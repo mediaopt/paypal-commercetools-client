@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
 
 import "./App.css";
 
@@ -47,11 +48,28 @@ function App() {
       "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment",
     getSettingsUrl:
       "https://poc-mediaopt2.frontastic.rocks/frontastic/action/settings/getPayPalSettings",
+    createOrderUrl:
+      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayPalOrder",
+    onApproveUrl:
+      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/capturePayPalOrder",
+
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
   };
 
-  const options = { clientId: "test" };
+  const options = {
+    clientId:
+      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
+  };
+
+  const payPalMessagesParams: PayPalMessagesComponentProps = {
+    amount: "100.00",
+    currency: "USD",
+    style: {
+      layout: "text",
+    },
+    placement: "product",
+  };
 
   const paymentMethods: { [index: string]: JSX.Element } = {
     TestButton: (
@@ -76,20 +94,20 @@ function App() {
       <PayPal
         {...params}
         requestHeader={requestHeader}
-        options={{ ...options, enableFunding: "paylater" }}
+        options={{
+          ...options,
+          enableFunding: "paylater",
+          components: "messages,buttons",
+        }}
         fundingSource="paylater"
+        paypalMessages={payPalMessagesParams}
       />
     ),
     PayPalMessages: (
       <PayPalMessages
-        {...params}
         requestHeader={requestHeader}
-        amount="100.00"
-        currency="USD"
-        style={{
-          layout: "text",
-        }}
-        placement="product"
+        {...payPalMessagesParams}
+        {...params}
         options={{ ...options, components: "messages" }}
       />
     ),

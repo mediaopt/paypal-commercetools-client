@@ -10,6 +10,8 @@ export const TestButton: React.FC<GeneralComponentsProps> = ({
 
   createPaymentUrl,
   getSettingsUrl,
+  createOrderUrl,
+  onApproveUrl,
 
   requestHeader,
   shippingMethodId,
@@ -21,6 +23,8 @@ export const TestButton: React.FC<GeneralComponentsProps> = ({
       requestHeader={requestHeader}
       createPaymentUrl={createPaymentUrl}
       getSettingsUrl={getSettingsUrl}
+      createOrderUrl={createOrderUrl}
+      onApproveUrl={onApproveUrl}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >

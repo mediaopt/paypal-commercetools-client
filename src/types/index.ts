@@ -1,6 +1,7 @@
 import {
   PayPalButtonsComponentProps,
   ReactPayPalScriptOptions,
+  PayPalMessagesComponentProps,
 } from "@paypal/react-paypal-js";
 
 export type LoadingOverlayType = {
@@ -16,10 +17,28 @@ export type GeneralComponentsProps = {
 
   createPaymentUrl: string;
   getSettingsUrl: string;
-  shippingMethodId?: string;
+  createOrderUrl: string;
+  onApproveUrl: string;
+
+  shippingMethodId: string;
 } & CartInformationProps;
 
-export type SmartComponentsProps = PayPalButtonsComponentProps &
+export type CustomPayPalButtonsComponentProps = Omit<
+  PayPalButtonsComponentProps,
+  | "createOrder"
+  | "createBillingAgreement"
+  | "createSubscription"
+  | "onApprove"
+  | "onCancel"
+  | "onClick"
+  | "onError"
+  | "onInit"
+  | "onShippingChange"
+> & {
+  paypalMessages?: PayPalMessagesComponentProps;
+};
+
+export type SmartComponentsProps = CustomPayPalButtonsComponentProps &
   GeneralComponentsProps;
 
 export type CartInformation = {
@@ -70,7 +89,7 @@ export const CartInformationInitial: CartInformation = {
   },
 };
 
-export type CartInformationProps = { cartInformation: CartInformation };
+export type CartInformationProps = { cartInformation?: CartInformation };
 
 export type PaymentInfo = {
   id: string;
