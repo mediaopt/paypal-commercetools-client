@@ -1,5 +1,10 @@
 import { PayPalMessages } from "../../src/components/PayPalMessages";
-import { params, options } from "./constants";
+import {
+  params,
+  options,
+  payPalMessagesParams,
+  requestHeader,
+} from "./constants";
 
 export default {
   title: "Components/PayPalMessages",
@@ -14,12 +19,8 @@ export default {
 export const Main = {
   args: {
     ...params,
+    requestHeader,
     options: { ...options, components: "messages" },
-    fundingSource: "paylater",
-    amount: "100.00",
-    currency: "USD",
-    style: {
-      layout: "text",
-    },
+    ...payPalMessagesParams,
   },
 };
