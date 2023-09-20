@@ -44,5 +44,8 @@ export const Main = {
     ...params,
     requestHeader,
     options: { ...options, enableFunding: "paylater" },
+    style: {
+      label: "pay",
+    },
   },
 };
