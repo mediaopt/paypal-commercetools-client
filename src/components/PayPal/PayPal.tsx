@@ -16,6 +16,7 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
   requestHeader,
   shippingMethodId,
   cartInformation,
+  purchaseCallback,
   ...restProps
 }) => {
   const buttonProps = restProps ?? undefined;
@@ -29,6 +30,7 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
       createOrderUrl={createOrderUrl}
       onApproveUrl={onApproveUrl}
       getSettingsUrl={getSettingsUrl}
+      purchaseCallback={purchaseCallback}
     >
       <PayPalButton {...buttonProps} />
     </RenderTemplate>

@@ -10,6 +10,7 @@ export const PayPalMessages: React.FC<
   GeneralComponentsProps & PayPalMessagesComponentProps
 > = ({
   options,
+  purchaseCallback,
 
   createPaymentUrl,
   getSettingsUrl,
@@ -34,6 +35,7 @@ export const PayPalMessages: React.FC<
       requestHeader={requestHeader}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
+      purchaseCallback={purchaseCallback}
     >
       <PayPalMessagesButton {...buttonProps} />
     </RenderTemplate>

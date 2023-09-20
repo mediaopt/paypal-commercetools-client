@@ -56,6 +56,7 @@ export const PaymentProvider: FC<
   React.PropsWithChildren<GeneralComponentsProps>
 > = ({
   children,
+  purchaseCallback,
 
   createPaymentUrl,
   getSettingsUrl,
@@ -69,6 +70,7 @@ export const PaymentProvider: FC<
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
+
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
   );
@@ -76,6 +78,8 @@ export const PaymentProvider: FC<
 
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
+
+  let latestPaymentVersion = paymentInfo.version;
 
   const value = useMemo(() => {
     const setSuccess = () => {
@@ -87,13 +91,44 @@ export const PaymentProvider: FC<
     const handleCreateOrder = async () => {
       if (!createOrderUrl) return "";
 
-      return await createOrder(requestHeader, createOrderUrl);
+      const createOrderResult = await createOrder(
+        requestHeader,
+        createOrderUrl,
+        paymentInfo.id,
+        paymentInfo.version
+      );
+
+      if (createOrderResult) {
+        const { orderData, paymentVersion } = createOrderResult;
+        latestPaymentVersion = paymentVersion;
+
+        return orderData.id;
+      } else return "";
     };
 
     const handleOnApprove = async (data: OnApproveData) => {
       if (!onApproveUrl) return;
       const orderID = data.orderID;
-      await onApprove(requestHeader, onApproveUrl, orderID);
+
+      const onApproveResult = await onApprove(
+        requestHeader,
+        onApproveUrl,
+        paymentInfo.id,
+        latestPaymentVersion,
+        orderID
+      );
+
+      if (
+        onApproveResult &&
+        onApproveResult.captureOrderData.status === "COMPLETED"
+      ) {
+        setShowResult(true);
+        setResultSuccess(true);
+        purchaseCallback(onApproveResult);
+      } else {
+        setShowResult(true);
+        setResultSuccess(false);
+      }
     };
 
     const handleCreatePayment = async () => {

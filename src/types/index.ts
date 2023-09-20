@@ -4,6 +4,27 @@ import {
   PayPalMessagesComponentProps,
 } from "@paypal/react-paypal-js";
 
+export type CreateOrderRequest = {
+  paymentId: string;
+  paymentVersion: number;
+};
+
+export type CreateOrderResponse = {
+  orderData: { id: string };
+  paymentVersion: number;
+};
+
+export type OnApproveRequest = {
+  paymentId: string;
+  paymentVersion: number;
+  orderID: string;
+};
+
+export type OnApproveResponse = {
+  captureOrderData: { id: string; status: string };
+  paymentVersion: number;
+};
+
 export type LoadingOverlayType = {
   loadingText?: string;
   textStyles?: string;
@@ -21,6 +42,7 @@ export type GeneralComponentsProps = {
   onApproveUrl: string;
 
   shippingMethodId: string;
+  purchaseCallback: (result: any, options?: any) => void;
 } & CartInformationProps;
 
 export type CustomPayPalButtonsComponentProps = Omit<

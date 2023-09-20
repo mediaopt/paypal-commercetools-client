@@ -1,14 +1,27 @@
 import { makeRequest } from "../api";
 
-import { RequestHeader } from "../types";
+import { RequestHeader, OnApproveRequest, OnApproveResponse } from "../types";
 
 export const onApprove = async (
   requestHeader: RequestHeader,
   url: string,
+  paymentId: string,
+  paymentVersion: number,
   orderID: string
 ) => {
   try {
-    return await makeRequest<any, {}>(requestHeader, url, "POST", { orderID });
+    const data: OnApproveRequest = {
+      paymentId,
+      paymentVersion,
+      orderID,
+    };
+
+    return await makeRequest<OnApproveResponse, OnApproveRequest>(
+      requestHeader,
+      url,
+      "POST",
+      data
+    );
   } catch (error) {
     console.warn(error);
     return false;

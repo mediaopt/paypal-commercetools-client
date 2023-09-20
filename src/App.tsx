@@ -9,7 +9,7 @@ import { PayPalMessages } from "./components/PayPalMessages";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJhMDBkZjRlMy1kZmZlLTRkODQtYTVjNy0xZjE3ZTg4NmE2YzQiLCJ3aXNobGlzdElkIjoiOWJmZTI5NGYtYjdkMC00NTQzLWJhYjEtNzg1MDhlN2NhN2Q1In0._71Asf9PEMQw0T2uy9GAdOsYq7dmc8D0Aoe9X-7n1Vk";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJiOGYwN2YzNi1iMTM4LTQwMTUtYTc5Mi03Y2ZhYjg4ODExNDkiLCJ3aXNobGlzdElkIjoiYWU4NGQzNzItMGJjMy00NTM5LWFiMWUtNzhlNmNmNGFlMmEzIn0.o-VuRwGMgmfJM3mb5spHmIcVADIXTvvdt295L_pb_a4";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -55,16 +55,20 @@ function App() {
 
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
+    purchaseCallback: (result: any, options: any) => {
+      console.log("Do something", result, options);
+    },
   };
 
   const options = {
     clientId:
       "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
+    currency: "EUR",
   };
 
   const payPalMessagesParams: PayPalMessagesComponentProps = {
     amount: "100.00",
-    currency: "USD",
+    currency: "EUR",
     style: {
       layout: "text",
     },
