@@ -1,5 +1,5 @@
 import { TestButton } from "../../src/components/TestButton";
-import { params, options } from "./constants";
+import { params, options, requestHeader } from "./constants";
 
 export default {
   title: "Components/TestButton",
@@ -9,6 +9,7 @@ export default {
 export const Main = {
   args: {
     ...params,
+    requestHeader,
     ...options,
   },
 };

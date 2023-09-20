@@ -1,5 +1,5 @@
 import { PayPal } from "../../src/components/PayPal";
-import { params, options } from "./constants";
+import { params, options, requestHeader } from "./constants";
 
 export default {
   title: "Components/All",
@@ -42,6 +42,7 @@ export default {
 export const Main = {
   args: {
     ...params,
+    requestHeader,
     options: { ...options, enableFunding: "paylater" },
   },
 };
