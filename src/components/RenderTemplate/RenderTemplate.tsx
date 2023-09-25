@@ -16,6 +16,7 @@ export const RenderTemplate: FC<
 
   createPaymentUrl,
   getSettingsUrl,
+  getClientTokenUrl,
 
   shippingMethodId,
   cartInformation,
@@ -29,6 +30,7 @@ export const RenderTemplate: FC<
           <PaymentProvider
             options={options}
             createPaymentUrl={createPaymentUrl}
+            getClientTokenUrl={getClientTokenUrl}
             getSettingsUrl={getSettingsUrl}
             requestHeader={requestHeader}
             shippingMethodId={shippingMethodId}

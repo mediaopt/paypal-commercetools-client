@@ -4,13 +4,14 @@ import { RenderTemplate } from "../RenderTemplate";
 import { HostedFieldsButton } from "./HostedFieldsButton";
 
 import { SmartComponentsProps } from "../../types";
+import { getClientToken } from "../../services/getClientToken";
 
 export const HostedFields: React.FC<SmartComponentsProps> = ({
   options,
-
+  getSettingsUrl,
   createPaymentUrl,
-  sessionKey,
-  sessionValue,
+  requestHeader,
+  getClientTokenUrl,
   shippingMethodId,
   cartInformation,
   ...restProps
@@ -20,8 +21,9 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
     <RenderTemplate
       options={options}
       createPaymentUrl={createPaymentUrl}
-      sessionKey={sessionKey}
-      sessionValue={sessionValue}
+      getSettingsUrl={getSettingsUrl}
+      getClientTokenUrl={getClientTokenUrl}
+      requestHeader={requestHeader}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >

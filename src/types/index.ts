@@ -16,6 +16,7 @@ export type GeneralComponentsProps = {
 
   createPaymentUrl: string;
   getSettingsUrl: string;
+  getClientTokenUrl?: string;
   shippingMethodId?: string;
 } & CartInformationProps;
 
@@ -102,6 +103,7 @@ export type CreatePaymentResponse = {
 export type ClientTokenResponse = {
   clientToken: string;
   paymentVersion: number;
+  error?: string;
 };
 
 export type ClientTokenRequest = {

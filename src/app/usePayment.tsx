@@ -52,6 +52,7 @@ export const PaymentProvider: FC<
   children,
   createPaymentUrl,
   getSettingsUrl,
+  getClientTokenUrl,
   requestHeader,
   shippingMethodId,
   cartInformation,
@@ -98,27 +99,30 @@ export const PaymentProvider: FC<
         return;
       }
 
-      const clientTokenResult = (await getClientToken(
-        requestHeader,
-        "https://poc-jye-mediaopt.frontastic.dev/frontastic/action/payment/getClientToken",
-        createPaymentResult.id,
-        createPaymentResult.version,
-        createPaymentResult.braintreeCustomerId
-      )) as ClientTokenResponse;
+      let paymentVersion: number = createPaymentResult.version;
+      if (getClientTokenUrl) {
+        const clientTokenResult = (await getClientToken(
+          requestHeader,
+          getClientTokenUrl,
+          createPaymentResult.id,
+          createPaymentResult.version,
+          createPaymentResult.braintreeCustomerId
+        )) as ClientTokenResponse;
+        setClientToken(clientTokenResult.clientToken);
+        paymentVersion = clientTokenResult.paymentVersion;
+      }
 
       const { amountPlanned, lineItems, shippingMethod } = createPaymentResult;
 
       setPaymentInfo({
         id: createPaymentResult.id,
-        version: clientTokenResult.paymentVersion,
+        version: paymentVersion,
         amount: amountPlanned.centAmount / 100,
         currency: amountPlanned.currencyCode,
         lineItems: lineItems,
         shippingMethod: shippingMethod,
         cartInformation: cartInformation,
       });
-
-      setClientToken(clientTokenResult.clientToken);
 
       isLoading(false);
     };

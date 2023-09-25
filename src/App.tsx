@@ -9,7 +9,7 @@ import { HostedFields } from "./components/HostedFields";
 import {
   CC_FRONTEND_EXTENSION_VERSION,
   FRONTASTIC_SESSION,
-} from "../dev_constants";
+} from "./dev_constants";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -43,11 +43,13 @@ function App() {
     "Commercetools-Frontend-Extension-Version": CC_FRONTEND_EXTENSION_VERSION,
   };
 
+  const ENDPOINT_URL: string =
+    "https://poc-mediaopt2.frontastic.rocks/frontastic/action";
+
   const params = {
-    createPaymentUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment",
-    getSettingsUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/settings/getPayPalSettings",
+    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+    getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
+    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
   };
