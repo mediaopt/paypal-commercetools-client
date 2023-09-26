@@ -108,6 +108,7 @@ function App() {
           components: "hosted-fields,buttons",
           vault: false,
         }}
+        theeDSAuth={"SCA_ALWAYS"}
       />
     ),
   };

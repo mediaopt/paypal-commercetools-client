@@ -20,8 +20,12 @@ const INVALID_COLOR = {
 };
 
 // Example of custom component to handle form submit
-// @ts-ignore
-const SubmitPayment = ({ customStyle }) => {
+
+const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
+  const customStyle = {
+    border: "1px solid #606060",
+    boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
+  };
   const { notify } = useNotifications();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
@@ -47,22 +51,34 @@ const SubmitPayment = ({ customStyle }) => {
     hostedField.cardFields
       .submit({
         cardholderName: cardHolderName?.current?.value,
+        contingencies: [threeDSAuth],
       })
       .then((data) => {
-        // Your logic to capture the transaction
-        fetch("url_to_capture_transaction", {
-          method: "POST",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            // Here use the captured info
+        // Needed only when 3D Secure contingency applied
+        if (threeDSAuth) {
+          if (data.liabilityShift === "POSSIBLE") {
+            // 3D Secure passed successfully
+          }
+
+          if (data.liabilityShift) {
+            // Handle buyer confirmed 3D Secure successfully
+          }
+        } else {
+          // Your logic to capture the transaction
+          fetch("url_to_capture_transaction", {
+            method: "POST",
           })
-          .catch((err) => {
-            // Here handle error
-          })
-          .finally(() => {
-            setPaying(false);
-          });
+            .then((response) => response.json())
+            .then((data) => {
+              // Here use the captured info
+            })
+            .catch((err) => {
+              // Here handle error
+            })
+            .finally(() => {
+              setPaying(false);
+            });
+        }
       })
       .catch((err) => {
         // Here handle error
@@ -128,7 +144,10 @@ const SubmitPayment = ({ customStyle }) => {
 *
 * */
 
-export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
+export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
+  options,
+  threeDSAuth,
+}) => {
   const { clientToken } = usePayment();
   return (
     <PayPalScriptProvider
@@ -187,12 +206,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           hostedFieldType={"expirationDate"}
           options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
         />
-        <SubmitPayment
-          customStyle={{
-            border: "1px solid #606060",
-            boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
-          }}
-        />
+        <SubmitPayment threeDSAuth={threeDSAuth} />
       </PayPalHostedFieldsProvider>
     </PayPalScriptProvider>
   );

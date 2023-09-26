@@ -9,6 +9,7 @@ import { HostedFieldsProps } from "../../types";
 
 export const HostedFieldsButton: React.FC<HostedFieldsProps> = ({
   options,
+  threeDSAuth,
 }) => {
   // const { paymentInfo } = usePayment();
   useHandleGetClientToken(false);
@@ -21,5 +22,9 @@ export const HostedFieldsButton: React.FC<HostedFieldsProps> = ({
 
   // useHandleCreatePayment();
   // return paymentInfo.id ? <HostedFieldsMask /> : <></>;
-  return clientToken ? <HostedFieldsMask options={options} /> : <></>;
+  return clientToken ? (
+    <HostedFieldsMask threeDSAuth={threeDSAuth} options={options} />
+  ) : (
+    <></>
+  );
 };

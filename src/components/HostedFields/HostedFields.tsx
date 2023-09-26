@@ -3,10 +3,10 @@ import React from "react";
 import { RenderTemplate } from "../RenderTemplate";
 import { HostedFieldsButton } from "./HostedFieldsButton";
 
-import { SmartComponentsProps } from "../../types";
+import { HostedFieldsSmartComponentProps } from "../../types";
 import { getClientToken } from "../../services/getClientToken";
 
-export const HostedFields: React.FC<SmartComponentsProps> = ({
+export const HostedFields: React.FC<HostedFieldsSmartComponentProps> = ({
   options,
   getSettingsUrl,
   createPaymentUrl,
@@ -14,6 +14,7 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
   getClientTokenUrl,
   shippingMethodId,
   cartInformation,
+  theeDSAuth,
   ...restProps
 }) => {
   const buttonProps = restProps ?? undefined;
@@ -27,7 +28,7 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
     >
-      <HostedFieldsButton options={options} />
+      <HostedFieldsButton options={options} threeDSAuth={theeDSAuth} />
     </RenderTemplate>
   );
 };

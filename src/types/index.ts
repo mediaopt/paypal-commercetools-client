@@ -20,8 +20,15 @@ export type GeneralComponentsProps = {
   shippingMethodId?: string;
 } & CartInformationProps;
 
+type HostedFieldsThreeDSAuth = "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
+
 export type HostedFieldsProps = {
   options: ReactPayPalScriptOptions;
+  threeDSAuth?: HostedFieldsThreeDSAuth;
+};
+
+export type HostedFieldsSmartComponentProps = SmartComponentsProps & {
+  theeDSAuth?: HostedFieldsThreeDSAuth;
 };
 
 export type SmartComponentsProps = PayPalButtonsComponentProps &
