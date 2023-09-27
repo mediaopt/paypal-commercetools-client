@@ -9,11 +9,11 @@ import { PayPalMessages } from "./components/PayPalMessages";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYmU0MmVkMmEtMGQ0Yy00Y2I3LTgwOGItMTA4OWJlOGE0Y2Y5IiwiY2FydElkIjoiNGYwYmY2NGMtMWZkOS00Y2QyLWJhOWYtMTVhN2IxMmNiMTU2In0.NXUic8CV0Iz39xGcyFb0CPzs0atKp1S_5HTGZF5EBGI";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNjI0YTM0MDAtYzM5Ni00YzI3LWE3NTEtNjQ4ZWM1NDQ4Y2JhIiwiY2FydElkIjoiYjM5NjkwMTYtZjk1My00MmI2LWE3YWUtNWRhZDU4YjZmODI2In0.RpcZevugPdM5YzHse00WcSDy6B6EB363Bevma-rninY";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
-  const [changed, setChanged] = useState(0);
+
   const cartInformation = {
     account: {
       email: "test@test.com",
