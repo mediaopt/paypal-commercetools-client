@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import "./App.css";
 
@@ -59,7 +59,7 @@ function App() {
       "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
   };
 
-  const paymentMethods: { [index: string]: JSX.Element } = {
+  const paymentMethods: { [index: string]: React.JSX.Element } = {
     TestButton: (
       <TestButton {...params} requestHeader={requestHeader} options={options} />
     ),
