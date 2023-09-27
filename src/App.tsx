@@ -9,11 +9,11 @@ import { PayPalMessages } from "./components/PayPalMessages";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYWU4NGQzNzItMGJjMy00NTM5LWFiMWUtNzhlNmNmNGFlMmEzIiwiY2FydElkIjoiNzRkODBkMzEtMzdlNS00YjlkLWEyZGUtYTBjYjk4NWY2MzA1In0.dG9q2RcYCaVQrXqjSCw2YDlLkm5_yOmP7S8o6u4ufpk";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYmU0MmVkMmEtMGQ0Yy00Y2I3LTgwOGItMTA4OWJlOGE0Y2Y5IiwiY2FydElkIjoiNGYwYmY2NGMtMWZkOS00Y2QyLWJhOWYtMTVhN2IxMmNiMTU2In0.NXUic8CV0Iz39xGcyFb0CPzs0atKp1S_5HTGZF5EBGI";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
-
+  const [changed, setChanged] = useState(0);
   const cartInformation = {
     account: {
       email: "test@test.com",
@@ -92,6 +92,21 @@ function App() {
         requestHeader={requestHeader}
         options={options}
         fundingSource="paypal"
+      />
+    ),
+    BuyNowPayPal: (
+      <PayPal
+        {...params}
+        requestHeader={requestHeader}
+        options={{ ...options, commit: false }}
+        fundingSource="paypal"
+        onShippingChange={async (data, actions) => {
+          //console.log(data, actions);
+          //update order shipping information based on data.shipping_address
+        }}
+        style={{
+          label: "buynow",
+        }}
       />
     ),
     PayPalLater: (
