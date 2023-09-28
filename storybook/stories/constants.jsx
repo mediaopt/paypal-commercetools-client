@@ -30,7 +30,7 @@ export const options = {
 
 export const requestHeader = {
   "Frontastic-Session":
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYWU4NGQzNzItMGJjMy00NTM5LWFiMWUtNzhlNmNmNGFlMmEzIiwiY2FydElkIjoiNzRkODBkMzEtMzdlNS00YjlkLWEyZGUtYTBjYjk4NWY2MzA1In0.dG9q2RcYCaVQrXqjSCw2YDlLkm5_yOmP7S8o6u4ufpk",
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIwYzkwZjliMC0yODVhLTQwMDQtOWIwYS0yYzI2ZGE4ZjExNzQifQ.mJIK2xLEt-vaF78zk2N341csfVjCe_8QC_2BaBqn6bU",
   "Commercetools-Frontend-Extension-Version": "devmajidabbasi",
 };
 

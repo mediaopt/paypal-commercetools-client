@@ -4,6 +4,11 @@ import {
   PayPalMessagesComponentProps,
 } from "@paypal/react-paypal-js";
 
+import {
+  OnShippingChangeData,
+  OnShippingChangeActions,
+} from "@paypal/paypal-js";
+
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
@@ -55,7 +60,6 @@ export type CustomPayPalButtonsComponentProps = Omit<
   | "onClick"
   | "onError"
   | "onInit"
-  | "onShippingChange"
 > & {
   paypalMessages?: PayPalMessagesComponentProps;
 };

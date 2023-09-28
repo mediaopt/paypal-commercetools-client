@@ -13,7 +13,6 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     <>
       <PayPalButtons
         {...restprops}
-        forceReRender={[props]}
         createOrder={handleCreateOrder}
         onApprove={handleOnApprove}
       />
