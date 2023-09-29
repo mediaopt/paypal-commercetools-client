@@ -141,5 +141,5 @@ export type CreatePaymentResponse = {
 };
 
 export type GetSettingsResponse = {
-  [key: string]: string;
+  [key: string]: string | boolean;
 };
