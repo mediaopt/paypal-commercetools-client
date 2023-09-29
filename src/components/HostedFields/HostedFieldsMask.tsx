@@ -20,9 +20,11 @@ const INVALID_COLOR = {
   color: "#dc3545",
 };
 
-// Example of custom component to handle form submit
-// @ts-ignore
-const SubmitPayment = ({ customStyle }) => {
+const SubmitPayment = () => {
+  const customStyle = {
+    border: "1px solid #606060",
+    boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
+  };
   const { handleOnApprove } = usePayment();
   const { notify } = useNotifications();
   const [paying, setPaying] = useState(false);
@@ -43,7 +45,8 @@ const SubmitPayment = ({ customStyle }) => {
       ) || !cardHolderName?.current?.value;
 
     if (isFormInvalid) {
-      return alert("The payment form is invalid");
+      notify("Error", "The form is invalid");
+      return;
     }
     setPaying(true);
     hostedField.cardFields
@@ -51,26 +54,23 @@ const SubmitPayment = ({ customStyle }) => {
         cardholderName: cardHolderName?.current?.value,
       })
       .then((data) => {
-        console.log(data);
         const approveData: OnApproveData = {
           orderID: data.orderId,
           facilitatorAccessToken: "",
         };
         handleOnApprove(approveData)
-          // Your logic to capture the transaction
           .then((data) => {
-            // Here use the captured info
             console.log(data);
           })
           .catch((err) => {
-            // Here handle error
+            notify("Error", err.message);
           })
           .finally(() => {
             setPaying(false);
           });
       })
       .catch((err) => {
-        // Here handle error
+        notify("Error", err.message);
         setPaying(false);
       });
   };
@@ -118,7 +118,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           input: { "font-family": "monospace", "font-size": "16px" },
         }}
         createOrder={handleCreateOrder}
-        notEligibleError={<h3>problem</h3>}
+        notEligibleError={<h3>hosted fields not available</h3>}
       >
         <label htmlFor="card-number">
           Card Number
@@ -155,12 +155,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           hostedFieldType={"expirationDate"}
           options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
         />
-        <SubmitPayment
-          customStyle={{
-            border: "1px solid #606060",
-            boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
-          }}
-        />
+        <SubmitPayment />
       </PayPalHostedFieldsProvider>
     </PayPalScriptProvider>
   );
