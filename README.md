@@ -11,10 +11,21 @@ Each payment component takes a set of props that will be the same for everything
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to create a payment in commerce tools. Communicates with CommerceTools backend  
   See the examples in our [CoFe integration example repository]()
-- **sessionValue**: `string`  
-  The session value is to be able to connect to the cart. We send it in the header of requests with the value of **sessionKey**
-- **sessionKey**: `string`  
-  The key for the session to be used in conjunction with the session value.
+- **getSettingsUrl**: `string`  
+  _POST_-Request - we get a [_GetSettingsResponse_](src/types/index.ts)  
+  It is **your** responsibility to develop this API  
+  The url that gets called to the endpoint of the connect app to get settings of PayPal in commerce tools. Communicates with CommerceTools backend  
+  See the examples in our [CoFe integration example repository]()
+- **createOrderUrl**: `string`  
+  _POST_-Request - we get a [_CreateOrderResponse_](src/types/index.ts)  
+  It is **your** responsibility to develop this API  
+  The url that gets called to the endpoint of the connect app to create a PayPal order in commerce tools. Communicates with CommerceTools backend  
+  See the examples in our [CoFe integration example repository]()
+- **onApproveUrl**: `string`  
+  _POST_-Request - we get a [_OnApproveResponse_](src/types/index.ts)  
+  It is **your** responsibility to develop this API  
+  The url that gets called to the endpoint of the connect app to capture a PayPal order in commerce tools. Communicates with CommerceTools backend  
+  See the examples in our [CoFe integration example repository]()
 - **cartInformation**: `object`  
   Information about the customers cart to crate payments with.
   Structure:
@@ -43,7 +54,18 @@ Each payment component takes a set of props that will be the same for everything
   };
   ```
 
-- **options**: `object`  
+- **purchaseCallback**: `(result: any) => void`  
+   Function to execute after a successful purchase.
+- **requestHeader**: `object`
+  Information that you want to send to the server as a header.
+  Structure for CoFe:
+
+  ```
+  "Frontastic-Session": string;
+  "Commercetools-Frontend-Extension-Version": string;
+  ```
+
+- **options**: `object`
   options will pass to PayPalScriptProvider component and you can see the structure on PayPal documentation. [_ReactPayPalScriptOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/types/scriptProviderTypes.ts).
 
 ## Payment specific properties
@@ -53,6 +75,9 @@ In addition, each payment component comes with its own specific properties.
 ### PayPal
 
 PayPal components props are based on PayPal props and you can see them on PayPal official documentation [_PayPalButtonsComponentOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/types/paypalButtonTypes.ts).
+
+- **paypalMessages**: `object`
+  Pass this object here if you want to show the `PayPal Messages` in the PayPal component. In order to see the structure check the parameters of `PayPalMessages`.
 
 ### PayPalMessages
 

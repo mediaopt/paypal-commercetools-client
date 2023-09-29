@@ -14,6 +14,9 @@ export const HostedFields: React.FC<HostedFieldsSmartComponentProps> = ({
   getClientTokenUrl,
   shippingMethodId,
   cartInformation,
+  createOrderUrl,
+  onApproveUrl,
+  purchaseCallback,
   theeDSAuth,
   ...restProps
 }) => {
@@ -27,6 +30,9 @@ export const HostedFields: React.FC<HostedFieldsSmartComponentProps> = ({
       requestHeader={requestHeader}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
+      createOrderUrl={createOrderUrl}
+      onApproveUrl={onApproveUrl}
+      purchaseCallback={purchaseCallback}
     >
       <HostedFieldsButton options={options} threeDSAuth={theeDSAuth} />
     </RenderTemplate>

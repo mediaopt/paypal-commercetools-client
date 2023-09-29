@@ -7,9 +7,12 @@ import { GeneralComponentsProps } from "../../types";
 
 export const TestButton: React.FC<GeneralComponentsProps> = ({
   options,
+  purchaseCallback,
 
   createPaymentUrl,
   getSettingsUrl,
+  createOrderUrl,
+  onApproveUrl,
 
   requestHeader,
   shippingMethodId,
@@ -21,8 +24,11 @@ export const TestButton: React.FC<GeneralComponentsProps> = ({
       requestHeader={requestHeader}
       createPaymentUrl={createPaymentUrl}
       getSettingsUrl={getSettingsUrl}
+      createOrderUrl={createOrderUrl}
+      onApproveUrl={onApproveUrl}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
+      purchaseCallback={purchaseCallback}
     >
       <TestButtonMask />
     </RenderTemplate>

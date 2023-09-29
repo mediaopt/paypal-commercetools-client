@@ -1,7 +1,34 @@
 import {
   PayPalButtonsComponentProps,
   ReactPayPalScriptOptions,
+  PayPalMessagesComponentProps,
 } from "@paypal/react-paypal-js";
+
+import {
+  OnShippingChangeData,
+  OnShippingChangeActions,
+} from "@paypal/paypal-js";
+
+export type CreateOrderRequest = {
+  paymentId: string;
+  paymentVersion: number;
+};
+
+export type CreateOrderResponse = {
+  orderData: { id: string };
+  paymentVersion: number;
+};
+
+export type OnApproveRequest = {
+  paymentId: string;
+  paymentVersion: number;
+  orderID: string;
+};
+
+export type OnApproveResponse = {
+  captureOrderData: { id: string; status: string };
+  paymentVersion: number;
+};
 
 export type LoadingOverlayType = {
   loadingText?: string;
@@ -16,8 +43,12 @@ export type GeneralComponentsProps = {
 
   createPaymentUrl: string;
   getSettingsUrl: string;
+  createOrderUrl: string;
+  onApproveUrl: string;
+
+  shippingMethodId: string;
+  purchaseCallback: (result: any, options?: any) => void;
   getClientTokenUrl?: string;
-  shippingMethodId?: string;
 } & CartInformationProps;
 
 type HostedFieldsThreeDSAuth = "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
@@ -31,7 +62,21 @@ export type HostedFieldsSmartComponentProps = SmartComponentsProps & {
   theeDSAuth?: HostedFieldsThreeDSAuth;
 };
 
-export type SmartComponentsProps = PayPalButtonsComponentProps &
+export type CustomPayPalButtonsComponentProps = Omit<
+  PayPalButtonsComponentProps,
+  | "createOrder"
+  | "createBillingAgreement"
+  | "createSubscription"
+  | "onApprove"
+  | "onCancel"
+  | "onClick"
+  | "onError"
+  | "onInit"
+> & {
+  paypalMessages?: PayPalMessagesComponentProps;
+};
+
+export type SmartComponentsProps = CustomPayPalButtonsComponentProps &
   GeneralComponentsProps;
 
 export type CartInformation = {
@@ -82,7 +127,7 @@ export const CartInformationInitial: CartInformation = {
   },
 };
 
-export type CartInformationProps = { cartInformation: CartInformation };
+export type CartInformationProps = { cartInformation?: CartInformation };
 
 export type PaymentInfo = {
   id: string;

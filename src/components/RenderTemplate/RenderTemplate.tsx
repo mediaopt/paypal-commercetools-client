@@ -13,10 +13,13 @@ export const RenderTemplate: FC<
 > = ({
   options,
   requestHeader,
+  purchaseCallback,
 
   createPaymentUrl,
   getSettingsUrl,
   getClientTokenUrl,
+  createOrderUrl,
+  onApproveUrl,
 
   shippingMethodId,
   cartInformation,
@@ -32,9 +35,12 @@ export const RenderTemplate: FC<
             createPaymentUrl={createPaymentUrl}
             getClientTokenUrl={getClientTokenUrl}
             getSettingsUrl={getSettingsUrl}
+            createOrderUrl={createOrderUrl}
+            onApproveUrl={onApproveUrl}
             requestHeader={requestHeader}
             shippingMethodId={shippingMethodId}
             cartInformation={cartInformation}
+            purchaseCallback={purchaseCallback}
           >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>

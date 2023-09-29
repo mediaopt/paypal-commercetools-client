@@ -10,6 +10,7 @@ import { usePayment } from "../../app/usePayment";
 import { HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import "./styles.css";
+import { OnApproveData } from "@paypal/paypal-js";
 
 const CUSTOM_FIELD_STYLE = {
   border: "1px solid #606060",
@@ -26,6 +27,7 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
     border: "1px solid #606060",
     boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
   };
+  const { handleOnApprove } = usePayment();
   const { notify } = useNotifications();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
@@ -64,11 +66,13 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
             // Handle buyer confirmed 3D Secure successfully
           }
         } else {
-          // Your logic to capture the transaction
-          fetch("url_to_capture_transaction", {
-            method: "POST",
-          })
-            .then((response) => response.json())
+        // Your logic to capture the transaction
+          console.log(data);
+          const approveData: OnApproveData = {
+            orderID: data.orderId,
+            facilitatorAccessToken: "",
+          };
+          handleOnApprove(approveData)
             .then((data) => {
               // Here use the captured info
             })
@@ -110,44 +114,11 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
   );
 };
 
-/*
-* createOrder={function () {
-							return fetch(
-								"your_custom_server_to_create_orders",
-								{
-									method: "POST",
-									headers: {
-										"Content-Type": "application/json",
-									},
-									body: JSON.stringify({
-										purchase_units: [
-											{
-												amount: {
-													value: "2", // Here change the amount if needed
-													currency_code: "USD", // Here change the currency if needed
-												},
-											},
-										],
-										intent: "capture",
-									}),
-								}
-							)
-								.then((response) => response.json())
-								.then((order) => {
-									// Your code here after create the order
-									return order.id;
-								})
-								.catch((err) => {
-									alert(err);
-								});
-						}}
-*
-* */
-
 export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   threeDSAuth,
 }) => {
+  const { handleCreateOrder } = usePayment();
   const { clientToken } = usePayment();
   return (
     <PayPalScriptProvider
@@ -164,11 +135,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
           ".invalid": { color: "#dc3545" },
           input: { "font-family": "monospace", "font-size": "16px" },
         }}
-        createOrder={() => {
-          return new Promise(() => {
-            console.log("test");
-          });
-        }}
+        createOrder={handleCreateOrder}
         notEligibleError={<h3>problem</h3>}
       >
         <label htmlFor="card-number">
