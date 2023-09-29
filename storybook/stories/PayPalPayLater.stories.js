@@ -1,5 +1,10 @@
 import { PayPal } from "../../src/components/PayPal";
-import { params, options } from "./constants";
+import {
+  params,
+  options,
+  payPalMessagesParams,
+  requestHeader,
+} from "./constants";
 
 export default {
   title: "Components/PayPalPayLater",
@@ -14,7 +19,13 @@ export default {
 export const Main = {
   args: {
     ...params,
-    options: { ...options, enableFunding: "paylater" },
+    requestHeader,
+    options: {
+      ...options,
+      enableFunding: "paylater",
+      components: "messages,buttons",
+    },
     fundingSource: "paylater",
+    paypalMessages: payPalMessagesParams,
   },
 };

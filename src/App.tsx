@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
 
 import "./App.css";
 
@@ -50,13 +51,30 @@ function App() {
     createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
     getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
+    createOrderUrl:
+      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayPalOrder",
+    onApproveUrl:
+      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/capturePayPalOrder",
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
+    purchaseCallback: (result: any, options: any) => {
+      console.log("Do something", result, options);
+    },
   };
 
   const options = {
     clientId:
       "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
+    currency: "EUR",
+  };
+
+  const payPalMessagesParams: PayPalMessagesComponentProps = {
+    amount: "100.00",
+    currency: "EUR",
+    style: {
+      layout: "text",
+    },
+    placement: "product",
   };
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {
@@ -78,24 +96,39 @@ function App() {
         fundingSource="paypal"
       />
     ),
+    BuyNowPayPal: (
+      <PayPal
+        {...params}
+        requestHeader={requestHeader}
+        options={{ ...options, commit: false }}
+        fundingSource="paypal"
+        onShippingChange={async (data, actions) => {
+          //console.log(data, actions);
+          //update order shipping information based on data.shipping_address
+        }}
+        style={{
+          label: "buynow",
+        }}
+      />
+    ),
     PayPalLater: (
       <PayPal
         {...params}
         requestHeader={requestHeader}
-        options={{ ...options, enableFunding: "paylater" }}
+        options={{
+          ...options,
+          enableFunding: "paylater",
+          components: "messages,buttons",
+        }}
         fundingSource="paylater"
+        paypalMessages={payPalMessagesParams}
       />
     ),
     PayPalMessages: (
       <PayPalMessages
-        {...params}
         requestHeader={requestHeader}
-        amount="100.00"
-        currency="USD"
-        style={{
-          layout: "text",
-        }}
-        placement="product"
+        {...payPalMessagesParams}
+        {...params}
         options={{ ...options, components: "messages" }}
       />
     ),
