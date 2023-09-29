@@ -56,6 +56,7 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
         contingencies: [threeDSAuth],
       })
       .then((data) => {
+        console.log(data);
         // Needed only when 3D Secure contingency applied
         if (threeDSAuth) {
           if (data.liabilityShift === "POSSIBLE") {
@@ -66,8 +67,7 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
             // Handle buyer confirmed 3D Secure successfully
           }
         } else {
-        // Your logic to capture the transaction
-          console.log(data);
+          // Your logic to capture the transaction
           const approveData: OnApproveData = {
             orderID: data.orderId,
             facilitatorAccessToken: "",
