@@ -51,10 +51,8 @@ function App() {
     createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
     getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
-    createOrderUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayPalOrder",
-    onApproveUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/capturePayPalOrder",
+    createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
     purchaseCallback: (result: any, options: any) => {

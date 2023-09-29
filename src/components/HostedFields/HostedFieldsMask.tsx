@@ -10,6 +10,7 @@ import { usePayment } from "../../app/usePayment";
 import { HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import "./styles.css";
+import { OnApproveData } from "@paypal/paypal-js";
 
 const CUSTOM_FIELD_STYLE = {
   border: "1px solid #606060",
@@ -22,6 +23,7 @@ const INVALID_COLOR = {
 // Example of custom component to handle form submit
 // @ts-ignore
 const SubmitPayment = ({ customStyle }) => {
+  const { handleOnApprove } = usePayment();
   const { notify } = useNotifications();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
@@ -49,13 +51,16 @@ const SubmitPayment = ({ customStyle }) => {
         cardholderName: cardHolderName?.current?.value,
       })
       .then((data) => {
-        // Your logic to capture the transaction
-        fetch("url_to_capture_transaction", {
-          method: "POST",
-        })
-          .then((response) => response.json())
+        console.log(data);
+        const approveData: OnApproveData = {
+          orderID: data.orderId,
+          facilitatorAccessToken: "",
+        };
+        handleOnApprove(approveData)
+          // Your logic to capture the transaction
           .then((data) => {
             // Here use the captured info
+            console.log(data);
           })
           .catch((err) => {
             // Here handle error
@@ -94,41 +99,8 @@ const SubmitPayment = ({ customStyle }) => {
   );
 };
 
-/*
-* createOrder={function () {
-							return fetch(
-								"your_custom_server_to_create_orders",
-								{
-									method: "POST",
-									headers: {
-										"Content-Type": "application/json",
-									},
-									body: JSON.stringify({
-										purchase_units: [
-											{
-												amount: {
-													value: "2", // Here change the amount if needed
-													currency_code: "USD", // Here change the currency if needed
-												},
-											},
-										],
-										intent: "capture",
-									}),
-								}
-							)
-								.then((response) => response.json())
-								.then((order) => {
-									// Your code here after create the order
-									return order.id;
-								})
-								.catch((err) => {
-									alert(err);
-								});
-						}}
-*
-* */
-
 export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
+  const { handleCreateOrder } = usePayment();
   const { clientToken } = usePayment();
   return (
     <PayPalScriptProvider
@@ -145,11 +117,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           ".invalid": { color: "#dc3545" },
           input: { "font-family": "monospace", "font-size": "16px" },
         }}
-        createOrder={() => {
-          return new Promise(() => {
-            console.log("test");
-          });
-        }}
+        createOrder={handleCreateOrder}
         notEligibleError={<h3>problem</h3>}
       >
         <label htmlFor="card-number">
