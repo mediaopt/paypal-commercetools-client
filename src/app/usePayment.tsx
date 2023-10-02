@@ -1,4 +1,11 @@
-import React, { FC, createContext, useContext, useState, useMemo } from "react";
+import React, {
+  FC,
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from "react";
 import { OnApproveData } from "@paypal/paypal-js";
 import { Result } from "../components/Result";
 import {
@@ -85,6 +92,12 @@ export const PaymentProvider: FC<
   const { notify } = useNotifications();
 
   let latestPaymentVersion = paymentInfo.version;
+
+  useEffect(() => {
+    if (showResult) {
+      isLoading(false);
+    }
+  }, [showResult]);
 
   const value = useMemo(() => {
     const setSuccess = () => {
@@ -175,7 +188,8 @@ export const PaymentProvider: FC<
           paymentVersion = clientTokenResult.paymentVersion;
         }
 
-        const {amountPlanned, lineItems, shippingMethod} = createPaymentResult;
+        const { amountPlanned, lineItems, shippingMethod } =
+          createPaymentResult;
 
         setPaymentInfo({
           id: createPaymentResult.id,

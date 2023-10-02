@@ -9,18 +9,20 @@ import {
 import { usePayment } from "../../app/usePayment";
 import { HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
-import "./styles.css";
+import { useLoader } from "../../app/useLoader";
 import { OnApproveData } from "@paypal/paypal-js";
+import HostedFieldsInvalid from "./HostedFieldsInvalid";
 
 const CUSTOM_FIELD_STYLE = {
   border: "1px solid #606060",
   boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
 };
-const INVALID_COLOR = {
-  color: "#dc3545",
-};
 
-// Example of custom component to handle form submit
+const HOSTED_FIELDS_CARD_FIELDS: string =
+  "w-full p-3 mt-1.5 mb-4 h-10 text-base bg-white text-neutral-700 border border-gray-300 rounded box-border resize-y";
+
+const HOSTED_FIELDS_BUTTON: string =
+  "float-right text-center whitespace-nowrap inline-block font-normal align-middle select-none cursor-pointer text-white text-base rounded py-1.5 px-3 bg-sky-500 border-sky-500";
 
 const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
   const customStyle = {
@@ -29,6 +31,7 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
   };
   const { handleOnApprove } = usePayment();
   const { notify } = useNotifications();
+  const { isLoading } = useLoader();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
@@ -47,9 +50,11 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
       ) || !cardHolderName?.current?.value;
 
     if (isFormInvalid) {
-      return alert("The payment form is invalid");
+      notify("Error", "The form is invalid");
+      return;
     }
     setPaying(true);
+    isLoading(true);
     hostedField.cardFields
       .submit({
         cardholderName: cardHolderName?.current?.value,
@@ -72,20 +77,16 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
             orderID: data.orderId,
             facilitatorAccessToken: "",
           };
-          handleOnApprove(approveData)
-            .then((data) => {
-              // Here use the captured info
-            })
-            .catch((err) => {
-              // Here handle error
-            })
-            .finally(() => {
+          handleOnApprove(approveData).catch((err) => {
               setPaying(false);
-            });
+              isLoading(false);
+              notify("Error", err.message);
+          });
         }
       })
       .catch((err) => {
-        // Here handle error
+        notify("Error", err.message);
+        isLoading(false);
         setPaying(false);
       });
   };
@@ -97,18 +98,14 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
         <input
           id="card-holder"
           ref={cardHolderName}
-          className="card-field"
+          className={HOSTED_FIELDS_CARD_FIELDS}
           style={{ ...customStyle, outline: "none" }}
           type="text"
           placeholder="Full name"
         />
       </label>
-      <button
-        className={`btn${paying ? "" : " btn-primary"}`}
-        style={{ float: "right" }}
-        onClick={handleClick}
-      >
-        {paying ? <div className="spinner tiny" /> : "Pay"}
+      <button className={HOSTED_FIELDS_BUTTON} onClick={handleClick}>
+        Pay
       </button>
     </>
   );
@@ -136,41 +133,42 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
           input: { "font-family": "monospace", "font-size": "16px" },
         }}
         createOrder={handleCreateOrder}
-        notEligibleError={<h3>problem</h3>}
+        notEligibleError={<h3>hosted fields not available</h3>}
       >
         <label htmlFor="card-number">
           Card Number
-          <span style={INVALID_COLOR}>*</span>
+          <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={"card-field"}
+          className={HOSTED_FIELDS_CARD_FIELDS}
           style={CUSTOM_FIELD_STYLE}
-          id={"card-number"}
-          hostedFieldType={"number"}
+          id="card-number"
+          hostedFieldType="number"
           options={{
             selector: "#card-number",
             placeholder: "4111 1111 1111 1111",
           }}
         />
         <label htmlFor="cvv">
-          CVV<span style={INVALID_COLOR}>*</span>
+          CVV
+          <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={"card-field"}
+          className={HOSTED_FIELDS_CARD_FIELDS}
           style={CUSTOM_FIELD_STYLE}
-          id={"cvv"}
-          hostedFieldType={"cvv"}
+          id="cvv"
+          hostedFieldType="cvv"
           options={{ selector: "#cvv", maskInput: true, placeholder: "123" }}
         />
         <label htmlFor="expiration-date">
           Expiration Date
-          <span style={INVALID_COLOR}>*</span>
+          <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={"card-field"}
+          className={HOSTED_FIELDS_CARD_FIELDS}
           style={CUSTOM_FIELD_STYLE}
-          id={"expiration-date"}
-          hostedFieldType={"expirationDate"}
+          id="expiration-date"
+          hostedFieldType="expirationDate"
           options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
         />
         <SubmitPayment threeDSAuth={threeDSAuth} />
