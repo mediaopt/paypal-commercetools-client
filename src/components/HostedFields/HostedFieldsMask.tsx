@@ -9,15 +9,14 @@ import {
 import { usePayment } from "../../app/usePayment";
 import { HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
+import { useLoader } from "../../app/useLoader";
 import "./styles.css";
 import { OnApproveData } from "@paypal/paypal-js";
+import HostedFieldsInvalid from "./HostedFieldsInvalid";
 
 const CUSTOM_FIELD_STYLE = {
   border: "1px solid #606060",
   boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
-};
-const INVALID_COLOR = {
-  color: "#dc3545",
 };
 
 const SubmitPayment = () => {
@@ -27,6 +26,7 @@ const SubmitPayment = () => {
   };
   const { handleOnApprove } = usePayment();
   const { notify } = useNotifications();
+  const { isLoading } = useLoader();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
@@ -49,6 +49,7 @@ const SubmitPayment = () => {
       return;
     }
     setPaying(true);
+    isLoading(true);
     hostedField.cardFields
       .submit({
         cardholderName: cardHolderName?.current?.value,
@@ -59,18 +60,18 @@ const SubmitPayment = () => {
           facilitatorAccessToken: "",
         };
         handleOnApprove(approveData)
-          .then((data) => {
-            console.log(data);
-          })
+          .then((data) => {})
           .catch((err) => {
             notify("Error", err.message);
           })
           .finally(() => {
+            isLoading(false);
             setPaying(false);
           });
       })
       .catch((err) => {
         notify("Error", err.message);
+        isLoading(false);
         setPaying(false);
       });
   };
@@ -89,11 +90,11 @@ const SubmitPayment = () => {
         />
       </label>
       <button
-        className={`btn${paying ? "" : " btn-primary"}`}
+        className="btn btn-primary"
         style={{ float: "right" }}
         onClick={handleClick}
       >
-        {paying ? <div className="spinner tiny" /> : "Pay"}
+        Pay
       </button>
     </>
   );
@@ -122,37 +123,38 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
       >
         <label htmlFor="card-number">
           Card Number
-          <span style={INVALID_COLOR}>*</span>
+          <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={"card-field"}
+          className="card-field"
           style={CUSTOM_FIELD_STYLE}
-          id={"card-number"}
-          hostedFieldType={"number"}
+          id="card-number"
+          hostedFieldType="number"
           options={{
             selector: "#card-number",
             placeholder: "4111 1111 1111 1111",
           }}
         />
         <label htmlFor="cvv">
-          CVV<span style={INVALID_COLOR}>*</span>
+          CVV
+          <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={"card-field"}
+          className="card-field"
           style={CUSTOM_FIELD_STYLE}
-          id={"cvv"}
-          hostedFieldType={"cvv"}
+          id="cvv"
+          hostedFieldType="cvv"
           options={{ selector: "#cvv", maskInput: true, placeholder: "123" }}
         />
         <label htmlFor="expiration-date">
           Expiration Date
-          <span style={INVALID_COLOR}>*</span>
+          <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={"card-field"}
+          className="card-field"
           style={CUSTOM_FIELD_STYLE}
-          id={"expiration-date"}
-          hostedFieldType={"expirationDate"}
+          id="expiration-date"
+          hostedFieldType="expirationDate"
           options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
         />
         <SubmitPayment />
