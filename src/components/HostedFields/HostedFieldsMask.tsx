@@ -64,15 +64,11 @@ const SubmitPayment = () => {
           orderID: data.orderId,
           facilitatorAccessToken: "",
         };
-        handleOnApprove(approveData)
-          .then((data) => {})
-          .catch((err) => {
-            notify("Error", err.message);
-          })
-          .finally(() => {
-            isLoading(false);
-            setPaying(false);
-          });
+        handleOnApprove(approveData).catch((err) => {
+          setPaying(false);
+          isLoading(false);
+          notify("Error", err.message);
+        });
       })
       .catch((err) => {
         notify("Error", err.message);
