@@ -1,9 +1,5 @@
 const HostedFieldsInvalid = () => {
-  const INVALID_COLOR = {
-    color: "#dc3545",
-  };
-
-  return <span style={INVALID_COLOR}>*</span>;
+  return <span className="text-red-500">*</span>;
 };
 
 export default HostedFieldsInvalid;
