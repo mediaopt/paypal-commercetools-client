@@ -9,7 +9,7 @@ import { PayPalMessages } from "./components/PayPalMessages";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNjI0YTM0MDAtYzM5Ni00YzI3LWE3NTEtNjQ4ZWM1NDQ4Y2JhIiwiY2FydElkIjoiYjM5NjkwMTYtZjk1My00MmI2LWE3YWUtNWRhZDU4YjZmODI2In0.RpcZevugPdM5YzHse00WcSDy6B6EB363Bevma-rninY";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI3YzI4ZDlhNC05MDVkLTQyODAtOWJmZC1iZjcxMDRlZjBhYmMifQ.9VEjKaXakuxm-cIy2bO3EuKdndPzjYNxhvyklwR3M0I";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
