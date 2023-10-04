@@ -7,10 +7,9 @@ import {
   usePayPalHostedFields,
 } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
-import { HostedFieldsProps } from "../../types";
+import { CustomOnApproveData, HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
-import { OnApproveData } from "@paypal/paypal-js";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
 
 const CUSTOM_FIELD_STYLE = {
@@ -60,9 +59,8 @@ const SubmitPayment = () => {
         cardholderName: cardHolderName?.current?.value,
       })
       .then((data) => {
-        const approveData: OnApproveData = {
+        const approveData: CustomOnApproveData = {
           orderID: data.orderId,
-          facilitatorAccessToken: "",
         };
         handleOnApprove(approveData).catch((err) => {
           setPaying(false);
