@@ -1,6 +1,11 @@
-import { FC, createContext, useContext, useState, useMemo } from "react";
-import { OnApproveData } from "@paypal/paypal-js";
-
+import React, {
+  FC,
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from "react";
 import { Result } from "../components/Result";
 import {
   GeneralComponentsProps,
@@ -9,6 +14,8 @@ import {
   CreatePaymentResponse,
   RequestHeader,
   GetSettingsResponse,
+  ClientTokenResponse,
+  CustomOnApproveData,
 } from "../types";
 import {
   createPayment,
@@ -19,6 +26,7 @@ import {
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
+import { getClientToken } from "../services/getClientToken";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -37,9 +45,10 @@ type PaymentContextT = {
   paymentInfo: PaymentInfo;
   requestHeader: RequestHeader;
   handleCreatePayment: () => void;
+  clientToken: string;
   settings?: GetSettingsResponse;
   handleCreateOrder: () => Promise<string>;
-  handleOnApprove: (data: OnApproveData) => Promise<void>;
+  handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -47,6 +56,7 @@ const PaymentContext = createContext<PaymentContextT>({
   paymentInfo: PaymentInfoInitialObject,
   requestHeader: {},
   handleCreatePayment: () => {},
+  clientToken: "",
   settings: {},
   handleCreateOrder: () => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
@@ -63,10 +73,12 @@ export const PaymentProvider: FC<
   createOrderUrl,
   onApproveUrl,
 
+  getClientTokenUrl,
   requestHeader,
   shippingMethodId,
   cartInformation,
 }) => {
+  const [clientToken, setClientToken] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
@@ -80,6 +92,12 @@ export const PaymentProvider: FC<
   const { notify } = useNotifications();
 
   let latestPaymentVersion = paymentInfo.version;
+
+  useEffect(() => {
+    if (showResult) {
+      isLoading(false);
+    }
+  }, [showResult]);
 
   const value = useMemo(() => {
     const setSuccess = () => {
@@ -106,7 +124,7 @@ export const PaymentProvider: FC<
       } else return "";
     };
 
-    const handleOnApprove = async (data: OnApproveData) => {
+    const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl) return;
       const orderID = data.orderID;
 
@@ -157,12 +175,25 @@ export const PaymentProvider: FC<
           return;
         }
 
+        let paymentVersion: number = createPaymentResult.version;
+        if (getClientTokenUrl) {
+          const clientTokenResult = (await getClientToken(
+            requestHeader,
+            getClientTokenUrl,
+            createPaymentResult.id,
+            createPaymentResult.version,
+            createPaymentResult.braintreeCustomerId
+          )) as ClientTokenResponse;
+          setClientToken(clientTokenResult.clientToken);
+          paymentVersion = clientTokenResult.paymentVersion;
+        }
+
         const { amountPlanned, lineItems, shippingMethod } =
           createPaymentResult;
 
         setPaymentInfo({
           id: createPaymentResult.id,
-          version: createPaymentResult.version,
+          version: paymentVersion,
           amount: amountPlanned.centAmount / 100,
           currency: amountPlanned.currencyCode,
           lineItems: lineItems,
@@ -178,6 +209,7 @@ export const PaymentProvider: FC<
       requestHeader,
       paymentInfo,
       handleCreatePayment,
+      clientToken,
       settings,
       handleOnApprove,
       handleCreateOrder,

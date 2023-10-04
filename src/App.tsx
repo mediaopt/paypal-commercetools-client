@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
 
 import "./App.css";
@@ -6,10 +6,11 @@ import "./App.css";
 import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
+import { HostedFields } from "./components/HostedFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI3YzI4ZDlhNC05MDVkLTQyODAtOWJmZC1iZjcxMDRlZjBhYmMifQ.9VEjKaXakuxm-cIy2bO3EuKdndPzjYNxhvyklwR3M0I";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYWU4NGQzNzItMGJjMy00NTM5LWFiMWUtNzhlNmNmNGFlMmEzIiwiY2FydElkIjoiNzRkODBkMzEtMzdlNS00YjlkLWEyZGUtYTBjYjk4NWY2MzA1In0.dG9q2RcYCaVQrXqjSCw2YDlLkm5_yOmP7S8o6u4ufpk";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -43,16 +44,15 @@ function App() {
     "Commercetools-Frontend-Extension-Version": CC_FRONTEND_EXTENSION_VERSION,
   };
 
-  const params = {
-    createPaymentUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment",
-    getSettingsUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/settings/getPayPalSettings",
-    createOrderUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayPalOrder",
-    onApproveUrl:
-      "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/capturePayPalOrder",
+  const ENDPOINT_URL: string =
+    "https://poc-mediaopt2.frontastic.rocks/frontastic/action";
 
+  const params = {
+    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+    getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
+    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
+    createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
     purchaseCallback: (result: any, options: any) => {
@@ -75,7 +75,7 @@ function App() {
     placement: "product",
   };
 
-  const paymentMethods: { [index: string]: JSX.Element } = {
+  const paymentMethods: { [index: string]: React.JSX.Element } = {
     TestButton: (
       <TestButton {...params} requestHeader={requestHeader} options={options} />
     ),
@@ -128,6 +128,17 @@ function App() {
         {...payPalMessagesParams}
         {...params}
         options={{ ...options, components: "messages" }}
+      />
+    ),
+    HostedFields: (
+      <HostedFields
+        requestHeader={requestHeader}
+        {...params}
+        options={{
+          ...options,
+          components: "hosted-fields,buttons",
+          vault: false,
+        }}
       />
     ),
   };

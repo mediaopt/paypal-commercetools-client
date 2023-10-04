@@ -27,3 +27,5 @@ yarn-error.log*
 /lib
 /dist
 /.idea
+
+dev_constants.ts

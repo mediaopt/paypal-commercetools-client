@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { useLoader } from "../../app/useLoader";
 
 type ResultProps = {
   success?: boolean;
@@ -11,8 +10,6 @@ export const Result: FC<React.PropsWithChildren<ResultProps>> = ({
   message,
   children,
 }) => {
-  const { isLoading } = useLoader();
-  isLoading(false);
   return (
     <div className={!success ? "text-rose-600" : "text-green-700"}>
       {message ?? "Thank you for your purchase!"}

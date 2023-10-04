@@ -17,6 +17,7 @@ export const RenderTemplate: FC<
 
   createPaymentUrl,
   getSettingsUrl,
+  getClientTokenUrl,
   createOrderUrl,
   onApproveUrl,
 
@@ -32,6 +33,7 @@ export const RenderTemplate: FC<
           <PaymentProvider
             options={options}
             createPaymentUrl={createPaymentUrl}
+            getClientTokenUrl={getClientTokenUrl}
             getSettingsUrl={getSettingsUrl}
             createOrderUrl={createOrderUrl}
             onApproveUrl={onApproveUrl}
