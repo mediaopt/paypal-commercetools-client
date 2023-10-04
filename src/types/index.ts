@@ -4,11 +4,6 @@ import {
   PayPalMessagesComponentProps,
 } from "@paypal/react-paypal-js";
 
-import {
-  OnShippingChangeData,
-  OnShippingChangeActions,
-} from "@paypal/paypal-js";
-
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
@@ -166,5 +161,15 @@ export type ClientTokenRequest = {
 };
 
 export type GetSettingsResponse = {
-  [key: string]: string;
+  [key: string]: string | boolean;
+};
+
+export type CustomOnApproveData = {
+  orderID: string;
+  billingToken?: string | null;
+  facilitatorAccessToken?: string;
+  payerID?: string | null;
+  paymentID?: string | null;
+  subscriptionID?: string | null;
+  authCode?: string | null;
 };

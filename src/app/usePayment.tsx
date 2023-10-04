@@ -6,7 +6,6 @@ import React, {
   useMemo,
   useEffect,
 } from "react";
-import { OnApproveData } from "@paypal/paypal-js";
 import { Result } from "../components/Result";
 import {
   GeneralComponentsProps,
@@ -16,6 +15,7 @@ import {
   RequestHeader,
   GetSettingsResponse,
   ClientTokenResponse,
+  CustomOnApproveData,
 } from "../types";
 import {
   createPayment,
@@ -48,7 +48,7 @@ type PaymentContextT = {
   clientToken: string;
   settings?: GetSettingsResponse;
   handleCreateOrder: () => Promise<string>;
-  handleOnApprove: (data: OnApproveData) => Promise<void>;
+  handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -124,7 +124,7 @@ export const PaymentProvider: FC<
       } else return "";
     };
 
-    const handleOnApprove = async (data: OnApproveData) => {
+    const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl) return;
       const orderID = data.orderID;
 

@@ -7,10 +7,10 @@ import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
-import {
-  CC_FRONTEND_EXTENSION_VERSION,
-  FRONTASTIC_SESSION,
-} from "./dev_constants";
+
+const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
+const FRONTASTIC_SESSION: string =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYWU4NGQzNzItMGJjMy00NTM5LWFiMWUtNzhlNmNmNGFlMmEzIiwiY2FydElkIjoiNzRkODBkMzEtMzdlNS00YjlkLWEyZGUtYTBjYjk4NWY2MzA1In0.dG9q2RcYCaVQrXqjSCw2YDlLkm5_yOmP7S8o6u4ufpk";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");

@@ -7,10 +7,9 @@ import {
   usePayPalHostedFields,
 } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
-import { HostedFieldsProps } from "../../types";
+import { CustomOnApproveData, HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
-import { OnApproveData } from "@paypal/paypal-js";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
 
 const CUSTOM_FIELD_STYLE = {
@@ -36,7 +35,7 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
   const cardHolderName = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
 
-  const approveTransaction = (approveData: OnApproveData) => {
+  const approveTransaction = (approveData: CustomOnApproveData) => {
     handleOnApprove(approveData).catch((err) => {
       setPaying(false);
       isLoading(false);
@@ -70,9 +69,8 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
       })
       .then((data) => {
         console.log(data);
-        const approveData: OnApproveData = {
+        const approveData: CustomOnApproveData = {
           orderID: data.orderId,
-          facilitatorAccessToken: "",
         };
         if (threeDSAuth) {
           if (data.liabilityShift === "POSSIBLE") {
