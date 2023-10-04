@@ -34,7 +34,7 @@ export const requestHeader = {
   "Commercetools-Frontend-Extension-Version": "devmajidabbasi",
 };
 
-const baseUrl = 'https://poc-mediaopt2.frontastic.rocks/frontastic/action/';
+const baseUrl = "https://poc-mediaopt2.frontastic.rocks/frontastic/action/";
 
 export const params = {
   createPaymentUrl: `${baseUrl}payment/createPayment`,
