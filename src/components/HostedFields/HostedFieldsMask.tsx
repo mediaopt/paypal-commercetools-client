@@ -36,6 +36,14 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
   const cardHolderName = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
 
+  const approveTransaction = (approveData: OnApproveData) => {
+    handleOnApprove(approveData).catch((err) => {
+      setPaying(false);
+      isLoading(false);
+      notify("Error", err.message);
+    });
+  };
+
   const handleClick = () => {
     if (!hostedField?.cardFields) {
       const childErrorMessage =
@@ -62,26 +70,20 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
       })
       .then((data) => {
         console.log(data);
-        // Needed only when 3D Secure contingency applied
+        const approveData: OnApproveData = {
+          orderID: data.orderId,
+          facilitatorAccessToken: "",
+        };
         if (threeDSAuth) {
           if (data.liabilityShift === "POSSIBLE") {
-            // 3D Secure passed successfully
-          }
-
-          if (data.liabilityShift) {
-            // Handle buyer confirmed 3D Secure successfully
+            approveTransaction(approveData);
+          } else {
+            notify("Error", "The form is invalid");
+            isLoading(false);
+            setPaying(false);
           }
         } else {
-          // Your logic to capture the transaction
-          const approveData: OnApproveData = {
-            orderID: data.orderId,
-            facilitatorAccessToken: "",
-          };
-          handleOnApprove(approveData).catch((err) => {
-              setPaying(false);
-              isLoading(false);
-              notify("Error", err.message);
-          });
+          approveTransaction(approveData);
         }
       })
       .catch((err) => {
