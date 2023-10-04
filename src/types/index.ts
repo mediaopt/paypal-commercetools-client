@@ -154,7 +154,7 @@ export type ClientTokenRequest = {
 };
 
 export type GetSettingsResponse = {
-  [key: string]: string;
+  [key: string]: string | boolean;
 };
 
 export type CustomOnApproveData = {
