@@ -34,15 +34,14 @@ export const requestHeader = {
   "Commercetools-Frontend-Extension-Version": "devmajidabbasi",
 };
 
+const baseUrl = "https://poc-mediaopt2.frontastic.rocks/frontastic/action/";
+
 export const params = {
-  createPaymentUrl:
-    "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayment",
-  getSettingsUrl:
-    "https://poc-mediaopt2.frontastic.rocks/frontastic/action/settings/getPayPalSettings",
-  createOrderUrl:
-    "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/createPayPalOrder",
-  onApproveUrl:
-    "https://poc-mediaopt2.frontastic.rocks/frontastic/action/payment/capturePayPalOrder",
+  createPaymentUrl: `${baseUrl}payment/createPayment`,
+  getSettingsUrl: `${baseUrl}settings/getPayPalSettings`,
+  createOrderUrl: `${baseUrl}payment/createPayPalOrder`,
+  getClientTokenUrl: `${baseUrl}payment/getClientToken`,
+  onApproveUrl: `${baseUrl}payment/capturePayPalOrder`,
 
   shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
   cartInformation: cartInformation,
