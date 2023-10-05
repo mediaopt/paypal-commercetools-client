@@ -8,9 +8,9 @@ import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYWU4NGQzNzItMGJjMy00NTM5LWFiMWUtNzhlNmNmNGFlMmEzIiwiY2FydElkIjoiNzRkODBkMzEtMzdlNS00YjlkLWEyZGUtYTBjYjk4NWY2MzA1In0.dG9q2RcYCaVQrXqjSCw2YDlLkm5_yOmP7S8o6u4ufpk";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIyOGVhMjMxYS00Mzg3LTQwMTctYWQ3Yi03YTMxMWFiMTdhNzkifQ.oq6K9l8oZZbGy2JAyCFb4TPtfiy14k4K9Q8Kz7JSgxM";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
