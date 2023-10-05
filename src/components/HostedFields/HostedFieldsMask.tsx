@@ -68,7 +68,6 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
         contingencies: [threeDSAuth],
       })
       .then((data) => {
-        console.log(data);
         const approveData: CustomOnApproveData = {
           orderID: data.orderId,
         };
@@ -76,7 +75,7 @@ const SubmitPayment = ({ threeDSAuth }: { threeDSAuth?: string }) => {
           if (data.liabilityShift === "POSSIBLE") {
             approveTransaction(approveData);
           } else {
-            notify("Error", "The form is invalid");
+            notify("Error", "3D Secure check has failed");
             isLoading(false);
             setPaying(false);
           }
