@@ -139,7 +139,7 @@ function App() {
           components: "hosted-fields,buttons",
           vault: false,
         }}
-        theeDSAuth={"SCA_ALWAYS"}
+        threeDSAuth={"SCA_ALWAYS"}
       />
     ),
   };
