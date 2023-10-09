@@ -7,7 +7,11 @@ import {
   usePayPalHostedFields,
 } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
-import { CustomOnApproveData, HostedFieldsProps } from "../../types";
+import {
+  CustomOnApproveData,
+  HostedFieldsProps,
+  HostedFieldsThreeDSAuth,
+} from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
@@ -23,7 +27,7 @@ const HOSTED_FIELDS_CARD_FIELDS: string =
 const HOSTED_FIELDS_BUTTON: string =
   "float-right text-center whitespace-nowrap inline-block font-normal align-middle select-none cursor-pointer text-white text-base rounded py-1.5 px-3 bg-sky-500 border-sky-500";
 
-const SubmitPayment = () => {
+const SubmitPayment = ({ threeDSAuth }: HostedFieldsThreeDSAuth) => {
   const customStyle = {
     border: "1px solid #606060",
     boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
@@ -34,6 +38,14 @@ const SubmitPayment = () => {
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
+
+  const approveTransaction = (approveData: CustomOnApproveData) => {
+    handleOnApprove(approveData).catch((err) => {
+      setPaying(false);
+      isLoading(false);
+      notify("Error", err.message);
+    });
+  };
 
   const handleClick = () => {
     if (!hostedField?.cardFields) {
@@ -57,16 +69,23 @@ const SubmitPayment = () => {
     hostedField.cardFields
       .submit({
         cardholderName: cardHolderName?.current?.value,
+        contingencies: [threeDSAuth],
       })
       .then((data) => {
         const approveData: CustomOnApproveData = {
           orderID: data.orderId,
         };
-        handleOnApprove(approveData).catch((err) => {
-          setPaying(false);
-          isLoading(false);
-          notify("Error", err.message);
-        });
+        if (threeDSAuth) {
+          if (data.liabilityShift === "POSSIBLE") {
+            approveTransaction(approveData);
+          } else {
+            notify("Error", "3D Secure check has failed");
+            isLoading(false);
+            setPaying(false);
+          }
+        } else {
+          approveTransaction(approveData);
+        }
       })
       .catch((err) => {
         notify("Error", err.message);
@@ -95,7 +114,10 @@ const SubmitPayment = () => {
   );
 };
 
-export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
+export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
+  options,
+  threeDSAuth,
+}) => {
   const { handleCreateOrder } = usePayment();
   const { clientToken } = usePayment();
   return (
@@ -152,7 +174,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           hostedFieldType="expirationDate"
           options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
         />
-        <SubmitPayment />
+        <SubmitPayment threeDSAuth={threeDSAuth} />
       </PayPalHostedFieldsProvider>
     </PayPalScriptProvider>
   );

@@ -46,9 +46,16 @@ export type GeneralComponentsProps = {
   getClientTokenUrl?: string;
 } & CartInformationProps;
 
+export type HostedFieldsThreeDSAuth = {
+  threeDSAuth?: "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
+};
+
 export type HostedFieldsProps = {
   options: ReactPayPalScriptOptions;
-};
+} & HostedFieldsThreeDSAuth;
+
+export type HostedFieldsSmartComponentProps = SmartComponentsProps &
+  HostedFieldsThreeDSAuth;
 
 export type CustomPayPalButtonsComponentProps = Omit<
   PayPalButtonsComponentProps,
