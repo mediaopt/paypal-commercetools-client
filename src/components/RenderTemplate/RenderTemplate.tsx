@@ -21,6 +21,7 @@ export const RenderTemplate: FC<
   getClientTokenUrl,
   createOrderUrl,
   onApproveUrl,
+  authorizeOrderUrl,
 
   shippingMethodId,
   cartInformation,
@@ -46,6 +47,7 @@ export const RenderTemplate: FC<
             shippingMethodId={shippingMethodId}
             cartInformation={cartInformation}
             purchaseCallback={purchaseCallback}
+            authorizeOrderUrl={authorizeOrderUrl}
           >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>

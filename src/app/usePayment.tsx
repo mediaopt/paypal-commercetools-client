@@ -13,14 +13,15 @@ import {
   CartInformationInitial,
   CreatePaymentResponse,
   RequestHeader,
-  GetSettingsResponse,
   ClientTokenResponse,
   CustomOnApproveData,
+  OnApproveResponse,
 } from "../types";
 import { createPayment, createOrder, onApprove } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
+import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
 
 const PaymentInfoInitialObject = {
@@ -64,6 +65,7 @@ export const PaymentProvider: FC<
   createPaymentUrl,
   createOrderUrl,
   onApproveUrl,
+  authorizeOrderUrl,
 
   getClientTokenUrl,
   requestHeader,
@@ -74,6 +76,8 @@ export const PaymentProvider: FC<
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
+
+  const { settings } = useSettings();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
@@ -116,27 +120,32 @@ export const PaymentProvider: FC<
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
-      if (!onApproveUrl) return;
+      if (!onApproveUrl && !authorizeOrderUrl) return;
+
       const orderID = data.orderID;
+
+      const onAuthorizeOrderUrl =
+        settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;
 
       const onApproveResult = await onApprove(
         requestHeader,
-        onApproveUrl,
+        onAuthorizeOrderUrl ?? onApproveUrl,
         paymentInfo.id,
         latestPaymentVersion,
         orderID
       );
 
-      if (
-        onApproveResult &&
-        onApproveResult.captureOrderData.status === "COMPLETED"
-      ) {
+      const { orderData } = onApproveResult as OnApproveResponse;
+      if (orderData.status === "COMPLETED") {
         setShowResult(true);
         setResultSuccess(true);
         purchaseCallback(onApproveResult);
       } else {
         setShowResult(true);
         setResultSuccess(false);
+        if (orderData) {
+          setResultMessage(orderData.message);
+        }
       }
     };
 
@@ -205,6 +214,7 @@ export const PaymentProvider: FC<
     requestHeader,
     shippingMethodId,
     notify,
+    settings,
   ]);
 
   return (
