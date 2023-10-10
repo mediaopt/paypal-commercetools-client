@@ -67,11 +67,15 @@ const SubmitPayment = () => {
     }
     setPaying(true);
     isLoading(true);
+
+    const hostedFieldsOptions: Record<string, unknown> = {
+      cardholderName: cardHolderName?.current?.value,
+    };
+    if (threeDSAuth) {
+      hostedFieldsOptions.contingencies = [threeDSAuth];
+    }
     hostedField.cardFields
-      .submit({
-        cardholderName: cardHolderName?.current?.value,
-        contingencies: [threeDSAuth],
-      })
+      .submit(hostedFieldsOptions)
       .then((data) => {
         const approveData: CustomOnApproveData = {
           orderID: data.orderId,
