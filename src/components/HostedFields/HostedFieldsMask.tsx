@@ -27,17 +27,18 @@ const HOSTED_FIELDS_CARD_FIELDS: string =
 const HOSTED_FIELDS_BUTTON: string =
   "float-right text-center whitespace-nowrap inline-block font-normal align-middle select-none cursor-pointer text-white text-base rounded py-1.5 px-3 bg-sky-500 border-sky-500";
 
-const SubmitPayment = ({ threeDSAuth }: HostedFieldsThreeDSAuth) => {
+const SubmitPayment = () => {
   const customStyle = {
     border: "1px solid #606060",
     boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
   };
-  const { handleOnApprove } = usePayment();
+  const { handleOnApprove, settings } = usePayment();
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
+  const threeDSAuth = settings?.threeDSOption;
 
   const approveTransaction = (approveData: CustomOnApproveData) => {
     handleOnApprove(approveData).catch((err) => {
@@ -66,11 +67,15 @@ const SubmitPayment = ({ threeDSAuth }: HostedFieldsThreeDSAuth) => {
     }
     setPaying(true);
     isLoading(true);
+
+    const hostedFieldsOptions: Record<string, unknown> = {
+      cardholderName: cardHolderName?.current?.value,
+    };
+    if (threeDSAuth) {
+      hostedFieldsOptions.contingencies = [threeDSAuth];
+    }
     hostedField.cardFields
-      .submit({
-        cardholderName: cardHolderName?.current?.value,
-        contingencies: [threeDSAuth],
-      })
+      .submit(hostedFieldsOptions)
       .then((data) => {
         const approveData: CustomOnApproveData = {
           orderID: data.orderId,
@@ -114,10 +119,7 @@ const SubmitPayment = ({ threeDSAuth }: HostedFieldsThreeDSAuth) => {
   );
 };
 
-export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
-  options,
-  threeDSAuth,
-}) => {
+export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
   const { handleCreateOrder } = usePayment();
   const { clientToken } = usePayment();
   return (
@@ -174,7 +176,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
           hostedFieldType="expirationDate"
           options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
         />
-        <SubmitPayment threeDSAuth={threeDSAuth} />
+        <SubmitPayment />
       </PayPalHostedFieldsProvider>
     </PayPalScriptProvider>
   );
