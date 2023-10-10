@@ -53,7 +53,7 @@ export type HostedFieldsThreeDSAuth = {
 
 export type HostedFieldsProps = {
   options: ReactPayPalScriptOptions;
-} & HostedFieldsThreeDSAuth;
+};
 
 export type HostedFieldsSmartComponentProps = SmartComponentsProps &
   HostedFieldsThreeDSAuth;

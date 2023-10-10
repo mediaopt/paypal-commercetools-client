@@ -140,7 +140,6 @@ function App() {
           components: "hosted-fields,buttons",
           vault: false,
         }}
-        threeDSAuth={"SCA_ALWAYS"}
       />
     ),
   };
