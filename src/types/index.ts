@@ -173,3 +173,9 @@ export type CustomOnApproveData = {
   subscriptionID?: string | null;
   authCode?: string | null;
 };
+
+export type SettingsProviderProps = {
+  getSettingsUrl: string;
+  requestHeader: RequestHeader;
+  options: ReactPayPalScriptOptions;
+};

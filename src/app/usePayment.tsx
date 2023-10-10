@@ -17,12 +17,7 @@ import {
   ClientTokenResponse,
   CustomOnApproveData,
 } from "../types";
-import {
-  createPayment,
-  getSettings,
-  createOrder,
-  onApprove,
-} from "../services";
+import { createPayment, createOrder, onApprove } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
@@ -46,7 +41,6 @@ type PaymentContextT = {
   requestHeader: RequestHeader;
   handleCreatePayment: () => void;
   clientToken: string;
-  settings?: GetSettingsResponse;
   handleCreateOrder: () => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
 };
@@ -57,7 +51,6 @@ const PaymentContext = createContext<PaymentContextT>({
   requestHeader: {},
   handleCreatePayment: () => {},
   clientToken: "",
-  settings: {},
   handleCreateOrder: () => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
 });
@@ -69,7 +62,6 @@ export const PaymentProvider: FC<
   purchaseCallback,
 
   createPaymentUrl,
-  getSettingsUrl,
   createOrderUrl,
   onApproveUrl,
 
@@ -86,7 +78,6 @@ export const PaymentProvider: FC<
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
   );
-  const [settings, setSettings] = useState<GetSettingsResponse>();
 
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
@@ -152,15 +143,6 @@ export const PaymentProvider: FC<
     const handleCreatePayment = async () => {
       isLoading(true);
 
-      if (getSettingsUrl) {
-        const getSettingsResult = (await getSettings(
-          requestHeader,
-          getSettingsUrl
-        )) as GetSettingsResponse;
-
-        setSettings(getSettingsResult);
-      }
-
       if (createPaymentUrl && cartInformation) {
         const createPaymentResult = (await createPayment(
           requestHeader,
@@ -210,17 +192,14 @@ export const PaymentProvider: FC<
       paymentInfo,
       handleCreatePayment,
       clientToken,
-      settings,
       handleOnApprove,
       handleCreateOrder,
     };
   }, [
     paymentInfo,
-    settings,
     cartInformation,
     createOrderUrl,
     createPaymentUrl,
-    getSettingsUrl,
     isLoading,
     onApproveUrl,
     requestHeader,
