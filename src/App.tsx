@@ -8,9 +8,9 @@ import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5NmYzMjcyMS02OTdkLTRlOTItODEzYi1lYzhmYjFiNzkzM2MifQ.0OiZ8H9cempSqKo1Q-IC5CVAjcvUgNbdin2oHosbr60";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5MWMyZDUxOS0zZDgwLTQwODYtYjMyMS03ZmM1MDNmZDYyMGYiLCJ3aXNobGlzdElkIjoiMGQ1NDM2NjEtMDA0OS00MDY1LTlkZWYtYWY3NTY3MjdiMTJkIn0.-lqUW_tQUd9KzmWHV0hygcGsxOuabK8UkfNciEEmAXQ";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -52,6 +52,7 @@ function App() {
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
     getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,

@@ -2,7 +2,7 @@ import React from "react";
 import { PayPalMessages } from "@paypal/react-paypal-js";
 import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
 
-import { usePayment } from "../../app/usePayment";
+import { useSettings } from "../../app/useSettings";
 
 type Layout = "text" | "flex" | "custom";
 type LogoType = "primary" | "alternative" | "inline" | "none";
@@ -15,7 +15,7 @@ type FlexRatio = "1x1" | "1x4" | "8x1" | "20x1";
 export const PayPalMessagesMask: React.FC<PayPalMessagesComponentProps> = (
   props
 ) => {
-  const { settings } = usePayment();
+  const { settings } = useSettings();
 
   if (!settings) return <></>;
 

@@ -3,6 +3,7 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 import { NotificationsProvider } from "../../app/useNotifications";
 import { PaymentProvider } from "../../app/usePayment";
+import { SettingsProvider } from "../../app/useSettings";
 import { LoaderProvider } from "../../app/useLoader";
 import { RenderPurchase } from "../RenderPurchase";
 
@@ -20,6 +21,7 @@ export const RenderTemplate: FC<
   getClientTokenUrl,
   createOrderUrl,
   onApproveUrl,
+  authorizeOrderUrl,
 
   shippingMethodId,
   cartInformation,
@@ -27,7 +29,11 @@ export const RenderTemplate: FC<
   children,
 }) => {
   return (
-    <PayPalScriptProvider options={options}>
+    <SettingsProvider
+      options={options}
+      getSettingsUrl={getSettingsUrl}
+      requestHeader={requestHeader}
+    >
       <NotificationsProvider>
         <LoaderProvider>
           <PaymentProvider
@@ -41,11 +47,12 @@ export const RenderTemplate: FC<
             shippingMethodId={shippingMethodId}
             cartInformation={cartInformation}
             purchaseCallback={purchaseCallback}
+            authorizeOrderUrl={authorizeOrderUrl}
           >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>
         </LoaderProvider>
       </NotificationsProvider>
-    </PayPalScriptProvider>
+    </SettingsProvider>
   );
 };

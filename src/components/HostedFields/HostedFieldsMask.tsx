@@ -7,11 +7,8 @@ import {
   usePayPalHostedFields,
 } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
-import {
-  CustomOnApproveData,
-  HostedFieldsProps,
-  HostedFieldsThreeDSAuth,
-} from "../../types";
+import { useSettings } from "../../app/useSettings";
+import { CustomOnApproveData, HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
@@ -32,7 +29,8 @@ const SubmitPayment = () => {
     border: "1px solid #606060",
     boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
   };
-  const { handleOnApprove, settings } = usePayment();
+  const { handleOnApprove } = usePayment();
+  const { settings } = useSettings();
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
   const [paying, setPaying] = useState(false);

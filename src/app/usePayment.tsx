@@ -13,19 +13,15 @@ import {
   CartInformationInitial,
   CreatePaymentResponse,
   RequestHeader,
-  GetSettingsResponse,
   ClientTokenResponse,
   CustomOnApproveData,
+  OnApproveResponse,
 } from "../types";
-import {
-  createPayment,
-  getSettings,
-  createOrder,
-  onApprove,
-} from "../services";
+import { createPayment, createOrder, onApprove } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
+import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
 
 const PaymentInfoInitialObject = {
@@ -46,7 +42,6 @@ type PaymentContextT = {
   requestHeader: RequestHeader;
   handleCreatePayment: () => void;
   clientToken: string;
-  settings?: GetSettingsResponse;
   handleCreateOrder: () => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
 };
@@ -57,7 +52,6 @@ const PaymentContext = createContext<PaymentContextT>({
   requestHeader: {},
   handleCreatePayment: () => {},
   clientToken: "",
-  settings: {},
   handleCreateOrder: () => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
 });
@@ -69,9 +63,9 @@ export const PaymentProvider: FC<
   purchaseCallback,
 
   createPaymentUrl,
-  getSettingsUrl,
   createOrderUrl,
   onApproveUrl,
+  authorizeOrderUrl,
 
   getClientTokenUrl,
   requestHeader,
@@ -83,10 +77,11 @@ export const PaymentProvider: FC<
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
 
+  const { settings } = useSettings();
+
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
   );
-  const [settings, setSettings] = useState<GetSettingsResponse>();
 
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
@@ -125,41 +120,37 @@ export const PaymentProvider: FC<
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
-      if (!onApproveUrl) return;
+      if (!onApproveUrl && !authorizeOrderUrl) return;
+
       const orderID = data.orderID;
+
+      const onAuthorizeOrderUrl =
+        settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;
 
       const onApproveResult = await onApprove(
         requestHeader,
-        onApproveUrl,
+        onAuthorizeOrderUrl ?? onApproveUrl,
         paymentInfo.id,
         latestPaymentVersion,
         orderID
       );
 
-      if (
-        onApproveResult &&
-        onApproveResult.captureOrderData.status === "COMPLETED"
-      ) {
+      const { orderData } = onApproveResult as OnApproveResponse;
+      if (orderData.status === "COMPLETED") {
         setShowResult(true);
         setResultSuccess(true);
         purchaseCallback(onApproveResult);
       } else {
         setShowResult(true);
         setResultSuccess(false);
+        if (orderData) {
+          setResultMessage(orderData.message);
+        }
       }
     };
 
     const handleCreatePayment = async () => {
       isLoading(true);
-
-      if (getSettingsUrl) {
-        const getSettingsResult = (await getSettings(
-          requestHeader,
-          getSettingsUrl
-        )) as GetSettingsResponse;
-
-        setSettings(getSettingsResult);
-      }
 
       if (createPaymentUrl && cartInformation) {
         const createPaymentResult = (await createPayment(
@@ -210,22 +201,20 @@ export const PaymentProvider: FC<
       paymentInfo,
       handleCreatePayment,
       clientToken,
-      settings,
       handleOnApprove,
       handleCreateOrder,
     };
   }, [
     paymentInfo,
-    settings,
     cartInformation,
     createOrderUrl,
     createPaymentUrl,
-    getSettingsUrl,
     isLoading,
     onApproveUrl,
     requestHeader,
     shippingMethodId,
     notify,
+    settings,
   ]);
 
   return (

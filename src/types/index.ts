@@ -21,7 +21,7 @@ export type OnApproveRequest = {
 };
 
 export type OnApproveResponse = {
-  captureOrderData: { id: string; status: string };
+  orderData: { id: string; status: string; message?: string };
   paymentVersion: number;
 };
 
@@ -40,6 +40,7 @@ export type GeneralComponentsProps = {
   getSettingsUrl: string;
   createOrderUrl: string;
   onApproveUrl: string;
+  authorizeOrderUrl?: string;
 
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;
@@ -172,4 +173,10 @@ export type CustomOnApproveData = {
   paymentID?: string | null;
   subscriptionID?: string | null;
   authCode?: string | null;
+};
+
+export type SettingsProviderProps = {
+  getSettingsUrl: string;
+  requestHeader: RequestHeader;
+  options: ReactPayPalScriptOptions;
 };
