@@ -4,7 +4,11 @@ import { params, options, requestHeader } from "./constants";
 export default {
   title: "Components/HostedFields",
   component: HostedFields,
-  argTypes: {},
+  argTypes: {
+    authorizeOrderUrl: {
+      table: { disable: true },
+    },
+  },
 };
 
 export const Main = {

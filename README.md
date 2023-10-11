@@ -26,6 +26,11 @@ Each payment component takes a set of props that will be the same for everything
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to capture a PayPal order in commerce tools. Communicates with CommerceTools backend  
   See the examples in our [CoFe integration example repository]()
+- **authorizeOrderUrl**: `string`  
+  _POST_-Request - we get a [_OnApproveResponse_](src/types/index.ts)  
+  It is **your** responsibility to develop this API  
+  The url that gets called to the endpoint of the connect app to authorize a PayPal order in commerce tools. Communicates with CommerceTools backend  
+  See the examples in our [CoFe integration example repository]()
 - **cartInformation**: `object`  
   Information about the customers cart to crate payments with.
   Structure:
@@ -65,6 +70,9 @@ Each payment component takes a set of props that will be the same for everything
   "Commercetools-Frontend-Extension-Version": string;
   ```
 
+- **shippingMethodId**: `string`  
+  The id of the selected shipping. It will be sent back in the create purchase call to calculate the correct shipping costs.
+
 - **options**: `object`
   options will pass to PayPalScriptProvider component and you can see the structure on PayPal documentation. [_ReactPayPalScriptOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/types/scriptProviderTypes.ts).
 
@@ -82,3 +90,11 @@ PayPal components props are based on PayPal props and you can see them on PayPal
 ### PayPalMessages
 
 PayPal messages props are based on PayPalMessages props and you can see them on PayPal official documentation [_PayPalMessagesComponentOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/components/PayPalMessages.tsx).
+
+### HostedFields
+
+- **getClientTokenUrl**: `string`  
+  _POST_-Request - we get a [_ClientTokenResponse_](src/types/index.ts)  
+  It is **your** responsibility to develop this API  
+  The URL that gets called to the endpoint of the connect app to get the client token to use in PayPalHostedFieldsProvider component in commerce tools. Communicates with CommerceTools backend  
+  See the examples in our [CoFe integration example repository]()

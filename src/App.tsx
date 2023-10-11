@@ -10,7 +10,7 @@ import { HostedFields } from "./components/HostedFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5MWMyZDUxOS0zZDgwLTQwODYtYjMyMS03ZmM1MDNmZDYyMGYiLCJ3aXNobGlzdElkIjoiMGQ1NDM2NjEtMDA0OS00MDY1LTlkZWYtYWY3NTY3MjdiMTJkIn0.-lqUW_tQUd9KzmWHV0hygcGsxOuabK8UkfNciEEmAXQ";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiOWIzZGY0M2UtNjc4MC00Yzk1LWJkNjktYmIyYWZhNDMxOGE4IiwiY2FydElkIjoiNWQ4Y2YyZDgtYzAwMC00MDI4LWI0NTUtNDcyNDIwNTJlMzVhIn0.dfUq-ZvWNEUaJny40BJbXv9fK25CK90sYQCqHkXX3sw";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
