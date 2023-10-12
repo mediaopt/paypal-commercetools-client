@@ -10,7 +10,7 @@ import { HostedFields } from "./components/HostedFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJiN2Q5ZTViNi02ZTRmLTQzODQtYjk4MS03M2FlNGU4ZmMyNzIifQ.w_J8wBLsFmXoKRzS4OQV-DhAILC9Fy5MRpElc3TegVM";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiODg4OWQ4ZTYtNTcxOC00OTdjLWI3ZDgtYjBkYmM0OWIxNDkwIiwiY2FydElkIjoiMjJjOTVlYWItN2MyYy00ZjJmLTgxNDMtMzVlNzNhM2JmYTYwIn0.CbsE3rxtmU5qrDgoD3-6CKUo7on6k5jswpDmywNBZVo";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -24,18 +24,18 @@ function App() {
       lastName: "Smith",
       streetName: "Hochstraße",
       streetNumber: "37",
-      city: "New York",
-      country: "US",
-      postalCode: "NY 11375",
+      city: "Berlin",
+      country: "DE",
+      postalCode: "12045",
     },
     shipping: {
       firstName: "John",
       lastName: "Smith",
       streetName: "Hochstraße",
       streetNumber: "37",
-      city: "New York",
-      country: "US",
-      postalCode: "NY 11375",
+      city: "Berlin",
+      country: "DE",
+      postalCode: "12045",
     },
   };
 
@@ -63,8 +63,8 @@ function App() {
 
   const options = {
     clientId:
-      "AaZY2PZLwQQl8XI_p9UJyH50Xo_xuLrtD3og6kVrQ2oKVQg4UriIcAHoJPa1hsaI56lNk3Jg6kqTdCYi",
-    currency: "USD",
+      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
+    currency: "EUR",
   };
 
   const payPalMessagesParams: PayPalMessagesComponentProps = {
