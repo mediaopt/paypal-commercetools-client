@@ -10,7 +10,7 @@ import { HostedFields } from "./components/HostedFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5MWMyZDUxOS0zZDgwLTQwODYtYjMyMS03ZmM1MDNmZDYyMGYiLCJ3aXNobGlzdElkIjoiMGQ1NDM2NjEtMDA0OS00MDY1LTlkZWYtYWY3NTY3MjdiMTJkIn0.-lqUW_tQUd9KzmWHV0hygcGsxOuabK8UkfNciEEmAXQ";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJiN2Q5ZTViNi02ZTRmLTQzODQtYjk4MS03M2FlNGU4ZmMyNzIifQ.w_J8wBLsFmXoKRzS4OQV-DhAILC9Fy5MRpElc3TegVM";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -24,18 +24,18 @@ function App() {
       lastName: "Smith",
       streetName: "Hochstraße",
       streetNumber: "37",
-      city: "Berlin",
-      country: "DE",
-      postalCode: "12045",
+      city: "New York",
+      country: "US",
+      postalCode: "NY 11375",
     },
     shipping: {
       firstName: "John",
       lastName: "Smith",
       streetName: "Hochstraße",
       streetNumber: "37",
-      city: "Berlin",
-      country: "DE",
-      postalCode: "12045",
+      city: "New York",
+      country: "US",
+      postalCode: "NY 11375",
     },
   };
 
@@ -63,8 +63,8 @@ function App() {
 
   const options = {
     clientId:
-      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
-    currency: "EUR",
+      "AaZY2PZLwQQl8XI_p9UJyH50Xo_xuLrtD3og6kVrQ2oKVQg4UriIcAHoJPa1hsaI56lNk3Jg6kqTdCYi",
+    currency: "USD",
   };
 
   const payPalMessagesParams: PayPalMessagesComponentProps = {
@@ -93,6 +93,19 @@ function App() {
         requestHeader={requestHeader}
         options={options}
         fundingSource="paypal"
+      />
+    ),
+    Venmo: (
+      <PayPal
+        {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "messages,buttons",
+          buyerCountry: "US",
+          enableFunding: "venmo",
+        }}
+        fundingSource="venmo"
       />
     ),
     BuyNowPayPal: (
