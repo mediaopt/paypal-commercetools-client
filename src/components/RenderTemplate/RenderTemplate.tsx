@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 import { NotificationsProvider } from "../../app/useNotifications";
 import { PaymentProvider } from "../../app/usePayment";

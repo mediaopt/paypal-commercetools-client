@@ -36,6 +36,9 @@ export default {
       ],
       control: { type: "select" },
     },
+    getClientTokenUrl: {
+      table: { disable: true },
+    },
   },
 };
 

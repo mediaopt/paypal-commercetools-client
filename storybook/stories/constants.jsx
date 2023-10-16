@@ -30,7 +30,7 @@ export const options = {
 
 export const requestHeader = {
   "Frontastic-Session":
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIwYzkwZjliMC0yODVhLTQwMDQtOWIwYS0yYzI2ZGE4ZjExNzQifQ.mJIK2xLEt-vaF78zk2N341csfVjCe_8QC_2BaBqn6bU",
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiOWIzZGY0M2UtNjc4MC00Yzk1LWJkNjktYmIyYWZhNDMxOGE4IiwiY2FydElkIjoiNWQ4Y2YyZDgtYzAwMC00MDI4LWI0NTUtNDcyNDIwNTJlMzVhIn0.dfUq-ZvWNEUaJny40BJbXv9fK25CK90sYQCqHkXX3sw",
   "Commercetools-Frontend-Extension-Version": "devmajidabbasi",
 };
 
@@ -42,7 +42,7 @@ export const params = {
   createOrderUrl: `${baseUrl}payment/createPayPalOrder`,
   getClientTokenUrl: `${baseUrl}payment/getClientToken`,
   onApproveUrl: `${baseUrl}payment/capturePayPalOrder`,
-
+  authorizeOrderUrl: `${baseUrl}payment/authorizePayPalOrder`,
   shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
   cartInformation: cartInformation,
   purchaseCallback: (result, options) => {
