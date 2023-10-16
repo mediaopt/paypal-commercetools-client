@@ -8,6 +8,9 @@ export default {
     fundingSource: {
       table: { disable: true },
     },
+    getClientTokenUrl: {
+      table: { disable: true },
+    },
   },
 };
 
