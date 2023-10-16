@@ -95,6 +95,19 @@ function App() {
         fundingSource="paypal"
       />
     ),
+    Venmo: (
+      <PayPal
+        {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "messages,buttons",
+          buyerCountry: "US",
+          enableFunding: "venmo",
+        }}
+        fundingSource="venmo"
+      />
+    ),
     BuyNowPayPal: (
       <PayPal
         {...params}
