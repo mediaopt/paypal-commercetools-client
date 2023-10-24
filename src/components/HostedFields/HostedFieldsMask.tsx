@@ -119,14 +119,19 @@ const SubmitPayment = () => {
 
 export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
   const { handleCreateOrder } = usePayment();
+  const { settings } = useSettings();
   const { clientToken } = usePayment();
-  return (
+
+  return !settings ? (
+    <></>
+  ) : (
     <PayPalScriptProvider
       options={{
         clientId: options.clientId,
         dataClientToken: clientToken,
         components: options.components,
         vault: options.vault,
+        dataPartnerAttributionId: settings.partnerAttributionId as string,
       }}
     >
       <PayPalHostedFieldsProvider

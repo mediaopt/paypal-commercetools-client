@@ -57,6 +57,7 @@ export const SettingsProvider: FC<
           options={{
             ...options,
             intent: settings.payPalIntent.toString().toLowerCase(),
+            dataPartnerAttributionId: settings.partnerAttributionId as string,
           }}
         >
           {children}
