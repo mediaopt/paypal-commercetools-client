@@ -7,6 +7,8 @@ import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
+import { PayUponInvoice } from "./components/PayUponInvoice/PayUponInvoice";
+import { v4 as uuidv4 } from "uuid";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
@@ -153,6 +155,12 @@ function App() {
           components: "hosted-fields,buttons",
           vault: false,
         }}
+      />
+    ),
+    PayUponInvoice: (
+      <PayUponInvoice
+        fraudnetSessionId={uuidv4().substring(0, 32)} //check if this should e replaced with cartID or order Id
+        merchantId="W3KJAHBNV5BS6" //merchant ID should move to env variables
       />
     ),
   };
