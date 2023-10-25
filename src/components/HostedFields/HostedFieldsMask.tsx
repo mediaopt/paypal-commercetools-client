@@ -131,7 +131,9 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
         dataClientToken: clientToken,
         components: options.components,
         vault: options.vault,
-        dataPartnerAttributionId: settings.partnerAttributionId as string,
+        dataPartnerAttributionId: settings.partnerAttributionId
+          ? (settings.partnerAttributionId as string)
+          : "",
       }}
     >
       <PayPalHostedFieldsProvider
