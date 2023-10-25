@@ -40,7 +40,9 @@ export const PayUponInvoice: FC<{
     );
     document.body.appendChild(fraudNetConfigScipt);
     loadScript(fraudnetUrl).then((res) => {
-      setScriptsLoaded(true);
+      res
+        ? setScriptsLoaded(true)
+        : console.log("something goes wrong with fraudNet");
     });
   }, []);
   return scriptsLoaded ? <>All fine</> : <>Something wrong</>;
