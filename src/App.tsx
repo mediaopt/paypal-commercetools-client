@@ -8,12 +8,10 @@ import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PayUponInvoice } from "./components/PayUponInvoice/PayUponInvoice";
-import { v4 as uuidv4 } from "uuid";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiOWIzZGY0M2UtNjc4MC00Yzk1LWJkNjktYmIyYWZhNDMxOGE4IiwiY2FydElkIjoiNWQ4Y2YyZDgtYzAwMC00MDI4LWI0NTUtNDcyNDIwNTJlMzVhIn0.dfUq-ZvWNEUaJny40BJbXv9fK25CK90sYQCqHkXX3sw";
-
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiYmU5MGJjYWItZGZiYi00MzJkLTkwOGUtN2JlMzI4YTk5NGE0In0.6ReqB2MAPhY1IyJmCZ5DNw_ujbT5pDz0b8TEodBp7yI";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -159,8 +157,10 @@ function App() {
     ),
     PayUponInvoice: (
       <PayUponInvoice
-        fraudnetSessionId={uuidv4().substring(0, 32)} //check if this should e replaced with cartID or order Id
-        merchantId="W3KJAHBNV5BS6" //merchant ID should move to env variables
+        options={options}
+        requestHeader={requestHeader}
+        {...params}
+        invoiceBenefitsNote="Once you place an order pay within 30 days. Our partner Ratepay will send you the instructions."
       />
     ),
   };

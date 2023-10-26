@@ -80,7 +80,7 @@ export const PaymentProvider: FC<
   const { settings } = useSettings();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
-    PaymentInfoInitialObject
+    PaymentInfoInitialObject,
   );
 
   const { isLoading } = useLoader();
@@ -108,7 +108,7 @@ export const PaymentProvider: FC<
         requestHeader,
         createOrderUrl,
         paymentInfo.id,
-        paymentInfo.version
+        paymentInfo.version,
       );
 
       if (createOrderResult) {
@@ -118,6 +118,24 @@ export const PaymentProvider: FC<
         return orderData.id;
       } else return "";
     };
+
+    // const handleCreateInvoice = async (fraudNetId:string, phone:string, birthDate:string) => {
+    //   if (!createOrderUrl) return "";
+    //
+    //   const createOrderResult = await createOrder(
+    //       requestHeader,
+    //       createOrderUrl,
+    //       paymentInfo.id,
+    //       paymentInfo.version
+    //   );
+    //
+    //   if (createOrderResult) {
+    //     const { orderData, paymentVersion } = createOrderResult;
+    //     latestPaymentVersion = paymentVersion;
+    //
+    //     return orderData.id;
+    //   } else return "";
+    // };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
@@ -132,7 +150,7 @@ export const PaymentProvider: FC<
         onAuthorizeOrderUrl ?? onApproveUrl,
         paymentInfo.id,
         latestPaymentVersion,
-        orderID
+        orderID,
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;
@@ -157,7 +175,7 @@ export const PaymentProvider: FC<
           requestHeader,
           createPaymentUrl,
           cartInformation,
-          shippingMethodId
+          shippingMethodId,
         )) as CreatePaymentResponse;
 
         if (!createPaymentResult) {
@@ -173,7 +191,7 @@ export const PaymentProvider: FC<
             getClientTokenUrl,
             createPaymentResult.id,
             createPaymentResult.version,
-            createPaymentResult.braintreeCustomerId
+            createPaymentResult.braintreeCustomerId,
           )) as ClientTokenResponse;
           setClientToken(clientTokenResult.clientToken);
           paymentVersion = clientTokenResult.paymentVersion;
