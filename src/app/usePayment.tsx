@@ -16,6 +16,7 @@ import {
   ClientTokenResponse,
   CustomOnApproveData,
   OnApproveResponse,
+  CreateOrderData,
 } from "../types";
 import { createPayment, createOrder, onApprove } from "../services";
 
@@ -42,7 +43,7 @@ type PaymentContextT = {
   requestHeader: RequestHeader;
   handleCreatePayment: () => void;
   clientToken: string;
-  handleCreateOrder: () => Promise<string>;
+  handleCreateOrder: (orderData?: CreateOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
 };
 
@@ -52,7 +53,7 @@ const PaymentContext = createContext<PaymentContextT>({
   requestHeader: {},
   handleCreatePayment: () => {},
   clientToken: "",
-  handleCreateOrder: () => Promise.resolve(""),
+  handleCreateOrder: (orderData?: CreateOrderData) => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
 });
 
@@ -101,14 +102,15 @@ export const PaymentProvider: FC<
       setResultMessage("Test success successful");
     };
 
-    const handleCreateOrder = async () => {
+    const handleCreateOrder = async (orderData?: CreateOrderData) => {
       if (!createOrderUrl) return "";
 
       const createOrderResult = await createOrder(
         requestHeader,
         createOrderUrl,
         paymentInfo.id,
-        paymentInfo.version
+        paymentInfo.version,
+        orderData
       );
 
       if (createOrderResult) {
