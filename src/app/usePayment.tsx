@@ -122,9 +122,10 @@ export const PaymentProvider: FC<
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
+      console.log(data);
       if (!onApproveUrl && !authorizeOrderUrl) return;
 
-      const orderID = data.orderID;
+      const { orderID, saveCard } = data;
 
       const onAuthorizeOrderUrl =
         settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;
@@ -134,7 +135,8 @@ export const PaymentProvider: FC<
         onAuthorizeOrderUrl ?? onApproveUrl,
         paymentInfo.id,
         latestPaymentVersion,
-        orderID
+        orderID,
+        saveCard
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;

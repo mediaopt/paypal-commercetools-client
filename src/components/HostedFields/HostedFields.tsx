@@ -16,9 +16,8 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
   createOrderUrl,
   onApproveUrl,
   purchaseCallback,
-  ...restProps
+  enableVaulting,
 }) => {
-  const buttonProps = restProps ?? undefined;
   return (
     <RenderTemplate
       options={options}
@@ -32,7 +31,7 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
       onApproveUrl={onApproveUrl}
       purchaseCallback={purchaseCallback}
     >
-      <HostedFieldsButton options={options} />
+      <HostedFieldsButton options={options} enableVaulting={enableVaulting} />
     </RenderTemplate>
   );
 };

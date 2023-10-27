@@ -10,7 +10,7 @@ import { HostedFields } from "./components/HostedFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJkYmQ4MGE4OS1kYjg2LTQwMzYtYjU2Yy0wMDgyYjEwMGM4MDgiLCJ3aXNobGlzdElkIjoiYWEwMDA1ZmUtZTQ3Mi00ZGFjLTgwNjYtMmRjNDE5ZGFkODZhIiwiYWNjb3VudCI6eyJhY2NvdW50SWQiOiJmMjJhNGZlMy1jMmI4LTQ4MDEtODIwOC00MTRkMjA2MjBlMGIiLCJlbWFpbCI6Im1hamlkLmFiYmFzaUBtZWRpYW9wdC5kZSIsInNhbHV0YXRpb24iOiIiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwiYmlydGhkYXkiOiIxOTg5LTAzLTA1VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W119fQ.A7ubUDKkMRFQZ7xQQHPRrT8jbUmJxtK5ZYXNQiMY6zg";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJiNjQxODBhMS1mZDI1LTQzOWEtYTFjZC1hYzIzODU4ZDJkMzMiLCJ3aXNobGlzdElkIjoiNmVkZTJhMmEtODgzNy00ZDliLTk4OGItYzUzZDAwOWExM2M0In0.FbdGxymEWJCdppcdNSSF9pHVblZ-wwoPW5ZQKno7Hpo";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -63,6 +63,7 @@ function App() {
 
   const vaultParams = {
     getUserIdTokenUrl: `${ENDPOINT_URL}/payment/getUserIdToken`,
+    enableVaulting: true,
   };
 
   const options = {
@@ -161,6 +162,18 @@ function App() {
       <HostedFields
         requestHeader={requestHeader}
         {...params}
+        options={{
+          ...options,
+          components: "hosted-fields,buttons",
+          vault: false,
+        }}
+      />
+    ),
+    HostedFieldsVault: (
+      <HostedFields
+        requestHeader={requestHeader}
+        {...params}
+        {...vaultParams}
         options={{
           ...options,
           components: "hosted-fields,buttons",

@@ -24,6 +24,7 @@ export type OnApproveRequest = {
   paymentId: string;
   paymentVersion: number;
   orderID: string;
+  saveCard?: boolean;
 };
 
 export type OnApproveResponse = {
@@ -52,6 +53,7 @@ export type GeneralComponentsProps = {
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;
   getClientTokenUrl?: string;
+  enableVaulting?: boolean;
 } & CartInformationProps;
 
 export type HostedFieldsThreeDSAuth = {
@@ -60,6 +62,7 @@ export type HostedFieldsThreeDSAuth = {
 
 export type HostedFieldsProps = {
   options: ReactPayPalScriptOptions;
+  enableVaulting?: boolean;
 };
 
 export type HostedFieldsSmartComponentProps = SmartComponentsProps &
@@ -184,6 +187,7 @@ export type CustomOnApproveData = {
   paymentID?: string | null;
   subscriptionID?: string | null;
   authCode?: string | null;
+  saveCard?: boolean;
 };
 
 export type SettingsProviderProps = {
