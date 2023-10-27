@@ -10,7 +10,7 @@ import { HostedFields } from "./components/HostedFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiOWIzZGY0M2UtNjc4MC00Yzk1LWJkNjktYmIyYWZhNDMxOGE4IiwiY2FydElkIjoiNWQ4Y2YyZDgtYzAwMC00MDI4LWI0NTUtNDcyNDIwNTJlMzVhIn0.dfUq-ZvWNEUaJny40BJbXv9fK25CK90sYQCqHkXX3sw";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJkYmQ4MGE4OS1kYjg2LTQwMzYtYjU2Yy0wMDgyYjEwMGM4MDgiLCJ3aXNobGlzdElkIjoiYWEwMDA1ZmUtZTQ3Mi00ZGFjLTgwNjYtMmRjNDE5ZGFkODZhIiwiYWNjb3VudCI6eyJhY2NvdW50SWQiOiJmMjJhNGZlMy1jMmI4LTQ4MDEtODIwOC00MTRkMjA2MjBlMGIiLCJlbWFpbCI6Im1hamlkLmFiYmFzaUBtZWRpYW9wdC5kZSIsInNhbHV0YXRpb24iOiIiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwiYmlydGhkYXkiOiIxOTg5LTAzLTA1VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W119fQ.A7ubUDKkMRFQZ7xQQHPRrT8jbUmJxtK5ZYXNQiMY6zg";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -61,6 +61,10 @@ function App() {
     },
   };
 
+  const vaultParams = {
+    getUserIdTokenUrl: `${ENDPOINT_URL}/payment/getUserIdToken`,
+  };
+
   const options = {
     clientId:
       "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
@@ -90,6 +94,15 @@ function App() {
     PayPal: (
       <PayPal
         {...params}
+        requestHeader={requestHeader}
+        options={options}
+        fundingSource="paypal"
+      />
+    ),
+    PayPalVault: (
+      <PayPal
+        {...params}
+        {...vaultParams}
         requestHeader={requestHeader}
         options={options}
         fundingSource="paypal"

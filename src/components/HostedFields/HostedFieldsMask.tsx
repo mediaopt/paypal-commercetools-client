@@ -110,6 +110,9 @@ const SubmitPayment = () => {
           placeholder="Full name"
         />
       </label>
+      <label>
+        <input type="checkbox" id="save" name="save" />
+      </label>
       <button className={HOSTED_FIELDS_BUTTON} onClick={handleClick}>
         Pay
       </button>

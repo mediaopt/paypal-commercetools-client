@@ -41,6 +41,7 @@ export type GeneralComponentsProps = {
   createOrderUrl: string;
   onApproveUrl: string;
   authorizeOrderUrl?: string;
+  getUserIdTokenUrl?: string;
 
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;
@@ -154,6 +155,10 @@ export type ClientTokenResponse = {
   error?: string;
 };
 
+export type GetUserIdTokenResponse = {
+  userIdToken?: string;
+};
+
 export type ClientTokenRequest = {
   paymentId: string;
   paymentVersion: number;
@@ -177,6 +182,7 @@ export type CustomOnApproveData = {
 
 export type SettingsProviderProps = {
   getSettingsUrl: string;
+  getUserIdTokenUrl?: string;
   requestHeader: RequestHeader;
   options: ReactPayPalScriptOptions;
 };
