@@ -78,6 +78,9 @@ export const SettingsProvider: FC<
             ...options,
             intent: settings.payPalIntent.toString().toLowerCase(),
             dataUserIdToken: userIdToken,
+            dataPartnerAttributionId: settings.partnerAttributionId
+              ? (settings.partnerAttributionId as string)
+              : undefined,
           }}
         >
           {children}

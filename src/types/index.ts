@@ -3,10 +3,16 @@ import {
   ReactPayPalScriptOptions,
   PayPalMessagesComponentProps,
 } from "@paypal/react-paypal-js";
+import { FUNDING_SOURCE } from "@paypal/paypal-js/types/components/funding-eligibility";
 
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
+  orderData?: CreateOrderData;
+};
+
+export type CreateOrderData = {
+  paymentSource: FUNDING_SOURCE;
 };
 
 export type CreateOrderResponse = {
