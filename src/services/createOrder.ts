@@ -4,18 +4,21 @@ import {
   RequestHeader,
   CreateOrderRequest,
   CreateOrderResponse,
+  CreateOrderData,
 } from "../types";
 
 export const createOrder = async (
   requestHeader: RequestHeader,
   url: string,
   paymentId: string,
-  paymentVersion: number
+  paymentVersion: number,
+  orderData?: CreateOrderData
 ) => {
   try {
     const data: CreateOrderRequest = {
       paymentId,
       paymentVersion,
+      orderData,
     };
 
     return await makeRequest<CreateOrderResponse, CreateOrderRequest>(
