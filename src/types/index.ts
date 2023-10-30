@@ -58,6 +58,27 @@ export type HostedFieldsProps = {
 export type HostedFieldsSmartComponentProps = SmartComponentsProps &
   HostedFieldsThreeDSAuth;
 
+export type FraudnetPage =
+  | "home-page"
+  | "search-result-page"
+  | "category-page"
+  | "product-detail-page"
+  | "cart-page"
+  | "inline-cart-page"
+  | "checkout-page";
+
+export type PayUponInvoiceProps = {
+  merchantId: string;
+  pageId: FraudnetPage;
+  invoiceBenefitsMessage: string;
+};
+
+export type PayUponInvoiceButtonProps = {
+  fraudnetSessionId: string;
+  invoiceBenefitsMessage?: string;
+  purchaseCallback?: (result: any, options?: any) => void;
+};
+
 export type CustomPayPalButtonsComponentProps = Omit<
   PayPalButtonsComponentProps,
   | "createOrder"
