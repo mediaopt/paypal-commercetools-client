@@ -8,10 +8,12 @@ import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PayUponInvoice } from "./components/PayUponInvoice/PayUponInvoice";
+import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiYmU5MGJjYWItZGZiYi00MzJkLTkwOGUtN2JlMzI4YTk5NGE0In0.6ReqB2MAPhY1IyJmCZ5DNw_ujbT5pDz0b8TEodBp7yI";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiMTI1ZjU4ZWQtMzMxMS00OWY2LTllMTQtM2YwYWVhOGUwOWU1IiwiY2FydElkIjoiNjVlNTQ2NDAtNmRjZS00M2EzLWE2MjEtNDM2ZmZmZGQyYTJhIn0.w7aDxsGBmkrsAQEMlVIf3kx3_PFio0JLk5yY_IdD9Mo";
+
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -74,6 +76,13 @@ function App() {
       layout: "text",
     },
     placement: "product",
+  };
+
+  const paypalInvoiceParams: PayUponInvoiceProps = {
+    merchantId: "W3KJAHBNV5BS6",
+    pageId: "checkout-page",
+    invoiceBenefitsMessage:
+      "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
   };
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {
@@ -160,7 +169,7 @@ function App() {
         options={options}
         requestHeader={requestHeader}
         {...params}
-        invoiceBenefitsNote="Once you place an order pay within 30 days. Our partner Ratepay will send you the instructions."
+        {...paypalInvoiceParams}
       />
     ),
   };
