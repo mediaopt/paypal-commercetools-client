@@ -208,35 +208,25 @@ export const PayUponInvoice: FC<
   purchaseCallback,
   invoiceBenefitsNote,
 }) => {
-  const [scriptsLoaded, setScriptsLoaded] = useState(false);
+  const [fraudnetSessionId, setFraudnetSessionId] = useState<
+    string | undefined
+  >(undefined);
 
   const { notify } = useNotifications();
 
-  const fraudnetSessionId = uuidv4().substring(0, 32); //check if this should be replaced with cartID or order id
+  const onLoad = (sessionId: string) => {
+    if (sessionId) setFraudnetSessionId(sessionId);
+    else {
+      setFraudnetSessionId("");
+      notify("Warning", invoiceErrors["noFraudNet"]);
+    }
+  };
 
   useEffect(() => {
-    if (Boolean(document.querySelector('script[src="' + fraudnetUrl + '"]'))) {
-      setScriptsLoaded(true);
-      return;
-    }
-    const fraudNetConfigScipt = document.createElement("script");
-    fraudNetConfigScipt.setAttribute("fncls", fraudnetFncls);
-    fraudNetConfigScipt.type = "application/json";
-    fraudNetConfigScipt.text = JSON.stringify(
-      fraudnetParams(fraudnetSessionId),
-    );
-    document.body.appendChild(fraudNetConfigScipt);
-    loadScript(fraudnetUrl).then((res) => {
-      res
-        ? setScriptsLoaded(true)
-        : notify(
-            "Warning",
-            "Pay by invoice is currently not available due to FraudNet issues",
-          );
-    });
+    embeddFraudNet(merchantId, pageId, setFraudnetSessionId);
   }, []);
 
-  return scriptsLoaded ? (
+  return (
     <RenderTemplate
       options={options}
       createPaymentUrl={createPaymentUrl}
