@@ -12,17 +12,12 @@ import { CustomOnApproveData, HostedFieldsProps } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
+import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
 
 const CUSTOM_FIELD_STYLE = {
   border: "1px solid #606060",
   boxShadow: "2px 2px 10px 2px rgba(0,0,0,0.1)",
 };
-
-const HOSTED_FIELDS_CARD_FIELDS: string =
-  "w-full p-3 mt-1.5 mb-4 h-10 text-base bg-white text-neutral-700 border border-gray-300 rounded box-border resize-y";
-
-const HOSTED_FIELDS_BUTTON: string =
-  "float-right text-center whitespace-nowrap inline-block font-normal align-middle select-none cursor-pointer text-white text-base rounded py-1.5 px-3 bg-sky-500 border-sky-500";
 
 const SubmitPayment = () => {
   const customStyle = {
@@ -56,7 +51,7 @@ const SubmitPayment = () => {
     }
     const isFormInvalid =
       Object.values(hostedField.cardFields.getState().fields).some(
-        (field) => !field.isValid
+        (field) => !field.isValid,
       ) || !cardHolderName?.current?.value;
 
     if (isFormInvalid) {
@@ -104,13 +99,13 @@ const SubmitPayment = () => {
         <input
           id="card-holder"
           ref={cardHolderName}
-          className={HOSTED_FIELDS_CARD_FIELDS}
+          className={STYLED_PAYMENT_FIELDS}
           style={{ ...customStyle, outline: "none" }}
           type="text"
           placeholder="Full name"
         />
       </label>
-      <button className={HOSTED_FIELDS_BUTTON} onClick={handleClick}>
+      <button className={STYLED_PAYMENT_BUTTON} onClick={handleClick}>
         Pay
       </button>
     </>
@@ -143,7 +138,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={HOSTED_FIELDS_CARD_FIELDS}
+          className={STYLED_PAYMENT_FIELDS}
           style={CUSTOM_FIELD_STYLE}
           id="card-number"
           hostedFieldType="number"
@@ -157,7 +152,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={HOSTED_FIELDS_CARD_FIELDS}
+          className={STYLED_PAYMENT_FIELDS}
           style={CUSTOM_FIELD_STYLE}
           id="cvv"
           hostedFieldType="cvv"
@@ -168,7 +163,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={HOSTED_FIELDS_CARD_FIELDS}
+          className={STYLED_PAYMENT_FIELDS}
           style={CUSTOM_FIELD_STYLE}
           id="expiration-date"
           hostedFieldType="expirationDate"
