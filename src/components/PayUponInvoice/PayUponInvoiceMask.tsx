@@ -65,7 +65,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
       />
       {InvoiceLegalNote}
       <button className={STYLED_PAYMENT_BUTTON} type="submit">
-        Buy now
+        Pay
       </button>
     </form>
   );
