@@ -31,7 +31,7 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
 
   const { notify } = useNotifications();
 
-  const onLoad = (sessionId: string) => {
+  const onLoad = (sessionId?: string) => {
     if (sessionId) setFraudNetSessionId(sessionId);
     else {
       setFraudNetSessionId("");
@@ -40,7 +40,7 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   };
 
   useEffect(() => {
-    embeddFraudNet(merchantId, pageId, setFraudNetSessionId);
+    embeddFraudNet(merchantId, pageId, onLoad);
   }, []);
 
   return (
