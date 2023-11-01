@@ -14,6 +14,16 @@ export type CreateOrderResponse = {
   paymentVersion: number;
 };
 
+export type createInvoiceRequest = CreateOrderRequest & {
+  clientMetadataId: string;
+  payment_source: {
+    pay_upon_invoice: {
+      birth_date: string;
+      phone: { national_number: string; country_code: string };
+    };
+  };
+};
+
 export type OnApproveRequest = {
   paymentId: string;
   paymentVersion: number;
@@ -194,6 +204,13 @@ export type CustomOnApproveData = {
   paymentID?: string | null;
   subscriptionID?: string | null;
   authCode?: string | null;
+};
+
+export type CustomInvoiceData = {
+  fraudnetSessionId: string;
+  nationalNumber: string;
+  countryCallingCode: string;
+  birthDate: string;
 };
 
 export type SettingsProviderProps = {
