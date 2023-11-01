@@ -16,6 +16,7 @@ import {
   ClientTokenResponse,
   CustomOnApproveData,
   OnApproveResponse,
+  CustomInvoiceData,
 } from "../types";
 import { createPayment, createOrder, onApprove } from "../services";
 
@@ -23,6 +24,7 @@ import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
+import { createPaypalInvoice } from "../services/createPaypalInvoice";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -44,6 +46,7 @@ type PaymentContextT = {
   clientToken: string;
   handleCreateOrder: () => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
+  handleCreateInvoice: (data: CustomInvoiceData) => Promise<string>;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -54,6 +57,7 @@ const PaymentContext = createContext<PaymentContextT>({
   clientToken: "",
   handleCreateOrder: () => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
+  handleCreateInvoice: () => Promise.resolve(""),
 });
 
 export const PaymentProvider: FC<
@@ -119,23 +123,41 @@ export const PaymentProvider: FC<
       } else return "";
     };
 
-    // const handleCreateInvoice = async (fraudNetId:string, phone:string, birthDate:string) => {
-    //   if (!createOrderUrl) return "";
-    //
-    //   const createOrderResult = await createOrder(
-    //       requestHeader,
-    //       createOrderUrl,
-    //       paymentInfo.id,
-    //       paymentInfo.version
-    //   );
-    //
-    //   if (createOrderResult) {
-    //     const { orderData, paymentVersion } = createOrderResult;
-    //     latestPaymentVersion = paymentVersion;
-    //
-    //     return orderData.id;
-    //   } else return "";
-    // };
+    const handleCreateInvoice = async (data: CustomInvoiceData) => {
+      if (!createOrderUrl) return "";
+      const {
+        fraudnetSessionId,
+        nationalNumber,
+        countryCallingCode,
+        birthDate,
+      } = data;
+
+      const createOrderResult = await createPaypalInvoice(
+        requestHeader,
+        createOrderUrl,
+        {
+          clientMetadataId: fraudnetSessionId,
+          payment_source: {
+            pay_upon_invoice: {
+              birth_date: birthDate,
+              phone: {
+                country_code: `+${countryCallingCode}`,
+                national_number: nationalNumber,
+              },
+            },
+          },
+          paymentId: paymentInfo.id,
+          paymentVersion: paymentInfo.version,
+        },
+      );
+
+      if (createOrderResult) {
+        const { orderData, paymentVersion } = createOrderResult;
+        latestPaymentVersion = paymentVersion;
+
+        return orderData.id;
+      } else return "";
+    };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
@@ -221,6 +243,7 @@ export const PaymentProvider: FC<
       clientToken,
       handleOnApprove,
       handleCreateOrder,
+      handleCreateInvoice,
     };
   }, [
     paymentInfo,
