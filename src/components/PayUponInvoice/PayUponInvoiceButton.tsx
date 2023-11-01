@@ -18,7 +18,6 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   purchaseCallback,
 }) => {
   const { paymentInfo } = usePayment();
-  console.log(paymentInfo);
   useHandleCreatePayment();
   const { settings } = useSettings();
 
