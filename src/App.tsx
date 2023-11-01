@@ -12,14 +12,13 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiMTI1ZjU4ZWQtMzMxMS00OWY2LTllMTQtM2YwYWVhOGUwOWU1IiwiY2FydElkIjoiNjVlNTQ2NDAtNmRjZS00M2EzLWE2MjEtNDM2ZmZmZGQyYTJhIn0.w7aDxsGBmkrsAQEMlVIf3kx3_PFio0JLk5yY_IdD9Mo";
-
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiMmU5YzJlYmMtNmNlYS00YmY1LTliZDMtYjZkNTYzZjZlMzdiIn0.tc5qvK4Cku4EwzUcZgf_lGhr5S3GrodNt--qV9s21UY";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
   const cartInformation = {
     account: {
-      email: "test@test.com",
+      email: "billing_address_invalid@example.com",
     },
     billing: {
       firstName: "John",
@@ -54,6 +53,7 @@ function App() {
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
     getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    createInvoiceUrl: `${ENDPOINT_URL}payment/createPayPalInvoice`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",

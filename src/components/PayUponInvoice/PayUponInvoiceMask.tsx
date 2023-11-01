@@ -17,11 +17,11 @@ const parsePhone = (phone: string) => {
 };
 
 export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
-  fraudnetSessionId,
+  fraudNetSessionId,
   invoiceBenefitsMessage,
   purchaseCallback,
 }) => {
-  useHandleGetClientToken(false);
+  //useHandleGetClientToken(false);
   const { handleCreateInvoice } = usePayment();
   const { notify } = useNotifications();
   const [phone, setPhone] = useState("+49 ");
@@ -43,9 +43,9 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
           const { countryCallingCode, nationalNumber } = actualPhone;
           if (countryCallingCode && nationalNumber) {
             const orderStatus = await handleCreateInvoice({
-              fraudnetSessionId,
+              fraudNetSessionId,
               nationalNumber,
-              countryCallingCode,
+              countryCode: countryCallingCode,
               birthDate,
             });
             if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);

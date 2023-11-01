@@ -13,11 +13,11 @@ const minPayableAmount = 5; //euro
 const maxPayableAmount = 2500; //euro
 
 export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
-  fraudnetSessionId,
+  fraudNetSessionId,
   invoiceBenefitsMessage,
   purchaseCallback,
 }) => {
-  const { paymentInfo } = usePayment();
+  const { paymentInfo, clientToken } = usePayment();
   useHandleCreatePayment();
   const { settings } = useSettings();
 
@@ -31,9 +31,9 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
 
   return invoiceError ? (
     <InvoiceError errorKind={invoiceError} />
-  ) : paymentInfo.id ? (
+  ) : paymentInfo.id && clientToken ? (
     <PayUponInvoiceMask
-      fraudnetSessionId={fraudnetSessionId}
+      fraudNetSessionId={fraudNetSessionId}
       invoiceBenefitsMessage={invoiceBenefitsMessage}
       purchaseCallback={purchaseCallback}
     />

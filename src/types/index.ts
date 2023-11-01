@@ -15,13 +15,10 @@ export type CreateOrderResponse = {
 };
 
 export type createInvoiceRequest = CreateOrderRequest & {
-  clientMetadataId: string;
-  payment_source: {
-    pay_upon_invoice: {
-      birth_date: string;
-      phone: { national_number: string; country_code: string };
-    };
-  };
+  fraudNetSessionId: string;
+  birthDate: string;
+  nationalNumber: string;
+  countryCode: string;
 };
 
 export type OnApproveRequest = {
@@ -49,12 +46,14 @@ export type GeneralComponentsProps = {
   createPaymentUrl: string;
   getSettingsUrl: string;
   createOrderUrl: string;
+
   onApproveUrl: string;
   authorizeOrderUrl?: string;
 
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;
   getClientTokenUrl?: string;
+  createInvoiceUrl?: string;
 } & CartInformationProps;
 
 export type HostedFieldsThreeDSAuth = {
@@ -84,7 +83,7 @@ export type PayUponInvoiceProps = {
 };
 
 export type PayUponInvoiceButtonProps = {
-  fraudnetSessionId: string;
+  fraudNetSessionId: string;
   invoiceBenefitsMessage?: string;
   purchaseCallback?: (result: any, options?: any) => void;
 };
@@ -207,9 +206,9 @@ export type CustomOnApproveData = {
 };
 
 export type CustomInvoiceData = {
-  fraudnetSessionId: string;
+  fraudNetSessionId: string;
   nationalNumber: string;
-  countryCallingCode: string;
+  countryCode: string;
   birthDate: string;
 };
 

@@ -15,6 +15,7 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   getSettingsUrl,
   getClientTokenUrl,
   createOrderUrl,
+  createInvoiceUrl,
   onApproveUrl,
   requestHeader,
   shippingMethodId,
@@ -24,22 +25,22 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   pageId,
   invoiceBenefitsMessage,
 }) => {
-  const [fraudnetSessionId, setFraudnetSessionId] = useState<
+  const [fraudNetSessionId, setFraudNetSessionId] = useState<
     string | undefined
   >(undefined);
 
   const { notify } = useNotifications();
 
   const onLoad = (sessionId: string) => {
-    if (sessionId) setFraudnetSessionId(sessionId);
+    if (sessionId) setFraudNetSessionId(sessionId);
     else {
-      setFraudnetSessionId("");
+      setFraudNetSessionId("");
       notify("Warning", invoiceErrors["noFraudNet"]);
     }
   };
 
   useEffect(() => {
-    embeddFraudNet(merchantId, pageId, setFraudnetSessionId);
+    embeddFraudNet(merchantId, pageId, setFraudNetSessionId);
   }, []);
 
   return (
@@ -48,6 +49,7 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
       createPaymentUrl={createPaymentUrl}
       getSettingsUrl={getSettingsUrl}
       createOrderUrl={createOrderUrl}
+      createInvoiceUrl={createInvoiceUrl}
       getClientTokenUrl={getClientTokenUrl}
       onApproveUrl={onApproveUrl}
       requestHeader={requestHeader}
@@ -55,9 +57,9 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
       cartInformation={cartInformation}
       purchaseCallback={purchaseCallback}
     >
-      {fraudnetSessionId ? (
+      {fraudNetSessionId ? (
         <PayUponInvoiceButton
-          fraudnetSessionId={fraudnetSessionId}
+          fraudNetSessionId={fraudNetSessionId}
           invoiceBenefitsMessage={invoiceBenefitsMessage}
           purchaseCallback={purchaseCallback}
         />

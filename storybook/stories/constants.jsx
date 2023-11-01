@@ -40,6 +40,7 @@ export const params = {
   createPaymentUrl: `${baseUrl}payment/createPayment`,
   getSettingsUrl: `${baseUrl}settings/getPayPalSettings`,
   createOrderUrl: `${baseUrl}payment/createPayPalOrder`,
+  createInvoiceUrl: `${baseUrl}payment/createPayPalInvoice`,
   getClientTokenUrl: `${baseUrl}payment/getClientToken`,
   onApproveUrl: `${baseUrl}payment/capturePayPalOrder`,
   authorizeOrderUrl: `${baseUrl}payment/authorizePayPalOrder`,

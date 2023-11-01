@@ -68,6 +68,7 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
+  createInvoiceUrl,
   onApproveUrl,
   authorizeOrderUrl,
 
@@ -124,28 +125,13 @@ export const PaymentProvider: FC<
     };
 
     const handleCreateInvoice = async (data: CustomInvoiceData) => {
-      if (!createOrderUrl) return "";
-      const {
-        fraudnetSessionId,
-        nationalNumber,
-        countryCallingCode,
-        birthDate,
-      } = data;
+      if (!createInvoiceUrl) return "";
 
       const createOrderResult = await createPaypalInvoice(
         requestHeader,
-        createOrderUrl,
+        createInvoiceUrl,
         {
-          clientMetadataId: fraudnetSessionId,
-          payment_source: {
-            pay_upon_invoice: {
-              birth_date: birthDate,
-              phone: {
-                country_code: `+${countryCallingCode}`,
-                national_number: nationalNumber,
-              },
-            },
-          },
+          ...data,
           paymentId: paymentInfo.id,
           paymentVersion: paymentInfo.version,
         },
