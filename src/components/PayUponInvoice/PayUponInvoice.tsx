@@ -35,7 +35,7 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
     if (sessionId) setFraudNetSessionId(sessionId);
     else {
       setFraudNetSessionId("");
-      notify("Warning", invoiceErrors["noFraudNet"]);
+      notify("Warning", invoiceErrors["thirdPartyIssue"]);
     }
   };
 

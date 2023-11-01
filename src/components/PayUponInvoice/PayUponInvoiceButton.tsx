@@ -27,6 +27,8 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
     ? "tooSmall"
     : paymentInfo.amount > maxPayableAmount
     ? "tooBig"
+    : paymentInfo.id && !clientToken
+    ? "thirdPartyIssue"
     : null;
 
   return invoiceError ? (
