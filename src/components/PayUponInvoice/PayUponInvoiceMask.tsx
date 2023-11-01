@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import parsePhoneNumber from "libphonenumber-js";
-import { useHandleGetClientToken } from "../../app/useHandleGetClientToken";
 import { usePayment } from "../../app/usePayment";
 import { useNotifications } from "../../app/useNotifications";
 import { InvoiceLegalNote } from "./InvoiceLegalNote";
@@ -21,7 +20,6 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
   invoiceBenefitsMessage,
   purchaseCallback,
 }) => {
-  //useHandleGetClientToken(false);
   const { handleCreateInvoice } = usePayment();
   const { notify } = useNotifications();
   const [phone, setPhone] = useState("+49 ");
