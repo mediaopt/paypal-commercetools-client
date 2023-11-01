@@ -16,6 +16,7 @@ import {
   ClientTokenResponse,
   CustomOnApproveData,
   OnApproveResponse,
+  CreateOrderData,
   CustomInvoiceData,
 } from "../types";
 import { createPayment, createOrder, onApprove } from "../services";
@@ -42,9 +43,9 @@ type PaymentContextT = {
   setSuccess: () => void;
   paymentInfo: PaymentInfo;
   requestHeader: RequestHeader;
-  handleCreatePayment: () => void;
+  handleCreatePayment: () => Promise<void>;
   clientToken: string;
-  handleCreateOrder: () => Promise<string>;
+  handleCreateOrder: (orderData?: CreateOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
   handleCreateInvoice: (data: CustomInvoiceData) => Promise<string>;
 };
@@ -53,9 +54,9 @@ const PaymentContext = createContext<PaymentContextT>({
   setSuccess: () => {},
   paymentInfo: PaymentInfoInitialObject,
   requestHeader: {},
-  handleCreatePayment: () => {},
+  handleCreatePayment: () => Promise.resolve(),
   clientToken: "",
-  handleCreateOrder: () => Promise.resolve(""),
+  handleCreateOrder: (orderData?: CreateOrderData) => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
   handleCreateInvoice: () => Promise.resolve(""),
 });
@@ -85,7 +86,7 @@ export const PaymentProvider: FC<
   const { settings } = useSettings();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
-    PaymentInfoInitialObject,
+    PaymentInfoInitialObject
   );
 
   const { isLoading } = useLoader();
@@ -106,7 +107,7 @@ export const PaymentProvider: FC<
       setResultMessage("Test success successful");
     };
 
-    const handleCreateOrder = async () => {
+    const handleCreateOrder = async (orderData?: CreateOrderData) => {
       if (!createOrderUrl) return "";
 
       const createOrderResult = await createOrder(
@@ -114,6 +115,7 @@ export const PaymentProvider: FC<
         createOrderUrl,
         paymentInfo.id,
         paymentInfo.version,
+        orderData
       );
 
       if (createOrderResult) {
@@ -124,26 +126,26 @@ export const PaymentProvider: FC<
       } else return "";
     };
 
-    const handleCreateInvoice = async (data: CustomInvoiceData) => {
-      if (!createInvoiceUrl) return "";
+      const handleCreateInvoice = async (data: CustomInvoiceData) => {
+          if (!createInvoiceUrl) return "";
 
-      const createOrderResult = await createPaypalInvoice(
-        requestHeader,
-        createInvoiceUrl,
-        {
-          ...data,
-          paymentId: paymentInfo.id,
-          paymentVersion: paymentInfo.version,
-        },
-      );
+          const createOrderResult = await createPaypalInvoice(
+              requestHeader,
+              createInvoiceUrl,
+              {
+                  ...data,
+                  paymentId: paymentInfo.id,
+                  paymentVersion: paymentInfo.version,
+              },
+          );
 
-      if (createOrderResult) {
-        const { orderData, paymentVersion } = createOrderResult;
-        latestPaymentVersion = paymentVersion;
+          if (createOrderResult) {
+              const { orderData, paymentVersion } = createOrderResult;
+              latestPaymentVersion = paymentVersion;
 
-        return orderData.id;
-      } else return "";
-    };
+              return orderData.id;
+          } else return "";
+      };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
@@ -158,7 +160,7 @@ export const PaymentProvider: FC<
         onAuthorizeOrderUrl ?? onApproveUrl,
         paymentInfo.id,
         latestPaymentVersion,
-        orderID,
+        orderID
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;
@@ -183,7 +185,7 @@ export const PaymentProvider: FC<
           requestHeader,
           createPaymentUrl,
           cartInformation,
-          shippingMethodId,
+          shippingMethodId
         )) as CreatePaymentResponse;
 
         if (!createPaymentResult) {
