@@ -86,7 +86,7 @@ export const PaymentProvider: FC<
   const { settings } = useSettings();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
-    PaymentInfoInitialObject
+    PaymentInfoInitialObject,
   );
 
   const { isLoading } = useLoader();
@@ -115,7 +115,7 @@ export const PaymentProvider: FC<
         createOrderUrl,
         paymentInfo.id,
         paymentInfo.version,
-        orderData
+        orderData,
       );
 
       if (createOrderResult) {
@@ -126,26 +126,26 @@ export const PaymentProvider: FC<
       } else return "";
     };
 
-      const handleCreateInvoice = async (data: CustomInvoiceData) => {
-          if (!createInvoiceUrl) return "";
+    const handleCreateInvoice = async (data: CustomInvoiceData) => {
+      if (!createOrderUrl) return "";
 
-          const createOrderResult = await createPaypalInvoice(
-              requestHeader,
-              createInvoiceUrl,
-              {
-                  ...data,
-                  paymentId: paymentInfo.id,
-                  paymentVersion: paymentInfo.version,
-              },
-          );
+      const createOrderResult = await createPaypalInvoice(
+        requestHeader,
+        createOrderUrl,
+        {
+          ...data,
+          paymentId: paymentInfo.id,
+          paymentVersion: paymentInfo.version,
+        },
+      );
 
-          if (createOrderResult) {
-              const { orderData, paymentVersion } = createOrderResult;
-              latestPaymentVersion = paymentVersion;
+      if (createOrderResult) {
+        const { orderData, paymentVersion } = createOrderResult;
+        latestPaymentVersion = paymentVersion;
 
-              return orderData.id;
-          } else return "";
-      };
+        return orderData.id;
+      } else return "";
+    };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
@@ -160,7 +160,7 @@ export const PaymentProvider: FC<
         onAuthorizeOrderUrl ?? onApproveUrl,
         paymentInfo.id,
         latestPaymentVersion,
-        orderID
+        orderID,
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;
@@ -185,7 +185,7 @@ export const PaymentProvider: FC<
           requestHeader,
           createPaymentUrl,
           cartInformation,
-          shippingMethodId
+          shippingMethodId,
         )) as CreatePaymentResponse;
 
         if (!createPaymentResult) {
