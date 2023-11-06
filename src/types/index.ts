@@ -216,6 +216,7 @@ export type GetSettingsResponse = {
     buttonLabel: "paypal" | "checkout" | "buynow" | "pay" | "installment";
   };
   hostedFieldsPayButtonClasses: string;
+  hostedFieldsInputFieldClasses: string;
 };
 
 export type CustomOnApproveData = {
