@@ -59,7 +59,6 @@ export type GeneralComponentsProps = {
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;
   getClientTokenUrl?: string;
-  createInvoiceUrl?: string;
 } & CartInformationProps;
 
 export type HostedFieldsThreeDSAuth = {

@@ -15,7 +15,6 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   getSettingsUrl,
   getClientTokenUrl,
   createOrderUrl,
-  createInvoiceUrl,
   onApproveUrl,
   requestHeader,
   shippingMethodId,
@@ -49,7 +48,6 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
       createPaymentUrl={createPaymentUrl}
       getSettingsUrl={getSettingsUrl}
       createOrderUrl={createOrderUrl}
-      createInvoiceUrl={createInvoiceUrl}
       getClientTokenUrl={getClientTokenUrl}
       onApproveUrl={onApproveUrl}
       requestHeader={requestHeader}

@@ -69,7 +69,6 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
-  createInvoiceUrl,
   onApproveUrl,
   authorizeOrderUrl,
 
