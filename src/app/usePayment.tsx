@@ -41,7 +41,7 @@ type PaymentContextT = {
   setSuccess: () => void;
   paymentInfo: PaymentInfo;
   requestHeader: RequestHeader;
-  handleCreatePayment: () => void;
+  handleCreatePayment: () => Promise<void>;
   clientToken: string;
   handleCreateOrder: (orderData?: CreateOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
@@ -51,7 +51,7 @@ const PaymentContext = createContext<PaymentContextT>({
   setSuccess: () => {},
   paymentInfo: PaymentInfoInitialObject,
   requestHeader: {},
-  handleCreatePayment: () => {},
+  handleCreatePayment: () => Promise.resolve(),
   clientToken: "",
   handleCreateOrder: (orderData?: CreateOrderData) => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
