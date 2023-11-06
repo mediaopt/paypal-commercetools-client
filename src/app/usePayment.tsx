@@ -122,7 +122,6 @@ export const PaymentProvider: FC<
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
-      console.log(data);
       if (!onApproveUrl && !authorizeOrderUrl) return;
 
       const { orderID, saveCard } = data;
