@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { PayPalButtons, PayPalMessages } from "@paypal/react-paypal-js";
 import { CustomPayPalButtonsComponentProps } from "../../types";
 
@@ -12,16 +12,18 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const { settings } = useSettings();
   const { paypalMessages, ...restprops } = props;
 
-  if (!settings) {
-    return <></>;
-  }
+  const style = useMemo(() => {
+    if (restprops.style || !settings) {
+      return restprops.style;
+    }
+    return {
+      color: settings.paypalButtonConfig.buttonColor,
+      label: settings.paypalButtonConfig.buttonLabel,
+      tagline: settings.buttonTagline,
+      shape: settings.buttonShape,
+    };
+  }, [settings, restprops]);
 
-  const style = {
-    color: settings.paypalButtonConfig.buttonColor,
-    label: settings.paypalButtonConfig.buttonLabel,
-    tagline: settings.buttonTagline,
-    shape: settings.buttonShape,
-  };
   return (
     <>
       <PayPalButtons
