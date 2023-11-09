@@ -6,8 +6,8 @@ import { useSettings } from "../../app/useSettings";
 
 import { PayUponInvoiceButtonProps } from "../../types";
 
-import { InvoiceError } from "./InvoiceError";
 import { PayUponInvoiceMask } from "./PayUponInvoiceMask";
+import { useTranslation } from "react-i18next";
 
 const minPayableAmount = 5; //euro
 const maxPayableAmount = 2500; //euro
@@ -18,6 +18,7 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   purchaseCallback,
 }) => {
   const { paymentInfo, clientToken } = usePayment();
+  const { t } = useTranslation();
   useHandleCreatePayment();
   const { settings } = useSettings();
 
@@ -32,7 +33,7 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
     : null;
 
   return invoiceError ? (
-    <InvoiceError errorKind={invoiceError} />
+    <div>{t(invoiceError)}</div>
   ) : paymentInfo.id && clientToken ? (
     <PayUponInvoiceMask
       fraudNetSessionId={fraudNetSessionId}
