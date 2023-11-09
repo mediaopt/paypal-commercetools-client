@@ -1,9 +1,9 @@
 import React, { useMemo, useRef, useState } from "react";
 
 import {
-  PayPalScriptProvider,
-  PayPalHostedFieldsProvider,
   PayPalHostedField,
+  PayPalHostedFieldsProvider,
+  PayPalScriptProvider,
   usePayPalHostedFields,
 } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
@@ -132,9 +132,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
   const { settings } = useSettings();
   const { clientToken } = usePayment();
   const hostedFieldClasses = useMemo(() => {
-    const hostedFieldsInputFieldClasses =
-      settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
-    return { hostedFieldsInputFieldClasses };
+    return settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
   }, [settings]);
 
   return !settings ? (
@@ -165,7 +163,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={hostedFieldClasses.hostedFieldsInputFieldClasses}
+          className={hostedFieldClasses}
           style={CUSTOM_FIELD_STYLE}
           id="card-number"
           hostedFieldType="number"
@@ -179,7 +177,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={hostedFieldClasses.hostedFieldsInputFieldClasses}
+          className={hostedFieldClasses}
           style={CUSTOM_FIELD_STYLE}
           id="cvv"
           hostedFieldType="cvv"
@@ -190,7 +188,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
           <HostedFieldsInvalid />
         </label>
         <PayPalHostedField
-          className={hostedFieldClasses.hostedFieldsInputFieldClasses}
+          className={hostedFieldClasses}
           style={CUSTOM_FIELD_STYLE}
           id="expiration-date"
           hostedFieldType="expirationDate"
