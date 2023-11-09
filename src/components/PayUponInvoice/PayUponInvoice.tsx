@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useNotifications } from "../../app/useNotifications";
 
@@ -7,7 +8,7 @@ import { PayUponInvoiceProps, SmartComponentsProps } from "../../types";
 import { RenderTemplate } from "../RenderTemplate";
 import { embeddFraudNet } from "./fraudNetIntegration";
 import { PayUponInvoiceButton } from "./PayUponInvoiceButton";
-import { invoiceErrors } from "./InvoiceError";
+import i18n from "./i18n";
 
 export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   options,
@@ -29,16 +30,20 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   >(undefined);
 
   const { notify } = useNotifications();
+  const { t } = useTranslation();
+  const locale = navigator.language.substring(0, 2);
 
   const onLoad = (sessionId?: string) => {
     if (sessionId) setFraudNetSessionId(sessionId);
     else {
       setFraudNetSessionId("");
-      notify("Warning", invoiceErrors["thirdPartyIssue"]);
+      notify("Warning", t("thirdPartyIssue"));
     }
   };
 
   useEffect(() => {
+    if (i18n.language !== locale && i18n.languages.includes(locale))
+      i18n.changeLanguage(locale);
     embeddFraudNet(merchantId, pageId, onLoad);
   }, []);
 
