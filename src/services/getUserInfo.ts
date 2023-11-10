@@ -1,13 +1,13 @@
 import { makeRequest } from "../api";
 
-import { GetUserIdTokenResponse, RequestHeader } from "../types";
+import { GetUserInfoResponse, RequestHeader } from "../types";
 
-export const getUserIdToken = async (
+export const getUserInfo = async (
   requestHeader: RequestHeader,
   url: string
 ) => {
   try {
-    const result = await makeRequest<GetUserIdTokenResponse, {}>(
+    const result = await makeRequest<GetUserInfoResponse, {}>(
       requestHeader,
       url,
       "GET"

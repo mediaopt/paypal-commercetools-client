@@ -12,7 +12,8 @@ export type CreateOrderRequest = {
 };
 
 export type CreateOrderData = {
-  paymentSource: FUNDING_SOURCE;
+  paymentSource?: FUNDING_SOURCE;
+  storeInVault?: boolean;
 };
 
 export type CreateOrderResponse = {
@@ -49,6 +50,7 @@ export type GeneralComponentsProps = {
   onApproveUrl: string;
   authorizeOrderUrl?: string;
   getUserIdTokenUrl?: string;
+  removePaymentTokenUrl?: string;
 
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;
@@ -164,8 +166,74 @@ export type ClientTokenResponse = {
   error?: string;
 };
 
-export type GetUserIdTokenResponse = {
+export type CardPaymentSource = {
+  name: string;
+  last_digits: string;
+  brand: string;
+  expiry: string;
+  verification_status: string;
+  verification: {
+    network_transaction_id: string;
+    time: string;
+    amount: {
+      currency_code: string;
+      value: string;
+    };
+    processor_response: {
+      avs_code: string;
+      cvv_code: string;
+      response_code: string;
+    };
+  };
+};
+export type PayPalPaymentSource = {
+  shipping: {
+    name: {
+      full_name: string;
+    };
+    address: {
+      address_line_1: string;
+      address_line_2: string;
+      admin_area_2: string;
+      admin_area_1: string;
+      postal_code: string;
+      country_code: string;
+    };
+  };
+  usage_type: string;
+  customer_type: string;
+  email_address: string;
+  payer_id: string;
+  name: {
+    given_name: string;
+    surname: string;
+    full_name: string;
+  };
+  phone: {
+    phone_number: {
+      country_code: string;
+      national_number: string;
+    };
+  };
+  tenant: string;
+};
+
+export type PaymentTokens = {
+  customer?: { id: string };
+  payment_tokens?: Array<{
+    id: string;
+    customer: { id: string };
+    payment_source: {
+      card: CardPaymentSource;
+      paypal: PayPalPaymentSource;
+      venmo: PayPalPaymentSource;
+    };
+  }>;
+};
+
+export type GetUserInfoResponse = {
   userIdToken?: string;
+  paymentTokens?: PaymentTokens;
 };
 
 export type ClientTokenRequest = {
@@ -195,4 +263,7 @@ export type SettingsProviderProps = {
   getUserIdTokenUrl?: string;
   requestHeader: RequestHeader;
   options: ReactPayPalScriptOptions;
+  removePaymentTokenUrl?: string;
 };
+
+export type RemovePaymentTokenRequest = { paymentTokenId: string };

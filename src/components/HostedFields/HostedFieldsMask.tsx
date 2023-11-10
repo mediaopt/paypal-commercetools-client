@@ -25,6 +25,8 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   const { settings } = useSettings();
   const { clientToken } = usePayment();
 
+  let saveCard = false;
+
   return !settings ? (
     <></>
   ) : (
@@ -45,7 +47,12 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
           ".invalid": { color: "#dc3545" },
           input: { "font-family": "monospace", "font-size": "16px" },
         }}
-        createOrder={handleCreateOrder}
+        createOrder={() => {
+          return handleCreateOrder({
+            paymentSource: "card",
+            storeInVault: saveCard,
+          });
+        }}
         notEligibleError={<h3>hosted fields not available</h3>}
       >
         <label htmlFor="card-number">
@@ -84,7 +91,12 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
           hostedFieldType="expirationDate"
           options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
         />
-        <SubmitPayment enableVaulting={enableVaulting} />
+        <SubmitPayment
+          enableVaulting={enableVaulting}
+          handleSaveCard={({ target }) => {
+            saveCard = target.checked;
+          }}
+        />
       </PayPalHostedFieldsProvider>
     </PayPalScriptProvider>
   );

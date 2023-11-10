@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 import { usePayPalHostedFields } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
@@ -8,8 +8,14 @@ import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import { HOSTED_FIELDS_CARD_FIELDS, HOSTED_FIELDS_BUTTON } from "./constants";
 
-export const SubmitPayment: React.FC<{ enableVaulting?: boolean }> = ({
+type SubmitPaymentProps = {
+  enableVaulting?: boolean;
+  handleSaveCard: (event: ChangeEvent<HTMLInputElement>) => void;
+};
+
+export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
   enableVaulting,
+  handleSaveCard,
 }) => {
   const customStyle = {
     border: "1px solid #606060",
@@ -107,6 +113,7 @@ export const SubmitPayment: React.FC<{ enableVaulting?: boolean }> = ({
             name="save"
             ref={save}
             className="mr-1"
+            onChange={handleSaveCard}
           />
           Save this card for future purchases
         </label>

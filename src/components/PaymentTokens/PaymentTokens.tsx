@@ -1,11 +1,11 @@
 import React from "react";
 
 import { RenderTemplate } from "../RenderTemplate";
-import { PayPalButton } from "./PayPalButton";
+import { PaymentTokensList } from "./PaymentTokensList";
 
 import { SmartComponentsProps } from "../../types";
 
-export const PayPal: React.FC<SmartComponentsProps> = ({
+export const PaymentTokens: React.FC<SmartComponentsProps> = ({
   options,
 
   createPaymentUrl,
@@ -14,16 +14,14 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
   onApproveUrl,
   authorizeOrderUrl,
   getUserIdTokenUrl,
+  removePaymentTokenUrl,
 
   requestHeader,
   shippingMethodId,
   cartInformation,
   purchaseCallback,
   enableVaulting,
-
-  ...restProps
 }) => {
-  const buttonProps = restProps ?? undefined;
   return (
     <RenderTemplate
       options={options}
@@ -38,8 +36,9 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
       authorizeOrderUrl={authorizeOrderUrl}
       getUserIdTokenUrl={getUserIdTokenUrl}
       enableVaulting={enableVaulting}
+      removePaymentTokenUrl={removePaymentTokenUrl}
     >
-      <PayPalButton {...buttonProps} />
+      <PaymentTokensList />
     </RenderTemplate>
   );
 };

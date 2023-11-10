@@ -2,4 +2,5 @@ export { createPayment } from "./createPayment";
 export { getSettings } from "./getSettings";
 export { createOrder } from "./createOrder";
 export { onApprove } from "./onApprove";
-export { getUserIdToken } from "./getUserIdToken";
+export { getUserInfo } from "./getUserInfo";
+export { removePaymentToken } from "./removePaymentToken";

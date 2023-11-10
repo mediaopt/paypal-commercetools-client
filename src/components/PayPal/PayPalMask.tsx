@@ -9,6 +9,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
 ) => {
   const { handleCreateOrder, handleOnApprove } = usePayment();
   const { paypalMessages, ...restprops } = props;
+
   return (
     <>
       <PayPalButtons

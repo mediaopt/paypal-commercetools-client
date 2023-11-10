@@ -72,6 +72,8 @@ export const PaymentProvider: FC<
   requestHeader,
   shippingMethodId,
   cartInformation,
+
+  enableVaulting,
 }) => {
   const [clientToken, setClientToken] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -110,7 +112,10 @@ export const PaymentProvider: FC<
         createOrderUrl,
         paymentInfo.id,
         paymentInfo.version,
-        orderData
+        {
+          storeInVault: enableVaulting,
+          ...orderData,
+        }
       );
 
       if (createOrderResult) {
@@ -206,6 +211,7 @@ export const PaymentProvider: FC<
       clientToken,
       handleOnApprove,
       handleCreateOrder,
+      enableVaulting,
     };
   }, [
     paymentInfo,

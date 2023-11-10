@@ -11,18 +11,23 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import {
   GetSettingsResponse,
   SettingsProviderProps,
-  GetUserIdTokenResponse,
+  GetUserInfoResponse,
+  PaymentTokens,
 } from "../types";
-import { getSettings, getUserIdToken } from "../services";
+import { getSettings, getUserInfo, removePaymentToken } from "../services";
 
 type SettingsContextT = {
   handleGetSettings: () => void;
+  handleRemovePaymentToken: (paymentTokenId: string) => void;
   settings?: GetSettingsResponse;
+  paymentTokens?: PaymentTokens;
 };
 
 const SettingsContext = createContext<SettingsContextT>({
   handleGetSettings: () => {},
+  handleRemovePaymentToken: () => {},
   settings: {},
+  paymentTokens: {},
 });
 
 export const SettingsProvider: FC<
@@ -33,18 +38,21 @@ export const SettingsProvider: FC<
   requestHeader,
   options,
   children,
+  removePaymentTokenUrl,
 }) => {
   const [settings, setSettings] = useState<GetSettingsResponse>();
   const [userIdToken, setUserIdToken] = useState<string>();
+  const [paymentTokens, setPaymentTokens] = useState<PaymentTokens>();
 
   const value = useMemo(() => {
     const handleGetSettings = async () => {
       if (getUserIdTokenUrl && !userIdToken) {
-        const { userIdToken } = (await getUserIdToken(
+        const { userIdToken, paymentTokens } = (await getUserInfo(
           requestHeader,
           getUserIdTokenUrl
-        )) as GetUserIdTokenResponse;
+        )) as GetUserInfoResponse;
 
+        setPaymentTokens(paymentTokens);
         setUserIdToken(userIdToken);
       }
 
@@ -57,12 +65,31 @@ export const SettingsProvider: FC<
         setSettings(getSettingsResult);
       }
     };
+    const handleRemovePaymentToken = async (paymentTokenId: string) => {
+      if (removePaymentTokenUrl) {
+        await removePaymentToken(
+          requestHeader,
+          removePaymentTokenUrl,
+          paymentTokenId
+        );
+
+        if (paymentTokens) {
+          const filterPaymentTokens = paymentTokens.payment_tokens?.filter(
+            (paymentToken) => paymentToken.id !== paymentTokenId
+          );
+          paymentTokens.payment_tokens = filterPaymentTokens;
+          setPaymentTokens({ ...paymentTokens });
+        }
+      }
+    };
 
     return {
       settings,
       handleGetSettings,
+      handleRemovePaymentToken,
+      paymentTokens,
     };
-  }, [settings, getSettingsUrl]);
+  }, [settings, getSettingsUrl, paymentTokens]);
 
   useEffect(() => {
     if (!settings) {
