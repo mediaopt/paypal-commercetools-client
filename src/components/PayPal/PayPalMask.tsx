@@ -16,12 +16,19 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     if (restprops.style || !settings) {
       return restprops.style;
     }
-    return {
-      color: settings.paypalButtonConfig.buttonColor,
-      label: settings.paypalButtonConfig.buttonLabel,
-      tagline: settings.buttonTagline,
-      shape: settings.buttonShape,
-    };
+    if (
+      settings.paypalButtonConfig &&
+      settings.buttonTagline &&
+      settings.buttonShape
+    ) {
+      return {
+        color: settings.paypalButtonConfig.buttonColor,
+        label: settings.paypalButtonConfig.buttonLabel,
+        tagline: settings.buttonTagline,
+        shape: settings.buttonShape,
+      };
+    }
+    return restprops.style;
   }, [settings, restprops]);
 
   return (
