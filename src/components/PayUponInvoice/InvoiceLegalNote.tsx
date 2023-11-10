@@ -1,6 +1,5 @@
 import { Trans } from "react-i18next";
-
-const STYLED_LINK = "text-blue-500 cursor-pointer";
+import { STYLED_LINK } from "../../styles";
 
 export const InvoiceLegalNote = (
   <div className="w-full text-sm te">
