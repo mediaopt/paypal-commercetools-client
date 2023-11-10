@@ -5,6 +5,7 @@ import { useNotifications } from "../../app/useNotifications";
 import { InvoiceLegalNote } from "./InvoiceLegalNote";
 import { PayUponInvoiceButtonProps } from "../../types";
 import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
+import { useTranslation } from "react-i18next";
 
 const parsePhone = (phone: string) => {
   const parsedPhone = parsePhoneNumber(phone.replaceAll(" ", ""));
@@ -22,12 +23,10 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
 }) => {
   const { handleCreateInvoice } = usePayment();
   const { notify } = useNotifications();
+  const { t } = useTranslation();
   const [phone, setPhone] = useState("+49 ");
-  const notifyWrongPhone = () =>
-    notify(
-      "Warning",
-      "Could not identify country code or national phone number, please check the data.",
-    );
+  const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
+  const maxDate = new Date().toJSON().slice(0, 10);
 
   return (
     <form
@@ -36,19 +35,17 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
         event.preventDefault();
         const formData = event.target as HTMLFormElement;
         const birthDate = formData["birthDate"].value;
-        const actualPhone = parsePhoneNumber(phone);
-        if (actualPhone) {
-          const { countryCallingCode, nationalNumber } = actualPhone;
-          if (countryCallingCode && nationalNumber) {
-            const orderStatus = await handleCreateInvoice({
-              fraudNetSessionId,
-              nationalNumber,
-              countryCode: countryCallingCode,
-              birthDate,
-            });
-            if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);
-            else notify("Warning", "Something went wrong");
-          } else notifyWrongPhone();
+        const { countryCallingCode, nationalNumber } = {
+          ...parsePhoneNumber(phone),
+        };
+        if (countryCallingCode && nationalNumber) {
+          const orderStatus = await handleCreateInvoice({
+            fraudNetSessionId,
+            nationalNumber,
+            countryCode: countryCallingCode,
+            birthDate,
+          });
+          if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);
         } else notifyWrongPhone();
       }}
     >
@@ -63,6 +60,8 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
         className={STYLED_PAYMENT_FIELDS}
         required
         autoComplete="bday"
+        min="1990-01-01"
+        max={maxDate}
       />
       <label htmlFor="phone">Phone number</label>
       <input
