@@ -16,7 +16,12 @@ export type CreateOrderData = {
 };
 
 export type CreateOrderResponse = {
-  orderData: { id: string };
+  orderData: {
+    id: string;
+    success?: boolean;
+    message?: string;
+    details?: string;
+  };
   paymentVersion: number;
 };
 

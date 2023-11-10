@@ -26,6 +26,7 @@ import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
 import { createPaypalInvoice } from "../services/createPaypalInvoice";
+import { useTranslation } from "react-i18next";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -83,6 +84,7 @@ export const PaymentProvider: FC<
   const [resultMessage, setResultMessage] = useState<string>();
 
   const { settings } = useSettings();
+  const { t } = useTranslation();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject,
@@ -140,10 +142,16 @@ export const PaymentProvider: FC<
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        latestPaymentVersion = paymentVersion;
-
-        return orderData.id;
-      } else return "";
+        if (orderData.success) {
+          latestPaymentVersion = paymentVersion;
+          return orderData.id;
+        } else
+          notify(
+            "Error",
+            orderData.details ?? orderData.message ?? t("thirdPartyIssue"),
+          );
+      }
+      return "";
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
