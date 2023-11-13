@@ -26,7 +26,7 @@ type SettingsContextT = {
 const SettingsContext = createContext<SettingsContextT>({
   handleGetSettings: () => {},
   handleRemovePaymentToken: () => {},
-  settings: {},
+  settings: undefined,
   paymentTokens: {},
 });
 

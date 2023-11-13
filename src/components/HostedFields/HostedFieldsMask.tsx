@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import {
-  PayPalScriptProvider,
-  PayPalHostedFieldsProvider,
   PayPalHostedField,
+  PayPalHostedFieldsProvider,
+  PayPalScriptProvider,
 } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
 import { useSettings } from "../../app/useSettings";
@@ -31,6 +31,9 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   const cardPaymentTokens = paymentTokens?.payment_tokens?.filter(
     (paymentToken) => paymentToken.payment_source.card !== undefined
   );
+  const hostedFieldClasses = useMemo(() => {
+    return settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
+  }, [settings]);
 
   return !settings ? (
     <></>
@@ -72,7 +75,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             <HostedFieldsInvalid />
           </label>
           <PayPalHostedField
-            className={HOSTED_FIELDS_CARD_FIELDS}
+            className={hostedFieldClasses}
             style={CUSTOM_FIELD_STYLE}
             id="card-number"
             hostedFieldType="number"
@@ -86,7 +89,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             <HostedFieldsInvalid />
           </label>
           <PayPalHostedField
-            className={HOSTED_FIELDS_CARD_FIELDS}
+            className={hostedFieldClasses}
             style={CUSTOM_FIELD_STYLE}
             id="cvv"
             hostedFieldType="cvv"
@@ -97,7 +100,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             <HostedFieldsInvalid />
           </label>
           <PayPalHostedField
-            className={HOSTED_FIELDS_CARD_FIELDS}
+            className={hostedFieldClasses}
             style={CUSTOM_FIELD_STYLE}
             id="expiration-date"
             hostedFieldType="expirationDate"

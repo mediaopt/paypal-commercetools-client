@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState, useMemo } from "react";
 
 import { usePayPalHostedFields } from "@paypal/react-paypal-js";
 import { usePayment } from "../../app/usePayment";
@@ -27,9 +27,17 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
   const { isLoading } = useLoader();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
+
   const save = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
   const threeDSAuth = settings?.threeDSOption;
+  const hostedFieldClasses = useMemo(() => {
+    const hostedFieldsPayButtonClasses =
+      settings?.hostedFieldsPayButtonClasses || HOSTED_FIELDS_BUTTON;
+    const hostedFieldsInputFieldClasses =
+      settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
+    return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
+  }, [settings]);
 
   const approveTransaction = (approveData: CustomOnApproveData) => {
     handleOnApprove(approveData).catch((err) => {
@@ -99,7 +107,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
         <input
           id="card-holder"
           ref={cardHolderName}
-          className={HOSTED_FIELDS_CARD_FIELDS}
+          className={hostedFieldClasses.hostedFieldsInputFieldClasses}
           style={{ ...customStyle, outline: "none" }}
           type="text"
           placeholder="Full name"
@@ -120,7 +128,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
       )}
 
       <button
-        className={HOSTED_FIELDS_BUTTON}
+        className={hostedFieldClasses.hostedFieldsPayButtonClasses}
         onClick={handleClick}
         disabled={paying}
       >
