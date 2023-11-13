@@ -22,10 +22,15 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   enableVaulting,
 }) => {
   const { handleCreateOrder } = usePayment();
-  const { settings } = useSettings();
+  const { settings, paymentTokens } = useSettings();
   const { clientToken } = usePayment();
+  const [addNew, setAddNew] = useState(false);
 
   let saveCard = false;
+
+  const cardPaymentTokens = paymentTokens?.payment_tokens?.filter(
+    (paymentToken) => paymentToken.payment_source.card !== undefined
+  );
 
   return !settings ? (
     <></>
@@ -41,63 +46,71 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
           : undefined,
       }}
     >
-      <PayPalHostedFieldsProvider
-        styles={{
-          ".valid": { color: "#28a745" },
-          ".invalid": { color: "#dc3545" },
-          input: { "font-family": "monospace", "font-size": "16px" },
-        }}
-        createOrder={() => {
-          return handleCreateOrder({
-            paymentSource: "card",
-            storeInVault: saveCard,
-          });
-        }}
-        notEligibleError={<h3>hosted fields not available</h3>}
-      >
-        <label htmlFor="card-number">
-          Card Number
-          <HostedFieldsInvalid />
-        </label>
-        <PayPalHostedField
-          className={HOSTED_FIELDS_CARD_FIELDS}
-          style={CUSTOM_FIELD_STYLE}
-          id="card-number"
-          hostedFieldType="number"
-          options={{
-            selector: "#card-number",
-            placeholder: "4111 1111 1111 1111",
+      {cardPaymentTokens &&
+      cardPaymentTokens?.length > 0 &&
+      addNew === false ? (
+        <>
+          <button onClick={() => setAddNew(true)}>Add New Card</button>
+        </>
+      ) : (
+        <PayPalHostedFieldsProvider
+          styles={{
+            ".valid": { color: "#28a745" },
+            ".invalid": { color: "#dc3545" },
+            input: { "font-family": "monospace", "font-size": "16px" },
           }}
-        />
-        <label htmlFor="cvv">
-          CVV
-          <HostedFieldsInvalid />
-        </label>
-        <PayPalHostedField
-          className={HOSTED_FIELDS_CARD_FIELDS}
-          style={CUSTOM_FIELD_STYLE}
-          id="cvv"
-          hostedFieldType="cvv"
-          options={{ selector: "#cvv", maskInput: true, placeholder: "123" }}
-        />
-        <label htmlFor="expiration-date">
-          Expiration Date
-          <HostedFieldsInvalid />
-        </label>
-        <PayPalHostedField
-          className={HOSTED_FIELDS_CARD_FIELDS}
-          style={CUSTOM_FIELD_STYLE}
-          id="expiration-date"
-          hostedFieldType="expirationDate"
-          options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
-        />
-        <SubmitPayment
-          enableVaulting={enableVaulting}
-          handleSaveCard={({ target }) => {
-            saveCard = target.checked;
+          createOrder={() => {
+            return handleCreateOrder({
+              paymentSource: "card",
+              storeInVault: saveCard,
+            });
           }}
-        />
-      </PayPalHostedFieldsProvider>
+          notEligibleError={<h3>hosted fields not available</h3>}
+        >
+          <label htmlFor="card-number">
+            Card Number
+            <HostedFieldsInvalid />
+          </label>
+          <PayPalHostedField
+            className={HOSTED_FIELDS_CARD_FIELDS}
+            style={CUSTOM_FIELD_STYLE}
+            id="card-number"
+            hostedFieldType="number"
+            options={{
+              selector: "#card-number",
+              placeholder: "4111 1111 1111 1111",
+            }}
+          />
+          <label htmlFor="cvv">
+            CVV
+            <HostedFieldsInvalid />
+          </label>
+          <PayPalHostedField
+            className={HOSTED_FIELDS_CARD_FIELDS}
+            style={CUSTOM_FIELD_STYLE}
+            id="cvv"
+            hostedFieldType="cvv"
+            options={{ selector: "#cvv", maskInput: true, placeholder: "123" }}
+          />
+          <label htmlFor="expiration-date">
+            Expiration Date
+            <HostedFieldsInvalid />
+          </label>
+          <PayPalHostedField
+            className={HOSTED_FIELDS_CARD_FIELDS}
+            style={CUSTOM_FIELD_STYLE}
+            id="expiration-date"
+            hostedFieldType="expirationDate"
+            options={{ selector: "#expiration-date", placeholder: "MM/YY" }}
+          />
+          <SubmitPayment
+            enableVaulting={enableVaulting}
+            handleSaveCard={({ target }) => {
+              saveCard = target.checked;
+            }}
+          />
+        </PayPalHostedFieldsProvider>
+      )}
     </PayPalScriptProvider>
   );
 };
