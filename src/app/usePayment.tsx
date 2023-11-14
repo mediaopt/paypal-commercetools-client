@@ -122,7 +122,6 @@ export const PaymentProvider: FC<
         const { orderData, paymentVersion } = createOrderResult;
         const { id, status, payment_source } = orderData;
         latestPaymentVersion = paymentVersion;
-        console.log(status === "COMPLETED" && payment_source);
         if (status === "COMPLETED" && payment_source) {
           setShowResult(true);
           setResultSuccess(true);
