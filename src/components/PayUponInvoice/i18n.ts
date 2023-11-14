@@ -21,7 +21,7 @@ i18n.use(initReactI18next).init({
         pUILegalNote:
           "By clicking on the button, you agree to the <0>terms of payment</0> and <1>performance of a risk check</1> from the payment partner, Ratepay. You also agree to PayPal’s <2>privacy statement</2>. If your request to purchase upon invoice is accepted, the purchase price claim will be assigned to Ratepay, and you may only pay Ratepay, not the merchant.",
         paymentSourceNotVerified:
-          "The combination of your name and address could not be validated. Please correct your data and try again. You can find further information in the <0>Ratepay Data Privacy Statement</0> or you can contact Ratepay using this <1>contact form</1>",
+          "The combination of your name and address could not be validated. Please correct your data and try again. You can find further information in the <0>Ratepay Data Privacy Statement</0> or you can contact Ratepay using this <1>contact form</1>.",
         paymentSourceDeclined:
           "It is not possible to use the selected payment method. This decision is based on automated data processing. You can find further information in the <0>Ratepay Data Privacy Statement</0> or you can contact Ratepay using this <1>contact form</1>.",
         duplicatePui:
