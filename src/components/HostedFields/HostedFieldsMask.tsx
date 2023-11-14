@@ -58,7 +58,7 @@ const SubmitPayment = () => {
     }
     const isFormInvalid =
       Object.values(hostedField.cardFields.getState().fields).some(
-        (field) => !field.isValid
+        (field) => !field.isValid,
       ) || !cardHolderName?.current?.value;
 
     if (isFormInvalid) {
@@ -127,7 +127,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({ options }) => {
   const { settings } = useSettings();
   const { clientToken } = usePayment();
   const hostedFieldClasses = useMemo(() => {
-    return settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
+    return settings?.hostedFieldsInputFieldClasses || STYLED_PAYMENT_FIELDS;
   }, [settings]);
 
   return !settings ? (
