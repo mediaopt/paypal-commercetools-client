@@ -120,9 +120,17 @@ export const PaymentProvider: FC<
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
+        const { id, status, payment_source } = orderData;
         latestPaymentVersion = paymentVersion;
-
-        return orderData.id;
+        console.log(status === "COMPLETED" && payment_source);
+        if (status === "COMPLETED" && payment_source) {
+          setShowResult(true);
+          setResultSuccess(true);
+          purchaseCallback(orderData);
+          return "";
+        } else {
+          return id;
+        }
       } else return "";
     };
 

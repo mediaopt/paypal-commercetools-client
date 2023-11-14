@@ -18,7 +18,20 @@ export type CreateOrderData = {
 };
 
 export type CreateOrderResponse = {
-  orderData: { id: string };
+  orderData: {
+    id: string;
+    status: string;
+    payment_source?: {
+      card: {
+        name: string;
+        last_digits: string;
+        expiry: string;
+        brand: string;
+        available_networks: string[];
+        type: string;
+      };
+    };
+  };
   paymentVersion: number;
 };
 
