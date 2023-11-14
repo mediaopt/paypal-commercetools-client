@@ -11,7 +11,7 @@ test("TestButton is shown", () => {
 test("PayPal is shown", () => {
   render(<App />);
   const linkElement = screen.getAllByText(/PayPal/i);
-  expect(linkElement.length).toEqual(5);
+  expect(linkElement.length).toEqual(6);
 });
 
 test("PayPalMessages is shown", () => {
