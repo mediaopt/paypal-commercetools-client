@@ -27,6 +27,7 @@ import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
 import { createPaypalInvoice } from "../services/createPaypalInvoice";
 import { useTranslation } from "react-i18next";
+import { relevantError } from "../components/PayUponInvoice/RatepayErrorNote";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -129,12 +130,22 @@ export const PaymentProvider: FC<
 
     const handleCreateInvoice = async (data: CustomInvoiceData) => {
       if (!createOrderUrl) return "";
+      const {
+        fraudNetSessionId,
+        nationalNumber,
+        countryCode,
+        birthDate,
+        setRatepayMessage,
+      } = data;
 
       const createOrderResult = await createPaypalInvoice(
         requestHeader,
         createOrderUrl,
         {
-          ...data,
+          fraudNetSessionId,
+          nationalNumber,
+          countryCode,
+          birthDate,
           paymentId: paymentInfo.id,
           paymentVersion: paymentInfo.version,
         },
@@ -142,14 +153,22 @@ export const PaymentProvider: FC<
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        if (orderData.success) {
-          latestPaymentVersion = paymentVersion;
+        if (paymentVersion) latestPaymentVersion = paymentVersion;
+        if (orderData?.success) {
+          setRatepayMessage(undefined);
           return orderData.id;
-        } else
-          notify(
-            "Error",
-            orderData.details ?? orderData.message ?? t("thirdPartyIssue"),
-          );
+        } else {
+          const errorDetails =
+            orderData?.details?.length && orderData?.details[0];
+          if (errorDetails) {
+            const ratepayError = relevantError(errorDetails);
+            if (ratepayError) {
+              setRatepayMessage(ratepayError);
+              return "";
+            }
+          }
+          notify("Error", orderData?.message ?? t("thirdPartyIssue"));
+        }
       }
       return "";
     };

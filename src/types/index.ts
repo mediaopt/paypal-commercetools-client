@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import {
   PayPalButtonsComponentProps,
   ReactPayPalScriptOptions,
@@ -268,6 +269,7 @@ export type CustomInvoiceData = {
   nationalNumber: string;
   countryCode: string;
   birthDate: string;
+  setRatepayMessage: Dispatch<SetStateAction<string | undefined>>;
 };
 
 export type SettingsProviderProps = {

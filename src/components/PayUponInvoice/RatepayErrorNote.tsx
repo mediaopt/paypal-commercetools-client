@@ -1,6 +1,27 @@
 import { Trans } from "react-i18next";
-import { STYLED_LINK } from "../../styles";
+import { ERROR_TEXT_STYLE, STYLED_LINK } from "../../styles";
 import i18n from "i18next";
+
+type RatepayErrorType = "paymentSourceNotVerified" | "paymentSourceDeclined";
+
+const connectToRatepayError = {
+  paymentSourceNotVerified: [
+    "PAYMENT_SOURCE_INFO_CANNOT_BE_VERIFIED",
+    "BILLING_ADDRESS_INVALID",
+    "SHIPPING_ADDRESS_INVALID",
+  ],
+  paymentSourceDeclined: [
+    "PAYMENT_SOURCE_DECLINED_BY_PROCESSOR",
+    "PAYMENT_SOURCE_CANNOT_BE_USED",
+  ],
+};
+
+export const relevantError = (orderErrorDetails: string) => {
+  const parcedError = Object.keys(connectToRatepayError).find((key) =>
+    connectToRatepayError[key as RatepayErrorType].includes(orderErrorDetails),
+  );
+  return parcedError && i18n.exists(parcedError) ? parcedError : undefined;
+};
 
 export const RatepayErrorNote = (errorKind: string) => {
   const isGerman = i18n.language === "de";
@@ -15,7 +36,7 @@ export const RatepayErrorNote = (errorKind: string) => {
       ];
 
   return (
-    <div>
+    <div className={ERROR_TEXT_STYLE}>
       <Trans
         i18nKey={errorKind}
         components={[

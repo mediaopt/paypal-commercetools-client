@@ -6,6 +6,7 @@ import { InvoiceLegalNote } from "./InvoiceLegalNote";
 import { PayUponInvoiceButtonProps } from "../../types";
 import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
 import { useTranslation } from "react-i18next";
+import { RatepayErrorNote } from "./RatepayErrorNote";
 
 const parsePhone = (phone: string) => {
   const parsedPhone = parsePhoneNumber(phone.replaceAll(" ", ""));
@@ -27,6 +28,9 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
   const [phone, setPhone] = useState("+49 ");
   const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
   const maxDate = new Date().toJSON().slice(0, 10);
+  const [ratepayMessage, setRatepayMessage] = useState<string | undefined>(
+    undefined,
+  );
 
   return (
     <form
@@ -44,6 +48,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
             nationalNumber,
             countryCode: countryCallingCode,
             birthDate,
+            setRatepayMessage,
           });
           if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);
         } else notifyWrongPhone();
@@ -80,6 +85,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
       <button className={STYLED_PAYMENT_BUTTON} type="submit">
         Pay
       </button>
+      {ratepayMessage && RatepayErrorNote(ratepayMessage)}
     </form>
   );
 };

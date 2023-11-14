@@ -12,7 +12,7 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiYzY5NmY0MDEtZGUyYS00MDBiLWEzNDAtMGVhYjVkMDU5ZDc3In0.0VMGbX4tqnL_5r3xhpq6AfKTf5hAlsiIMf5onU9eUxA";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiOGY2ZGM2MWQtNDk0Ny00YTA4LWFmM2MtZmJlNDZkYmU1MjgxIn0.gfYRqe63U6-vRjaoGqrmRb-eGxVjr6NYeCrsFXB2FJU";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
