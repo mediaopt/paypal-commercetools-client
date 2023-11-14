@@ -21,9 +21,12 @@ export const RenderTemplate: FC<
   createOrderUrl,
   onApproveUrl,
   authorizeOrderUrl,
+  getUserInfoUrl,
+  removePaymentTokenUrl,
 
   shippingMethodId,
   cartInformation,
+  enableVaulting,
 
   children,
 }) => {
@@ -32,6 +35,8 @@ export const RenderTemplate: FC<
       options={options}
       getSettingsUrl={getSettingsUrl}
       requestHeader={requestHeader}
+      getUserInfoUrl={getUserInfoUrl}
+      removePaymentTokenUrl={removePaymentTokenUrl}
     >
       <NotificationsProvider>
         <LoaderProvider>
@@ -47,6 +52,7 @@ export const RenderTemplate: FC<
             cartInformation={cartInformation}
             purchaseCallback={purchaseCallback}
             authorizeOrderUrl={authorizeOrderUrl}
+            enableVaulting={enableVaulting}
           >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>

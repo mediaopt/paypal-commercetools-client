@@ -7,10 +7,11 @@ import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
+import { PaymentTokens } from "./components/PaymentTokens";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiOWIzZGY0M2UtNjc4MC00Yzk1LWJkNjktYmIyYWZhNDMxOGE4IiwiY2FydElkIjoiNWQ4Y2YyZDgtYzAwMC00MDI4LWI0NTUtNDcyNDIwNTJlMzVhIn0.dfUq-ZvWNEUaJny40BJbXv9fK25CK90sYQCqHkXX3sw";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI3ZGI0YmJmOC1mMTMwLTRlYjQtODMyZS1mMWZkZmUxYjQ1YWIiLCJ3aXNobGlzdElkIjoiOGI0NDVjMWMtNDliOC00ODlkLTk4NDgtZGQ2ZmNiOTZmNzljIiwiYWNjb3VudCI6eyJhY2NvdW50SWQiOiJmMjJhNGZlMy1jMmI4LTQ4MDEtODIwOC00MTRkMjA2MjBlMGIiLCJlbWFpbCI6Im1hamlkLmFiYmFzaUBtZWRpYW9wdC5kZSIsInNhbHV0YXRpb24iOiIiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwiYmlydGhkYXkiOiIxOTg5LTAzLTA1VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W3siYWRkcmVzc0lkIjoiamJUSlhtM00iLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInN0cmVldE51bWJlciI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInBvc3RhbENvZGUiOiIxMzM1NyIsImNpdHkiOiJERSIsImNvdW50cnkiOiJERSIsInBob25lIjoiNTk5MzU3NTYyIiwiaXNEZWZhdWx0QmlsbGluZ0FkZHJlc3MiOmZhbHNlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOmZhbHNlfSx7ImFkZHJlc3NJZCI6ImtyelI3bTBRIiwiZmlyc3ROYW1lIjoiTWFqaWQiLCJsYXN0TmFtZSI6IkFiYmFzaSIsInN0cmVldE5hbWUiOiJDb3VudHkgU3QuIE1pYW1pIiwic3RyZWV0TnVtYmVyIjoiNDMyIiwicG9zdGFsQ29kZSI6IjMzMDE4IiwiY2l0eSI6IlVTIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6dHJ1ZSwiaXNEZWZhdWx0U2hpcHBpbmdBZGRyZXNzIjp0cnVlfV19fQ.WgszPIO2zvdPMHyRFpJdocBFxZLrtds4Ls4BP8TxjSU";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -61,6 +62,11 @@ function App() {
     },
   };
 
+  const vaultParams = {
+    getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
+    enableVaulting: true,
+  };
+
   const options = {
     clientId:
       "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
@@ -95,9 +101,32 @@ function App() {
         fundingSource="paypal"
       />
     ),
+    PayPalVault: (
+      <PayPal
+        {...params}
+        {...vaultParams}
+        requestHeader={requestHeader}
+        options={options}
+        fundingSource="paypal"
+      />
+    ),
     Venmo: (
       <PayPal
         {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "messages,buttons",
+          buyerCountry: "US",
+          enableFunding: "venmo",
+        }}
+        fundingSource="venmo"
+      />
+    ),
+    VenmoVault: (
+      <PayPal
+        {...params}
+        {...vaultParams}
         requestHeader={requestHeader}
         options={{
           ...options,
@@ -153,6 +182,27 @@ function App() {
           components: "hosted-fields,buttons",
           vault: false,
         }}
+      />
+    ),
+    HostedFieldsVault: (
+      <HostedFields
+        requestHeader={requestHeader}
+        {...params}
+        {...vaultParams}
+        options={{
+          ...options,
+          components: "hosted-fields,buttons",
+          vault: true,
+        }}
+      />
+    ),
+    PaymentTokens: (
+      <PaymentTokens
+        {...params}
+        {...vaultParams}
+        removePaymentTokenUrl={`${ENDPOINT_URL}/payment/removePaymentToken`}
+        requestHeader={requestHeader}
+        options={options}
       />
     ),
   };

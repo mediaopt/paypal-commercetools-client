@@ -72,6 +72,8 @@ export const PaymentProvider: FC<
   requestHeader,
   shippingMethodId,
   cartInformation,
+
+  enableVaulting,
 }) => {
   const [clientToken, setClientToken] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -110,21 +112,31 @@ export const PaymentProvider: FC<
         createOrderUrl,
         paymentInfo.id,
         paymentInfo.version,
-        orderData
+        {
+          storeInVault: enableVaulting,
+          ...orderData,
+        }
       );
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
+        const { id, status, payment_source } = orderData;
         latestPaymentVersion = paymentVersion;
-
-        return orderData.id;
+        if (status === "COMPLETED" && payment_source) {
+          setShowResult(true);
+          setResultSuccess(true);
+          purchaseCallback(orderData);
+          return "";
+        } else {
+          return id;
+        }
       } else return "";
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
 
-      const orderID = data.orderID;
+      const { orderID, saveCard } = data;
 
       const onAuthorizeOrderUrl =
         settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;
@@ -134,7 +146,8 @@ export const PaymentProvider: FC<
         onAuthorizeOrderUrl ?? onApproveUrl,
         paymentInfo.id,
         latestPaymentVersion,
-        orderID
+        orderID,
+        saveCard
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;
@@ -205,6 +218,7 @@ export const PaymentProvider: FC<
       clientToken,
       handleOnApprove,
       handleCreateOrder,
+      enableVaulting,
     };
   }, [
     paymentInfo,
