@@ -7,9 +7,14 @@ import { HostedFieldsProps } from "../../types";
 
 export const HostedFieldsButton: React.FC<HostedFieldsProps> = ({
   options,
+  enableVaulting,
 }) => {
   useHandleGetClientToken(false);
   const { clientToken } = usePayment();
 
-  return clientToken ? <HostedFieldsMask options={options} /> : <></>;
+  return clientToken ? (
+    <HostedFieldsMask options={options} enableVaulting={enableVaulting} />
+  ) : (
+    <></>
+  );
 };

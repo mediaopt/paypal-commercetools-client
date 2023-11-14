@@ -7,12 +7,12 @@ import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
+import { PaymentTokens } from "./components/PaymentTokens";
 import { PayUponInvoice } from "./components/PayUponInvoice";
 import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
-const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiOGY2ZGM2MWQtNDk0Ny00YTA4LWFmM2MtZmJlNDZkYmU1MjgxIn0.gfYRqe63U6-vRjaoGqrmRb-eGxVjr6NYeCrsFXB2FJU";
+const FRONTASTIC_SESSION: string = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiOGY2ZGM2MWQtNDk0Ny00YTA4LWFmM2MtZmJlNDZkYmU1MjgxIn0.gfYRqe63U6-vRjaoGqrmRb-eGxVjr6NYeCrsFXB2FJU";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -62,6 +62,11 @@ function App() {
     },
   };
 
+  const vaultParams = {
+    getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
+    enableVaulting: true,
+  };
+
   const options = {
     clientId:
       "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
@@ -103,9 +108,32 @@ function App() {
         fundingSource="paypal"
       />
     ),
+    PayPalVault: (
+      <PayPal
+        {...params}
+        {...vaultParams}
+        requestHeader={requestHeader}
+        options={options}
+        fundingSource="paypal"
+      />
+    ),
     Venmo: (
       <PayPal
         {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "messages,buttons",
+          buyerCountry: "US",
+          enableFunding: "venmo",
+        }}
+        fundingSource="venmo"
+      />
+    ),
+    VenmoVault: (
+      <PayPal
+        {...params}
+        {...vaultParams}
         requestHeader={requestHeader}
         options={{
           ...options,
@@ -161,6 +189,27 @@ function App() {
           components: "hosted-fields,buttons",
           vault: false,
         }}
+      />
+    ),
+    HostedFieldsVault: (
+      <HostedFields
+        requestHeader={requestHeader}
+        {...params}
+        {...vaultParams}
+        options={{
+          ...options,
+          components: "hosted-fields,buttons",
+          vault: true,
+        }}
+      />
+    ),
+    PaymentTokens: (
+      <PaymentTokens
+        {...params}
+        {...vaultParams}
+        removePaymentTokenUrl={`${ENDPOINT_URL}/payment/removePaymentToken`}
+        requestHeader={requestHeader}
+        options={options}
       />
     ),
     PayUponInvoice: (

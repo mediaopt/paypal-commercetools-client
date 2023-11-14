@@ -7,13 +7,15 @@ export const onApprove = async (
   url: string,
   paymentId: string,
   paymentVersion: number,
-  orderID: string
+  orderID: string,
+  saveCard?: boolean
 ) => {
   try {
     const data: OnApproveRequest = {
       paymentId,
       paymentVersion,
       orderID,
+      saveCard,
     };
 
     return await makeRequest<OnApproveResponse, OnApproveRequest>(

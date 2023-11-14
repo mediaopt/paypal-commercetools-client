@@ -1,40 +1,44 @@
 import React from "react";
 
 import { RenderTemplate } from "../RenderTemplate";
-import { HostedFieldsButton } from "./HostedFieldsButton";
+import { PaymentTokensList } from "./PaymentTokensList";
 
 import { SmartComponentsProps } from "../../types";
 
-export const HostedFields: React.FC<SmartComponentsProps> = ({
+export const PaymentTokens: React.FC<SmartComponentsProps> = ({
   options,
-  getSettingsUrl,
+
   createPaymentUrl,
-  requestHeader,
-  getClientTokenUrl,
-  getUserInfoUrl,
-  shippingMethodId,
-  cartInformation,
+  getSettingsUrl,
   createOrderUrl,
   onApproveUrl,
+  authorizeOrderUrl,
+  getUserInfoUrl,
+  removePaymentTokenUrl,
+
+  requestHeader,
+  shippingMethodId,
+  cartInformation,
   purchaseCallback,
   enableVaulting,
 }) => {
   return (
     <RenderTemplate
       options={options}
-      createPaymentUrl={createPaymentUrl}
-      getSettingsUrl={getSettingsUrl}
-      getClientTokenUrl={getClientTokenUrl}
       requestHeader={requestHeader}
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
+      createPaymentUrl={createPaymentUrl}
       createOrderUrl={createOrderUrl}
       onApproveUrl={onApproveUrl}
+      getSettingsUrl={getSettingsUrl}
       purchaseCallback={purchaseCallback}
-      enableVaulting={enableVaulting}
+      authorizeOrderUrl={authorizeOrderUrl}
       getUserInfoUrl={getUserInfoUrl}
+      enableVaulting={enableVaulting}
+      removePaymentTokenUrl={removePaymentTokenUrl}
     >
-      <HostedFieldsButton options={options} enableVaulting={enableVaulting} />
+      <PaymentTokensList />
     </RenderTemplate>
   );
 };

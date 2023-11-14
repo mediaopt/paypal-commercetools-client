@@ -13,15 +13,28 @@ export type CreateOrderRequest = {
 };
 
 export type CreateOrderData = {
-  paymentSource: FUNDING_SOURCE;
+  paymentSource?: FUNDING_SOURCE;
+  storeInVault?: boolean;
+  vaultId?: string;
 };
 
 export type CreateOrderResponse = {
   orderData: {
     id: string;
-    success?: boolean;
-    message?: string;
-    details?: string;
+    status: string;
+      success?: boolean;
+      message?: string;
+      details?: string;
+    payment_source?: {
+      card: {
+        name: string;
+        last_digits: string;
+        expiry: string;
+        brand: string;
+        available_networks: string[];
+        type: string;
+      };
+    };
   };
   paymentVersion: number;
 };
@@ -37,6 +50,7 @@ export type OnApproveRequest = {
   paymentId: string;
   paymentVersion: number;
   orderID: string;
+  saveCard?: boolean;
 };
 
 export type OnApproveResponse = {
@@ -58,13 +72,15 @@ export type GeneralComponentsProps = {
   createPaymentUrl: string;
   getSettingsUrl: string;
   createOrderUrl: string;
-
   onApproveUrl: string;
   authorizeOrderUrl?: string;
+  getUserInfoUrl?: string;
+  removePaymentTokenUrl?: string;
 
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;
   getClientTokenUrl?: string;
+  enableVaulting?: boolean;
 } & CartInformationProps;
 
 export type HostedFieldsThreeDSAuth = {
@@ -73,6 +89,7 @@ export type HostedFieldsThreeDSAuth = {
 
 export type HostedFieldsProps = {
   options: ReactPayPalScriptOptions;
+  enableVaulting?: boolean;
 };
 
 export type HostedFieldsSmartComponentProps = SmartComponentsProps &
@@ -195,6 +212,76 @@ export type ClientTokenResponse = {
   error?: string;
 };
 
+export type CardPaymentSource = {
+  name: string;
+  last_digits: string;
+  brand: string;
+  expiry: string;
+  verification_status: string;
+  verification: {
+    network_transaction_id: string;
+    time: string;
+    amount: {
+      currency_code: string;
+      value: string;
+    };
+    processor_response: {
+      avs_code: string;
+      cvv_code: string;
+      response_code: string;
+    };
+  };
+};
+export type PayPalPaymentSource = {
+  shipping: {
+    name: {
+      full_name: string;
+    };
+    address: {
+      address_line_1: string;
+      address_line_2: string;
+      admin_area_2: string;
+      admin_area_1: string;
+      postal_code: string;
+      country_code: string;
+    };
+  };
+  usage_type: string;
+  customer_type: string;
+  email_address: string;
+  payer_id: string;
+  name: {
+    given_name: string;
+    surname: string;
+    full_name: string;
+  };
+  phone: {
+    phone_number: {
+      country_code: string;
+      national_number: string;
+    };
+  };
+  tenant: string;
+};
+
+export type PaymentTokens = {
+  customer?: { id: string };
+  payment_tokens?: Array<{
+    id: string;
+    customer: { id: string };
+    payment_source: {
+      card: CardPaymentSource;
+      paypal: PayPalPaymentSource;
+      venmo: PayPalPaymentSource;
+    };
+  }>;
+};
+
+export type GetUserInfoResponse = {
+  userIdToken?: string;
+  paymentTokens?: PaymentTokens;
+};
+
 export type ClientTokenRequest = {
   paymentId: string;
   paymentVersion: number;
@@ -262,6 +349,7 @@ export type CustomOnApproveData = {
   paymentID?: string | null;
   subscriptionID?: string | null;
   authCode?: string | null;
+  saveCard?: boolean;
 };
 
 export type CustomInvoiceData = {
@@ -274,6 +362,10 @@ export type CustomInvoiceData = {
 
 export type SettingsProviderProps = {
   getSettingsUrl: string;
+  getUserInfoUrl?: string;
   requestHeader: RequestHeader;
   options: ReactPayPalScriptOptions;
+  removePaymentTokenUrl?: string;
 };
+
+export type RemovePaymentTokenRequest = { paymentTokenId: string };

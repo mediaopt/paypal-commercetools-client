@@ -28,7 +28,6 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
       return {
         color: settings.paypalButtonConfig.buttonColor,
         label: settings.paypalButtonConfig.buttonLabel,
-        tagline: settings.buttonTagline,
         shape: settings.buttonShape,
       };
     }
