@@ -18,7 +18,7 @@ type SettingsContextT = {
 
 const SettingsContext = createContext<SettingsContextT>({
   handleGetSettings: () => {},
-  settings: {},
+  settings: undefined,
 });
 
 export const SettingsProvider: FC<
