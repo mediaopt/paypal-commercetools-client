@@ -192,7 +192,7 @@ function App() {
         options={{
           ...options,
           components: "hosted-fields,buttons",
-          vault: false,
+          vault: true,
         }}
       />
     ),
