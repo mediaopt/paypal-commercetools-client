@@ -21,7 +21,7 @@ export const RenderTemplate: FC<
   createOrderUrl,
   onApproveUrl,
   authorizeOrderUrl,
-  getUserIdTokenUrl,
+  getUserInfoUrl,
   removePaymentTokenUrl,
 
   shippingMethodId,
@@ -35,7 +35,7 @@ export const RenderTemplate: FC<
       options={options}
       getSettingsUrl={getSettingsUrl}
       requestHeader={requestHeader}
-      getUserIdTokenUrl={getUserIdTokenUrl}
+      getUserInfoUrl={getUserInfoUrl}
       removePaymentTokenUrl={removePaymentTokenUrl}
     >
       <NotificationsProvider>

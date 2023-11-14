@@ -11,7 +11,7 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
   createPaymentUrl,
   requestHeader,
   getClientTokenUrl,
-  getUserIdTokenUrl,
+  getUserInfoUrl,
   shippingMethodId,
   cartInformation,
   createOrderUrl,
@@ -32,7 +32,7 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
       onApproveUrl={onApproveUrl}
       purchaseCallback={purchaseCallback}
       enableVaulting={enableVaulting}
-      getUserIdTokenUrl={getUserIdTokenUrl}
+      getUserInfoUrl={getUserInfoUrl}
     >
       <HostedFieldsButton options={options} enableVaulting={enableVaulting} />
     </RenderTemplate>

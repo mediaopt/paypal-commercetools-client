@@ -13,7 +13,7 @@ export const PaymentTokens: React.FC<SmartComponentsProps> = ({
   createOrderUrl,
   onApproveUrl,
   authorizeOrderUrl,
-  getUserIdTokenUrl,
+  getUserInfoUrl,
   removePaymentTokenUrl,
 
   requestHeader,
@@ -34,7 +34,7 @@ export const PaymentTokens: React.FC<SmartComponentsProps> = ({
       getSettingsUrl={getSettingsUrl}
       purchaseCallback={purchaseCallback}
       authorizeOrderUrl={authorizeOrderUrl}
-      getUserIdTokenUrl={getUserIdTokenUrl}
+      getUserInfoUrl={getUserInfoUrl}
       enableVaulting={enableVaulting}
       removePaymentTokenUrl={removePaymentTokenUrl}
     >

@@ -33,7 +33,7 @@ const SettingsContext = createContext<SettingsContextT>({
 export const SettingsProvider: FC<
   React.PropsWithChildren<SettingsProviderProps>
 > = ({
-  getUserIdTokenUrl,
+  getUserInfoUrl,
   getSettingsUrl,
   requestHeader,
   options,
@@ -46,10 +46,10 @@ export const SettingsProvider: FC<
 
   const value = useMemo(() => {
     const handleGetSettings = async () => {
-      if (getUserIdTokenUrl && !userIdToken) {
+      if (getUserInfoUrl && !userIdToken) {
         const { userIdToken, paymentTokens } = (await getUserInfo(
           requestHeader,
-          getUserIdTokenUrl
+          getUserInfoUrl
         )) as GetUserInfoResponse;
 
         setPaymentTokens(paymentTokens);

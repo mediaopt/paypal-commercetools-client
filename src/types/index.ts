@@ -63,7 +63,7 @@ export type GeneralComponentsProps = {
   createOrderUrl: string;
   onApproveUrl: string;
   authorizeOrderUrl?: string;
-  getUserIdTokenUrl?: string;
+  getUserInfoUrl?: string;
   removePaymentTokenUrl?: string;
 
   shippingMethodId: string;
@@ -322,7 +322,7 @@ export type CustomOnApproveData = {
 
 export type SettingsProviderProps = {
   getSettingsUrl: string;
-  getUserIdTokenUrl?: string;
+  getUserInfoUrl?: string;
   requestHeader: RequestHeader;
   options: ReactPayPalScriptOptions;
   removePaymentTokenUrl?: string;

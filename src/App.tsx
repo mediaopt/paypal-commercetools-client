@@ -63,7 +63,7 @@ function App() {
   };
 
   const vaultParams = {
-    getUserIdTokenUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
+    getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
     enableVaulting: true,
   };
 
