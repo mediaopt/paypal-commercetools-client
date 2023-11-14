@@ -4,12 +4,16 @@ import { CustomPayPalButtonsComponentProps } from "../../types";
 
 import { usePayment } from "../../app/usePayment";
 import { useSettings } from "../../app/useSettings";
+import { useLoader } from "../../app/useLoader";
+import { useNotifications } from "../../app/useNotifications";
 
 export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   props
 ) => {
   const { handleCreateOrder, handleOnApprove } = usePayment();
   const { settings } = useSettings();
+  const { isLoading } = useLoader();
+  const { notify } = useNotifications();
   const { paypalMessages, ...restprops } = props;
 
   const style = useMemo(() => {
@@ -30,6 +34,13 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     return restprops.style;
   }, [settings, restprops]);
 
+
+  const errorFunc = (err: Record<string, unknown>) => {
+    isLoading(false);
+    notify("Error", "an error occurred");
+    console.error(err);
+  };
+
   return (
     <>
       <PayPalButtons
@@ -37,6 +48,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         style={style}
         createOrder={handleCreateOrder}
         onApprove={handleOnApprove}
+        onError={errorFunc}
       />
       {paypalMessages && <PayPalMessages {...paypalMessages} />}
     </>
