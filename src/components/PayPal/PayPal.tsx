@@ -15,6 +15,9 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
   authorizeOrderUrl,
   getUserInfoUrl,
 
+  createVaultSetupTokenUrl,
+  approveVaultSetupTokenUrl,
+
   requestHeader,
   shippingMethodId,
   cartInformation,
@@ -38,6 +41,8 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
       authorizeOrderUrl={authorizeOrderUrl}
       getUserInfoUrl={getUserInfoUrl}
       enableVaulting={enableVaulting}
+      createVaultSetupTokenUrl={createVaultSetupTokenUrl}
+      approveVaultSetupTokenUrl={approveVaultSetupTokenUrl}
     >
       <PayPalButton {...buttonProps} />
     </RenderTemplate>
