@@ -9,7 +9,7 @@ import { usePayment } from "../../app/usePayment";
 import { useSettings } from "../../app/useSettings";
 import { HostedFieldsProps } from "../../types";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
-import { HOSTED_FIELDS_CARD_FIELDS } from "./constants";
+import { HOSTED_FIELDS_CARD_FIELDS, HOSTED_FIELDS_BUTTON } from "./constants";
 import { SubmitPayment } from "./SubmitPayment";
 
 const CUSTOM_FIELD_STYLE = {
@@ -25,14 +25,20 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   const { settings, paymentTokens } = useSettings();
   const { clientToken } = usePayment();
   const [addNew, setAddNew] = useState(false);
+  const [vaultId, setVaultId] = useState<string>();
 
   let saveCard = false;
 
   const cardPaymentTokens = paymentTokens?.payment_tokens?.filter(
     (paymentToken) => paymentToken.payment_source.card !== undefined
   );
+
   const hostedFieldClasses = useMemo(() => {
-    return settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
+    const hostedFieldsPayButtonClasses =
+      settings?.hostedFieldsPayButtonClasses || HOSTED_FIELDS_BUTTON;
+    const hostedFieldsInputFieldClasses =
+      settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
+    return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
   }, [settings]);
 
   return !settings ? (
@@ -53,7 +59,44 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
       cardPaymentTokens?.length > 0 &&
       addNew === false ? (
         <>
-          <button onClick={() => setAddNew(true)}>Add New Card</button>
+          {cardPaymentTokens.map((paymentToken) => {
+            const { id, payment_source } = paymentToken;
+            const { brand, last_digits } = payment_source.card;
+
+            return (
+              <div key={id}>
+                <span>
+                  <input
+                    type="radio"
+                    name="pay-with-vaulted-card"
+                    value={id}
+                    onChange={(e) => {
+                      setVaultId(e.target.value);
+                    }}
+                  />
+                  {brand} ending in {last_digits}
+                </span>
+              </div>
+            );
+          })}
+          {vaultId && (
+            <div className="h-9">
+              <button
+                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
+                onClick={() =>
+                  handleCreateOrder({
+                    paymentSource: "card",
+                    storeInVault: saveCard,
+                    vaultId: vaultId,
+                  })
+                }
+              >
+                Pay
+              </button>
+            </div>
+          )}
+
+          <button onClick={() => setAddNew(true)}>Add A New Card</button>
         </>
       ) : (
         <PayPalHostedFieldsProvider
@@ -75,7 +118,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             <HostedFieldsInvalid />
           </label>
           <PayPalHostedField
-            className={hostedFieldClasses}
+            className={hostedFieldClasses.hostedFieldsInputFieldClasses}
             style={CUSTOM_FIELD_STYLE}
             id="card-number"
             hostedFieldType="number"
@@ -89,7 +132,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             <HostedFieldsInvalid />
           </label>
           <PayPalHostedField
-            className={hostedFieldClasses}
+            className={hostedFieldClasses.hostedFieldsInputFieldClasses}
             style={CUSTOM_FIELD_STYLE}
             id="cvv"
             hostedFieldType="cvv"
@@ -100,7 +143,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             <HostedFieldsInvalid />
           </label>
           <PayPalHostedField
-            className={hostedFieldClasses}
+            className={hostedFieldClasses.hostedFieldsInputFieldClasses}
             style={CUSTOM_FIELD_STYLE}
             id="expiration-date"
             hostedFieldType="expirationDate"

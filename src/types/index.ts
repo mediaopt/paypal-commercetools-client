@@ -14,6 +14,7 @@ export type CreateOrderRequest = {
 export type CreateOrderData = {
   paymentSource?: FUNDING_SOURCE;
   storeInVault?: boolean;
+  vaultId?: string;
 };
 
 export type CreateOrderResponse = {
