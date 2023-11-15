@@ -10,7 +10,13 @@ import { useNotifications } from "../../app/useNotifications";
 export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   props
 ) => {
-  const { handleCreateOrder, handleOnApprove } = usePayment();
+  const {
+    handleCreateOrder,
+    handleOnApprove,
+    vaultOnly,
+    handleCreateVaultSetupToken,
+    handleApproveVaultSetupToken,
+  } = usePayment();
   const { settings } = useSettings();
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
@@ -34,20 +40,32 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     return restprops.style;
   }, [settings, restprops]);
 
-
   const errorFunc = (err: Record<string, unknown>) => {
     isLoading(false);
     notify("Error", "an error occurred");
     console.error(err);
   };
 
+  let actions: any;
+
+  if (vaultOnly) {
+    actions = {
+      createVaultSetupToken: () => handleCreateVaultSetupToken("paypal"),
+      onApprove: handleApproveVaultSetupToken,
+    };
+  } else {
+    actions = {
+      createOrder: handleCreateOrder,
+      onApprove: handleOnApprove,
+    };
+  }
+
   return (
     <>
       <PayPalButtons
         {...restprops}
         style={style}
-        createOrder={handleCreateOrder}
-        onApprove={handleOnApprove}
+        {...actions}
         onError={errorFunc}
       />
       {paypalMessages && <PayPalMessages {...paypalMessages} />}

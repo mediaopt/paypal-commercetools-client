@@ -6,6 +6,20 @@ import {
 } from "@paypal/react-paypal-js";
 import { FUNDING_SOURCE } from "@paypal/paypal-js/types/components/funding-eligibility";
 
+export type CreateVaultSetupTokenRequest = { paymentSource: FUNDING_SOURCE };
+export type CreateVaultSetupTokenResponse = {
+  createVaultSetupTokenResponse: { id: string };
+  version: string;
+};
+
+export type ApproveVaultSetupTokenRequest = { vaultSetupToken: string };
+export type ApproveVaultSetupTokenResponse = {
+  createPaymentTokenResponse: { id: string };
+  version: string;
+};
+
+export type ApproveVaultSetupTokenData = { vaultSetupToken: string };
+
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
@@ -71,11 +85,14 @@ export type GeneralComponentsProps = {
 
   createPaymentUrl: string;
   getSettingsUrl: string;
-  createOrderUrl: string;
-  onApproveUrl: string;
+  createOrderUrl?: string;
+  onApproveUrl?: string;
   authorizeOrderUrl?: string;
   getUserInfoUrl?: string;
   removePaymentTokenUrl?: string;
+
+  createVaultSetupTokenUrl?: string;
+  approveVaultSetupTokenUrl?: string;
 
   shippingMethodId: string;
   purchaseCallback: (result: any, options?: any) => void;

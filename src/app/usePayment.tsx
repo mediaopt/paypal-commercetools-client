@@ -6,6 +6,8 @@ import React, {
   useMemo,
   useEffect,
 } from "react";
+import { FUNDING_SOURCE } from "@paypal/paypal-js/types/components/funding-eligibility";
+
 import { Result } from "../components/Result";
 import {
   GeneralComponentsProps,
@@ -18,8 +20,15 @@ import {
   OnApproveResponse,
   CreateOrderData,
   CustomInvoiceData,
+  ApproveVaultSetupTokenData,
 } from "../types";
-import { createPayment, createOrder, onApprove } from "../services";
+import {
+  createPayment,
+  createOrder,
+  onApprove,
+  createVaultSetupToken,
+  approveVaultSetupToken,
+} from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
@@ -49,6 +58,14 @@ type PaymentContextT = {
   clientToken: string;
   handleCreateOrder: (orderData?: CreateOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
+  vaultOnly: boolean;
+
+  handleCreateVaultSetupToken: (
+    paymentSource: FUNDING_SOURCE
+  ) => Promise<string>;
+  handleApproveVaultSetupToken: (
+    data: ApproveVaultSetupTokenData
+  ) => Promise<void>;
   handleCreateInvoice: (data: CustomInvoiceData) => Promise<string>;
 };
 
@@ -60,6 +77,11 @@ const PaymentContext = createContext<PaymentContextT>({
   clientToken: "",
   handleCreateOrder: (orderData?: CreateOrderData) => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
+  vaultOnly: false,
+  handleCreateVaultSetupToken: (paymentSource: FUNDING_SOURCE) =>
+    Promise.resolve(""),
+  handleApproveVaultSetupToken: (data?: ApproveVaultSetupTokenData) =>
+    Promise.resolve(),
   handleCreateInvoice: () => Promise.resolve(""),
 });
 
@@ -73,6 +95,9 @@ export const PaymentProvider: FC<
   createOrderUrl,
   onApproveUrl,
   authorizeOrderUrl,
+
+  createVaultSetupTokenUrl,
+  approveVaultSetupTokenUrl,
 
   getClientTokenUrl,
   requestHeader,
@@ -109,6 +134,41 @@ export const PaymentProvider: FC<
       setResultSuccess(true);
       setShowResult(true);
       setResultMessage("Test success successful");
+    };
+
+    const handleCreateVaultSetupToken = async (
+      paymentSource: FUNDING_SOURCE
+    ) => {
+      if (!createVaultSetupTokenUrl) return "";
+
+      const createVaultSetupTokenResult = await createVaultSetupToken(
+        requestHeader,
+        createVaultSetupTokenUrl,
+        paymentSource
+      );
+
+      return createVaultSetupTokenResult
+        ? createVaultSetupTokenResult.createVaultSetupTokenResponse.id
+        : "";
+    };
+    const handleApproveVaultSetupToken = async ({
+      vaultSetupToken,
+    }: ApproveVaultSetupTokenData) => {
+      if (!approveVaultSetupTokenUrl) return;
+
+      const result = await approveVaultSetupToken(
+        requestHeader,
+        approveVaultSetupTokenUrl,
+        vaultSetupToken
+      );
+      if (result) {
+        setShowResult(true);
+        setResultSuccess(true);
+        purchaseCallback(result);
+      } else {
+        setShowResult(true);
+        setResultSuccess(false);
+      }
     };
 
     const handleCreateOrder = async (orderData?: CreateOrderData) => {
@@ -193,9 +253,13 @@ export const PaymentProvider: FC<
       const onAuthorizeOrderUrl =
         settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;
 
+      const requestUrl = onAuthorizeOrderUrl ?? onApproveUrl;
+
+      if (!requestUrl) return;
+
       const onApproveResult = await onApprove(
         requestHeader,
-        onAuthorizeOrderUrl ?? onApproveUrl,
+        requestUrl,
         paymentInfo.id,
         latestPaymentVersion,
         orderID,
@@ -262,6 +326,9 @@ export const PaymentProvider: FC<
       isLoading(false);
     };
 
+    let vaultOnly: boolean =
+      createVaultSetupTokenUrl && approveVaultSetupTokenUrl ? true : false;
+
     return {
       setSuccess,
       requestHeader,
@@ -270,7 +337,9 @@ export const PaymentProvider: FC<
       clientToken,
       handleOnApprove,
       handleCreateOrder,
-      enableVaulting,
+      vaultOnly,
+      handleCreateVaultSetupToken,
+      handleApproveVaultSetupToken,
       handleCreateInvoice,
     };
   }, [
@@ -284,6 +353,8 @@ export const PaymentProvider: FC<
     shippingMethodId,
     notify,
     settings,
+    createVaultSetupTokenUrl,
+    approveVaultSetupTokenUrl,
   ]);
 
   return (

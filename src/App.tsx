@@ -67,6 +67,22 @@ function App() {
     enableVaulting: true,
   };
 
+  const vaultOnlyParams = {
+    getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
+    enableVaulting: true,
+    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+    getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
+    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
+
+    createVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/createVaultSetupToken`,
+    approveVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/approveVaultSetupToken`,
+
+    purchaseCallback: (result: any, options: any) => {
+      console.log("Do something", result, options);
+    },
+    shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
+  };
+
   const options = {
     clientId:
       "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
@@ -111,6 +127,15 @@ function App() {
     PayPalVault: (
       <PayPal
         {...params}
+        {...vaultParams}
+        requestHeader={requestHeader}
+        options={options}
+        fundingSource="paypal"
+      />
+    ),
+    PayPalVaultOnly: (
+      <PayPal
+        {...vaultOnlyParams}
         {...vaultParams}
         requestHeader={requestHeader}
         options={options}

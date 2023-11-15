@@ -24,6 +24,9 @@ export const RenderTemplate: FC<
   getUserInfoUrl,
   removePaymentTokenUrl,
 
+  createVaultSetupTokenUrl,
+  approveVaultSetupTokenUrl,
+
   shippingMethodId,
   cartInformation,
   enableVaulting,
@@ -53,6 +56,8 @@ export const RenderTemplate: FC<
             purchaseCallback={purchaseCallback}
             authorizeOrderUrl={authorizeOrderUrl}
             enableVaulting={enableVaulting}
+            createVaultSetupTokenUrl={createVaultSetupTokenUrl}
+            approveVaultSetupTokenUrl={approveVaultSetupTokenUrl}
           >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>
