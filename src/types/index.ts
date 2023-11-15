@@ -369,12 +369,8 @@ export type CustomOnApproveData = {
   saveCard?: boolean;
 };
 
-export type CustomInvoiceData = {
-  fraudNetSessionId: string;
-  nationalNumber: string;
-  countryCode: string;
-  birthDate: string;
-  setRatepayMessage: Dispatch<SetStateAction<string | undefined>>;
+export type CustomInvoiceData = CreateInvoiceData & {
+  setRatepayMessage?: Dispatch<SetStateAction<string | undefined>>;
 };
 
 export type SettingsProviderProps = {

@@ -12,7 +12,8 @@ import { PayUponInvoice } from "./components/PayUponInvoice";
 import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
-const FRONTASTIC_SESSION: string = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiOGY2ZGM2MWQtNDk0Ny00YTA4LWFmM2MtZmJlNDZkYmU1MjgxIn0.gfYRqe63U6-vRjaoGqrmRb-eGxVjr6NYeCrsFXB2FJU";
+const FRONTASTIC_SESSION: string =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiZWEyYzg0MWMtNjc0NS00NmJhLTljOGItMTJjMGE2OWNlZTM1In0.X8Zal7DlVdkxuZsLcgZlrJN-zNbbkJdlYVHNTgY1iJ0";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 

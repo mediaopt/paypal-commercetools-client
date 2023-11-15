@@ -21,6 +21,7 @@ import {
   CreateOrderData,
   CustomInvoiceData,
   ApproveVaultSetupTokenData,
+  CreateInvoiceData,
 } from "../types";
 import {
   createPayment,
@@ -55,7 +56,10 @@ type PaymentContextT = {
   requestHeader: RequestHeader;
   handleCreatePayment: () => Promise<void>;
   clientToken: string;
-  handleCreateOrder: (orderData?: CreateOrderData) => Promise<string>;
+  handleCreateOrder: (
+    orderData?: CreateOrderData & CustomInvoiceData,
+    isInvoice?: boolean,
+  ) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
   vaultOnly: boolean;
 
@@ -65,7 +69,20 @@ type PaymentContextT = {
   handleApproveVaultSetupToken: (
     data: ApproveVaultSetupTokenData,
   ) => Promise<void>;
-  handleCreateInvoice: (data: CustomInvoiceData) => Promise<string>;
+};
+
+const setRelevantData = (
+  orderData?: CreateOrderData & CustomInvoiceData,
+  isInvoice?: boolean,
+  enableVaulting?: boolean,
+) => {
+  if (isInvoice) {
+    return orderData as CreateInvoiceData;
+  } else
+    return {
+      storeInVault: enableVaulting,
+      ...orderData,
+    };
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -74,14 +91,16 @@ const PaymentContext = createContext<PaymentContextT>({
   requestHeader: {},
   handleCreatePayment: () => Promise.resolve(),
   clientToken: "",
-  handleCreateOrder: (orderData?: CreateOrderData) => Promise.resolve(""),
+  handleCreateOrder: (
+    orderData?: CreateOrderData & CustomInvoiceData,
+    isInvoice?: boolean,
+  ) => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
   vaultOnly: false,
   handleCreateVaultSetupToken: (paymentSource: FUNDING_SOURCE) =>
     Promise.resolve(""),
   handleApproveVaultSetupToken: (data?: ApproveVaultSetupTokenData) =>
     Promise.resolve(),
-  handleCreateInvoice: () => Promise.resolve(""),
 });
 
 export const PaymentProvider: FC<
@@ -170,8 +189,20 @@ export const PaymentProvider: FC<
       }
     };
 
-    const handleCreateOrder = async (orderData?: CreateOrderData) => {
+    const handleCreateOrder = async (
+      orderData?: CreateOrderData & CustomInvoiceData,
+      isInvoise = false,
+    ) => {
       if (!createOrderUrl) return "";
+      const setRatepayMessage = isInvoise
+        ? orderData?.setRatepayMessage
+        : undefined;
+
+      const relevantOrderData = setRelevantData(
+        orderData,
+        isInvoise,
+        enableVaulting,
+      );
 
       const createOrderResult = await createOrder(
         requestHeader,
@@ -179,69 +210,43 @@ export const PaymentProvider: FC<
         paymentInfo.id,
         paymentInfo.version,
         {
-          storeInVault: enableVaulting,
-          ...orderData,
+          ...relevantOrderData,
         },
       );
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        const { id, status, payment_source } = orderData;
-        latestPaymentVersion = paymentVersion;
-        if (status === "COMPLETED" && payment_source) {
-          setShowResult(true);
-          setResultSuccess(true);
-          purchaseCallback(orderData);
-          return "";
+        const { id, status, payment_source, success, details } = orderData;
+        if (paymentVersion) {
+          latestPaymentVersion = paymentVersion;
+        }
+        if (isInvoise) {
+          if (success) {
+            setRatepayMessage && setRatepayMessage(undefined);
+            return orderData.id;
+          } else {
+            const errorDetails = details?.length && details[0];
+            if (errorDetails) {
+              const ratepayError = relevantError(errorDetails);
+              if (ratepayError) {
+                setRatepayMessage && setRatepayMessage(ratepayError);
+                return "";
+              }
+            }
+            notify("Error", orderData?.message ?? t("thirdPartyIssue"));
+            return "";
+          }
         } else {
-          return id;
+          if (status === "COMPLETED" && payment_source) {
+            setShowResult(true);
+            setResultSuccess(true);
+            purchaseCallback(orderData);
+            return "";
+          } else {
+            return id;
+          }
         }
       } else return "";
-    };
-
-    const handleCreateInvoice = async (data: CustomInvoiceData) => {
-      if (!createOrderUrl) return "";
-      const {
-        fraudNetSessionId,
-        nationalNumber,
-        countryCode,
-        birthDate,
-        setRatepayMessage,
-      } = data;
-
-      const createOrderResult = await createOrder(
-        requestHeader,
-        createOrderUrl,
-        paymentInfo.id,
-        paymentInfo.version,
-        {
-          fraudNetSessionId,
-          nationalNumber,
-          countryCode,
-          birthDate,
-        },
-      );
-
-      if (createOrderResult) {
-        const { orderData, paymentVersion } = createOrderResult;
-        if (paymentVersion) latestPaymentVersion = paymentVersion;
-        if (orderData?.success) {
-          setRatepayMessage(undefined);
-          return orderData.id;
-        } else {
-          const errorDetails =
-            orderData?.details?.length && orderData?.details[0];
-          if (errorDetails) {
-            const ratepayError = relevantError(errorDetails);
-            if (ratepayError) {
-              setRatepayMessage(ratepayError);
-              return "";
-            }
-          }
-          notify("Error", orderData?.message ?? t("thirdPartyIssue"));
-        }
-      }
-      return "";
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
@@ -339,7 +344,6 @@ export const PaymentProvider: FC<
       vaultOnly,
       handleCreateVaultSetupToken,
       handleApproveVaultSetupToken,
-      handleCreateInvoice,
     };
   }, [
     paymentInfo,
