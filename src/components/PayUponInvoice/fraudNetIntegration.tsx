@@ -37,7 +37,7 @@ export const embeddFraudNet = async (
   const noscriptImgSRC = noscriptSRC(sessionId, merchantId, pageId);
 
   const fnclsScript = document.querySelector(
-    'script[fncls="' + fraudNetFncls + '"]',
+    `script[fncls="${fraudNetFncls}"]`,
   );
   if (Boolean(fnclsScript))
     (fnclsScript as HTMLScriptElement).text = fnclsNetText;
@@ -64,9 +64,7 @@ export const embeddFraudNet = async (
     document.body.appendChild(fraudNetNoscript);
   }
 
-  const fraudnetScript = document.querySelector(
-    'script[src="' + fraudNetUrl + '"]',
-  );
+  const fraudnetScript = document.querySelector(`script[src="${fraudNetUrl}"]`);
   if (fraudnetScript) onLoad(sessionId);
   else
     loadScript(fraudNetUrl).then((res) => {

@@ -28,9 +28,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
   const [phone, setPhone] = useState("+49 ");
   const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
   const maxDate = new Date().toJSON().slice(0, 10);
-  const [ratepayMessage, setRatepayMessage] = useState<string | undefined>(
-    undefined,
-  );
+  const [ratepayMessage, setRatepayMessage] = useState<string>();
 
   return (
     <form

@@ -25,9 +25,7 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   pageId,
   invoiceBenefitsMessage,
 }) => {
-  const [fraudNetSessionId, setFraudNetSessionId] = useState<
-    string | undefined
-  >(undefined);
+  const [fraudNetSessionId, setFraudNetSessionId] = useState<string>();
 
   const { notify } = useNotifications();
   const { t } = useTranslation();

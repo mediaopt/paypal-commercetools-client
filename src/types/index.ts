@@ -23,7 +23,7 @@ export type ApproveVaultSetupTokenData = { vaultSetupToken: string };
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
-  orderData?: CreateOrderData | CreateInvoiceData;
+  orderData?: CreatePayPalOrderData;
 };
 
 export type CreateOrderData = {
@@ -38,6 +38,8 @@ export type CreateInvoiceData = {
   nationalNumber?: string;
   countryCode?: string;
 };
+
+export type CreatePayPalOrderData = CreateOrderData & CreateInvoiceData;
 
 export type CreateOrderResponse = {
   orderData: {
@@ -369,7 +371,7 @@ export type CustomOnApproveData = {
   saveCard?: boolean;
 };
 
-export type CustomInvoiceData = CreateInvoiceData & {
+export type CustomOrderData = CreatePayPalOrderData & {
   setRatepayMessage?: Dispatch<SetStateAction<string | undefined>>;
 };
 

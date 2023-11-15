@@ -18,8 +18,7 @@ import {
   ClientTokenResponse,
   CustomOnApproveData,
   OnApproveResponse,
-  CreateOrderData,
-  CustomInvoiceData,
+  CustomOrderData,
   ApproveVaultSetupTokenData,
   CreateInvoiceData,
 } from "../types";
@@ -57,7 +56,7 @@ type PaymentContextT = {
   handleCreatePayment: () => Promise<void>;
   clientToken: string;
   handleCreateOrder: (
-    orderData?: CreateOrderData & CustomInvoiceData,
+    orderData?: CustomOrderData,
     isInvoice?: boolean,
   ) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
@@ -72,7 +71,7 @@ type PaymentContextT = {
 };
 
 const setRelevantData = (
-  orderData?: CreateOrderData & CustomInvoiceData,
+  orderData?: CustomOrderData,
   isInvoice?: boolean,
   enableVaulting?: boolean,
 ) => {
@@ -91,10 +90,8 @@ const PaymentContext = createContext<PaymentContextT>({
   requestHeader: {},
   handleCreatePayment: () => Promise.resolve(),
   clientToken: "",
-  handleCreateOrder: (
-    orderData?: CreateOrderData & CustomInvoiceData,
-    isInvoice?: boolean,
-  ) => Promise.resolve(""),
+  handleCreateOrder: (orderData?: CustomOrderData, isInvoice?: boolean) =>
+    Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
   vaultOnly: false,
   handleCreateVaultSetupToken: (paymentSource: FUNDING_SOURCE) =>
@@ -190,17 +187,17 @@ export const PaymentProvider: FC<
     };
 
     const handleCreateOrder = async (
-      orderData?: CreateOrderData & CustomInvoiceData,
-      isInvoise = false,
+      orderData?: CustomOrderData,
+      isInvoice = false,
     ) => {
       if (!createOrderUrl) return "";
-      const setRatepayMessage = isInvoise
+      const setRatepayMessage = isInvoice
         ? orderData?.setRatepayMessage
         : undefined;
 
       const relevantOrderData = setRelevantData(
         orderData,
-        isInvoise,
+        isInvoice,
         enableVaulting,
       );
 
@@ -220,7 +217,7 @@ export const PaymentProvider: FC<
         if (paymentVersion) {
           latestPaymentVersion = paymentVersion;
         }
-        if (isInvoise) {
+        if (isInvoice) {
           if (success) {
             setRatepayMessage && setRatepayMessage(undefined);
             return orderData.id;

@@ -4,8 +4,7 @@ import {
   RequestHeader,
   CreateOrderRequest,
   CreateOrderResponse,
-  CreateOrderData,
-  CreateInvoiceData,
+  CreatePayPalOrderData,
 } from "../types";
 
 export const createOrder = async (
@@ -13,7 +12,7 @@ export const createOrder = async (
   url: string,
   paymentId: string,
   paymentVersion: number,
-  orderData?: CreateOrderData | CreateInvoiceData,
+  orderData?: CreatePayPalOrderData,
 ) => {
   try {
     const data: CreateOrderRequest = {
