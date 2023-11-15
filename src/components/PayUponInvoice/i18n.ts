@@ -45,6 +45,7 @@ i18n.use(initReactI18next).init({
           "Die Kombination aus Ihrem Namen und Ihrer Anschrift konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut. Weitere Informationen finden Sie in den Ratepay <0>Datenschutzbestimmungen</0> oder nutzen Sie das Ratepay <1>Kontaktformular</1>.",
         paymentSourceDeclined:
           "Die gewählte Zahlungsart kann nicht genutzt werden. Diese Entscheidung basiert auf einem automatisierten Datenverarbeitungsverfahren. Weitere Informationen finden Sie in den Ratepay <0>Datenschutzbestimmungen</0> oder nutzen Sie das Ratepay <1>Kontaktformular</1>.",
+        duplicatePui: "",
       },
     },
   },
