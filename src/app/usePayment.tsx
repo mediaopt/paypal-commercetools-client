@@ -330,8 +330,9 @@ export const PaymentProvider: FC<
       isLoading(false);
     };
 
-    let vaultOnly: boolean =
-      createVaultSetupTokenUrl && approveVaultSetupTokenUrl ? true : false;
+    let vaultOnly: boolean = !!(
+      createVaultSetupTokenUrl && approveVaultSetupTokenUrl
+    );
 
     return {
       setSuccess,
