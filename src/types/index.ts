@@ -123,17 +123,25 @@ export type FraudnetPage =
   | "inline-cart-page"
   | "checkout-page";
 
-export type PayUponInvoiceProps = {
+type ratepayPaymentRestrictions = {
+  minPayableAmount: number;
+  maxPayableAmount: number;
+};
+
+export type PayUponInvoiceProps = ratepayPaymentRestrictions & {
   merchantId: string;
   pageId: FraudnetPage;
   invoiceBenefitsMessage: string;
 };
 
-export type PayUponInvoiceButtonProps = {
+export type PayUponInvoiceMaskProps = {
   fraudNetSessionId: string;
   invoiceBenefitsMessage?: string;
   purchaseCallback?: (result: any, options?: any) => void;
 };
+
+export type PayUponInvoiceButtonProps = ratepayPaymentRestrictions &
+  PayUponInvoiceMaskProps;
 
 export type CustomPayPalButtonsComponentProps = Omit<
   PayPalButtonsComponentProps,

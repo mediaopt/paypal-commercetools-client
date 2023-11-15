@@ -24,6 +24,8 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   merchantId,
   pageId,
   invoiceBenefitsMessage,
+  minPayableAmount,
+  maxPayableAmount,
 }) => {
   const [fraudNetSessionId, setFraudNetSessionId] = useState<string>();
 
@@ -63,6 +65,8 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
           fraudNetSessionId={fraudNetSessionId}
           invoiceBenefitsMessage={invoiceBenefitsMessage}
           purchaseCallback={purchaseCallback}
+          maxPayableAmount={maxPayableAmount}
+          minPayableAmount={minPayableAmount}
         />
       ) : (
         <></>

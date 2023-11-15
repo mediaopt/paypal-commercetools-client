@@ -13,7 +13,7 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiZWEyYzg0MWMtNjc0NS00NmJhLTljOGItMTJjMGE2OWNlZTM1In0.X8Zal7DlVdkxuZsLcgZlrJN-zNbbkJdlYVHNTgY1iJ0";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiNWI4ZjEzODUtNmU2OC00NmRjLWJlZjItZmYwZDYyYWNmODg3In0.F7OLYbLRfTwMUIO4h1Pi2JJ3PsEE7nTL1Od1U0Zi4fk";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -104,6 +104,8 @@ function App() {
     pageId: "checkout-page",
     invoiceBenefitsMessage:
       "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
+    minPayableAmount: 5, //euro
+    maxPayableAmount: 2500, //euro
   };
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {

@@ -3,7 +3,7 @@ import parsePhoneNumber from "libphonenumber-js";
 import { usePayment } from "../../app/usePayment";
 import { useNotifications } from "../../app/useNotifications";
 import { InvoiceLegalNote } from "./InvoiceLegalNote";
-import { PayUponInvoiceButtonProps } from "../../types";
+import { PayUponInvoiceMaskProps } from "../../types";
 import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
 import { useTranslation } from "react-i18next";
 import { RatepayErrorNote } from "./RatepayErrorNote";
@@ -17,7 +17,7 @@ const parsePhone = (phone: string) => {
     : phone;
 };
 
-export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
+export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   fraudNetSessionId,
   invoiceBenefitsMessage,
   purchaseCallback,
@@ -30,26 +30,29 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
   const maxDate = new Date().toJSON().slice(0, 10);
   const [ratepayMessage, setRatepayMessage] = useState<string>();
 
+  const submitForm = async (formData: HTMLFormElement) => {
+    const birthDate = formData["birthDate"].value;
+    const { countryCallingCode, nationalNumber } = {
+      ...parsePhoneNumber(phone),
+    };
+    if (countryCallingCode && nationalNumber) {
+      const orderStatus = await handleCreateOrder({
+        fraudNetSessionId,
+        nationalNumber,
+        countryCode: countryCallingCode,
+        birthDate,
+        setRatepayMessage,
+      });
+      if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);
+    } else notifyWrongPhone();
+  };
+
   return (
     <form
       className="my-4"
       onSubmit={async (event) => {
         event.preventDefault();
-        const formData = event.target as HTMLFormElement;
-        const birthDate = formData["birthDate"].value;
-        const { countryCallingCode, nationalNumber } = {
-          ...parsePhoneNumber(phone),
-        };
-        if (countryCallingCode && nationalNumber) {
-          const orderStatus = await handleCreateOrder({
-            fraudNetSessionId,
-            nationalNumber,
-            countryCode: countryCallingCode,
-            birthDate,
-            setRatepayMessage,
-          });
-          if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);
-        } else notifyWrongPhone();
+        await submitForm(event.target as HTMLFormElement);
       }}
     >
       {invoiceBenefitsMessage && (

@@ -9,10 +9,9 @@ import { PayUponInvoiceButtonProps } from "../../types";
 import { PayUponInvoiceMask } from "./PayUponInvoiceMask";
 import { useTranslation } from "react-i18next";
 
-const minPayableAmount = 5; //euro
-const maxPayableAmount = 2500; //euro
-
 export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
+  maxPayableAmount,
+  minPayableAmount,
   fraudNetSessionId,
   invoiceBenefitsMessage,
   purchaseCallback,
