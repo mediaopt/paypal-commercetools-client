@@ -33,19 +33,19 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   const { t } = useTranslation();
   const locale = navigator.language.substring(0, 2);
 
-  const onLoad = (sessionId?: string) => {
-    if (sessionId) setFraudNetSessionId(sessionId);
-    else {
-      setFraudNetSessionId("");
-      notify("Warning", t("thirdPartyIssue"));
-    }
-  };
-
   useEffect(() => {
     if (i18n.language !== locale && i18n.languages.includes(locale))
       i18n.changeLanguage(locale);
-    embeddFraudNet(merchantId, pageId, onLoad);
-  }, []);
+  }, [locale]);
+
+  useEffect(() => {
+    if (!fraudNetSessionId)
+      embeddFraudNet(merchantId, pageId, setFraudNetSessionId);
+  }, [merchantId, pageId, fraudNetSessionId]);
+
+  useEffect(() => {
+    if (fraudNetSessionId === "") notify("Warning", t("thirdPartyIssue"));
+  }, [fraudNetSessionId, notify, t]);
 
   return (
     <RenderTemplate

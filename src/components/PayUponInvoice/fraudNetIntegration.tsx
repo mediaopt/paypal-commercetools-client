@@ -28,7 +28,7 @@ const noscriptSRC = (
 export const embeddFraudNet = async (
   merchantId: string,
   pageId: FraudnetPage,
-  onLoad: (value: string | undefined) => void,
+  setFraudnetSessionId: (value: string | undefined) => void,
 ) => {
   const sessionId = uuidv4().substring(0, 32);
   const fnclsNetText = JSON.stringify(
@@ -65,9 +65,9 @@ export const embeddFraudNet = async (
   }
 
   const fraudnetScript = document.querySelector(`script[src="${fraudNetUrl}"]`);
-  if (fraudnetScript) onLoad(sessionId);
+  if (fraudnetScript) setFraudnetSessionId(sessionId);
   else
     loadScript(fraudNetUrl).then((res) => {
-      res ? onLoad(sessionId) : onLoad("");
+      res ? setFraudnetSessionId(sessionId) : setFraudnetSessionId("");
     });
 };
