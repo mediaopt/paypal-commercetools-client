@@ -34,7 +34,6 @@ import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
-import { createPaypalInvoice } from "../services/createPaypalInvoice";
 import { useTranslation } from "react-i18next";
 import { relevantError } from "../components/PayUponInvoice/RatepayErrorNote";
 
@@ -61,10 +60,10 @@ type PaymentContextT = {
   vaultOnly: boolean;
 
   handleCreateVaultSetupToken: (
-    paymentSource: FUNDING_SOURCE
+    paymentSource: FUNDING_SOURCE,
   ) => Promise<string>;
   handleApproveVaultSetupToken: (
-    data: ApproveVaultSetupTokenData
+    data: ApproveVaultSetupTokenData,
   ) => Promise<void>;
   handleCreateInvoice: (data: CustomInvoiceData) => Promise<string>;
 };
@@ -137,14 +136,14 @@ export const PaymentProvider: FC<
     };
 
     const handleCreateVaultSetupToken = async (
-      paymentSource: FUNDING_SOURCE
+      paymentSource: FUNDING_SOURCE,
     ) => {
       if (!createVaultSetupTokenUrl) return "";
 
       const createVaultSetupTokenResult = await createVaultSetupToken(
         requestHeader,
         createVaultSetupTokenUrl,
-        paymentSource
+        paymentSource,
       );
 
       return createVaultSetupTokenResult
@@ -159,7 +158,7 @@ export const PaymentProvider: FC<
       const result = await approveVaultSetupToken(
         requestHeader,
         approveVaultSetupTokenUrl,
-        vaultSetupToken
+        vaultSetupToken,
       );
       if (result) {
         setShowResult(true);
@@ -182,7 +181,7 @@ export const PaymentProvider: FC<
         {
           storeInVault: enableVaulting,
           ...orderData,
-        }
+        },
       );
 
       if (createOrderResult) {
@@ -210,16 +209,16 @@ export const PaymentProvider: FC<
         setRatepayMessage,
       } = data;
 
-      const createOrderResult = await createPaypalInvoice(
+      const createOrderResult = await createOrder(
         requestHeader,
         createOrderUrl,
+        paymentInfo.id,
+        paymentInfo.version,
         {
           fraudNetSessionId,
           nationalNumber,
           countryCode,
           birthDate,
-          paymentId: paymentInfo.id,
-          paymentVersion: paymentInfo.version,
         },
       );
 
@@ -263,7 +262,7 @@ export const PaymentProvider: FC<
         paymentInfo.id,
         latestPaymentVersion,
         orderID,
-        saveCard
+        saveCard,
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;

@@ -23,7 +23,7 @@ export type ApproveVaultSetupTokenData = { vaultSetupToken: string };
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
-  orderData?: CreateOrderData;
+  orderData?: CreateOrderData | CreateInvoiceData;
 };
 
 export type CreateOrderData = {
@@ -32,13 +32,20 @@ export type CreateOrderData = {
   vaultId?: string;
 };
 
+export type CreateInvoiceData = {
+  fraudNetSessionId?: string;
+  birthDate?: string;
+  nationalNumber?: string;
+  countryCode?: string;
+};
+
 export type CreateOrderResponse = {
   orderData: {
     id: string;
     status: string;
-      success?: boolean;
-      message?: string;
-      details?: string;
+    success?: boolean;
+    message?: string;
+    details?: string;
     payment_source?: {
       card: {
         name: string;
@@ -51,13 +58,6 @@ export type CreateOrderResponse = {
     };
   };
   paymentVersion: number;
-};
-
-export type createInvoiceRequest = CreateOrderRequest & {
-  fraudNetSessionId: string;
-  birthDate: string;
-  nationalNumber: string;
-  countryCode: string;
 };
 
 export type OnApproveRequest = {
