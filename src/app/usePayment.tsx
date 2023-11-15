@@ -55,10 +55,7 @@ type PaymentContextT = {
   requestHeader: RequestHeader;
   handleCreatePayment: () => Promise<void>;
   clientToken: string;
-  handleCreateOrder: (
-    orderData?: CustomOrderData,
-    isInvoice?: boolean,
-  ) => Promise<string>;
+  handleCreateOrder: (orderData?: CustomOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
   vaultOnly: boolean;
 
@@ -90,8 +87,7 @@ const PaymentContext = createContext<PaymentContextT>({
   requestHeader: {},
   handleCreatePayment: () => Promise.resolve(),
   clientToken: "",
-  handleCreateOrder: (orderData?: CustomOrderData, isInvoice?: boolean) =>
-    Promise.resolve(""),
+  handleCreateOrder: (orderData?: CustomOrderData) => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
   vaultOnly: false,
   handleCreateVaultSetupToken: (paymentSource: FUNDING_SOURCE) =>
@@ -186,18 +182,12 @@ export const PaymentProvider: FC<
       }
     };
 
-    const handleCreateOrder = async (
-      orderData?: CustomOrderData,
-      isInvoice = false,
-    ) => {
+    const handleCreateOrder = async (orderData?: CustomOrderData) => {
       if (!createOrderUrl) return "";
-      const setRatepayMessage = isInvoice
-        ? orderData?.setRatepayMessage
-        : undefined;
-
+      const setRatepayMessage = orderData?.setRatepayMessage ?? undefined;
       const relevantOrderData = setRelevantData(
         orderData,
-        isInvoice,
+        !!setRatepayMessage,
         enableVaulting,
       );
 
@@ -214,10 +204,8 @@ export const PaymentProvider: FC<
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
         const { id, status, payment_source, success, details } = orderData;
-        if (paymentVersion) {
-          latestPaymentVersion = paymentVersion;
-        }
-        if (isInvoice) {
+        latestPaymentVersion = paymentVersion;
+        if (setRatepayMessage) {
           if (success) {
             setRatepayMessage && setRatepayMessage(undefined);
             return orderData.id;
@@ -233,15 +221,14 @@ export const PaymentProvider: FC<
             notify("Error", orderData?.message ?? t("thirdPartyIssue"));
             return "";
           }
+        }
+        if (status === "COMPLETED" && payment_source) {
+          setShowResult(true);
+          setResultSuccess(true);
+          purchaseCallback(orderData);
+          return "";
         } else {
-          if (status === "COMPLETED" && payment_source) {
-            setShowResult(true);
-            setResultSuccess(true);
-            purchaseCallback(orderData);
-            return "";
-          } else {
-            return id;
-          }
+          return id;
         }
       } else return "";
     };

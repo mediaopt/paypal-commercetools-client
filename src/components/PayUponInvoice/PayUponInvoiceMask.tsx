@@ -41,16 +41,13 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceButtonProps> = ({
           ...parsePhoneNumber(phone),
         };
         if (countryCallingCode && nationalNumber) {
-          const orderStatus = await handleCreateOrder(
-            {
-              fraudNetSessionId,
-              nationalNumber,
-              countryCode: countryCallingCode,
-              birthDate,
-              setRatepayMessage,
-            },
-            true,
-          );
+          const orderStatus = await handleCreateOrder({
+            fraudNetSessionId,
+            nationalNumber,
+            countryCode: countryCallingCode,
+            birthDate,
+            setRatepayMessage,
+          });
           if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);
         } else notifyWrongPhone();
       }}
