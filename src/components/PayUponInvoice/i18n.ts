@@ -30,22 +30,24 @@ i18n.use(initReactI18next).init({
     },
     de: {
       translation: {
-        wrongPhone: "",
-        birthDate: "",
-        phoneNumber: "",
+        wrongPhone:
+          "Die Landesvorwahl oder die nationale Telefonnummer konnte nicht identifiziert werden, bitte überprüfen Sie die Daten",
+        birthDate: "Geburtsdatum",
+        phoneNumber: "Telefonnummer",
         thirdPartyIssue:
-          "Die Zahlung per Rechnung ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.",
-        wrongIntent: "Die Zahlung per Rechnung ist zur Zeit nicht möglich.",
+          "Zahlung auf Rechnung ist derzeit nicht verfügbar. Bitte versuchen Sie es später noch einmal.",
+        wrongIntent: "Zahlung auf Rechnung ist zur Zeit nicht verfügbar.",
         tooSmall: "Zahlung auf Rechnung ist ab {{min}} Euro möglich.",
         tooBig:
-          "Zahlung auf Rechnung ist nur möglich, wenn der Betrag unter {{max}} Euro liegt.",
+          "Zahlung auf Rechnung ist nur bei einem Betrag unter {{max}}Euro möglich.",
         pUILegalNote:
           "Mit Klicken auf den Button akzeptieren Sie die <0>Ratepay Zahlungsbedingungen</0> und erklären sich mit der Durchführung einer <1>Risikoprüfung durch Ratepay</1>, unseren Partner, einverstanden. Sie akzeptieren auch PayPals <2>Datenschutzerklärung</2>. Falls Ihre Transaktion per Kauf auf Rechnung erfolgreich abgewickelt werden kann, wird der Kaufpreis an Ratepay abgetreten und Sie dürfen nur an Ratepay überweisen, nicht an den Händler.",
         paymentSourceNotVerified:
           "Die Kombination aus Ihrem Namen und Ihrer Anschrift konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut. Weitere Informationen finden Sie in den Ratepay <0>Datenschutzbestimmungen</0> oder nutzen Sie das Ratepay <1>Kontaktformular</1>.",
         paymentSourceDeclined:
           "Die gewählte Zahlungsart kann nicht genutzt werden. Diese Entscheidung basiert auf einem automatisierten Datenverarbeitungsverfahren. Weitere Informationen finden Sie in den Ratepay <0>Datenschutzbestimmungen</0> oder nutzen Sie das Ratepay <1>Kontaktformular</1>.",
-        duplicatePui: "",
+        duplicatePui:
+          "Ein Rechnungskauf-Auftrag mit der gleichen Nutzlast wurde in den letzten Sekunden bereits erfolgreich bearbeitet. Um eine neue Bestellung zu verarbeiten, versuchen Sie es bitte in einigen Sekunden erneut.",
       },
     },
   },
