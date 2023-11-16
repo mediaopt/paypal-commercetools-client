@@ -66,7 +66,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         className={STYLED_PAYMENT_FIELDS}
         required
         autoComplete="bday"
-        min="1990-01-01"
+        min="1900-01-01"
         max={maxDate}
       />
       <label htmlFor="phone">Phone number</label>
