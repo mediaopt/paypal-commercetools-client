@@ -208,6 +208,9 @@ export const PaymentProvider: FC<
         if (setRatepayMessage) {
           if (id) {
             setRatepayMessage && setRatepayMessage(undefined);
+            setShowResult(true);
+            setResultSuccess(true);
+            purchaseCallback(orderData);
             return id;
           } else {
             const errorDetails = details?.length && details[0];
