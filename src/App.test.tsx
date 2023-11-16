@@ -25,3 +25,9 @@ test("HostedFields is shown", () => {
   const linkElement = screen.getAllByText(/HostedFields/i);
   expect(linkElement.length).toEqual(2);
 });
+
+test("Pay upon invoice is shown", () => {
+  render(<App />);
+  const linkElement = screen.getAllByText(/PayUponInvoice/i);
+  expect(linkElement.length).toEqual(1);
+});

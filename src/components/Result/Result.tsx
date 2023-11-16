@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { ERROR_TEXT_STYLE, SUCCESS_TEXT_STYLE } from "../../styles";
 
 type ResultProps = {
   success?: boolean;
@@ -11,7 +12,7 @@ export const Result: FC<React.PropsWithChildren<ResultProps>> = ({
   children,
 }) => {
   return (
-    <div className={!success ? "text-rose-600" : "text-green-700"}>
+    <div className={!success ? ERROR_TEXT_STYLE : SUCCESS_TEXT_STYLE}>
       {message ?? "Thank you for your purchase!"}
 
       <div>{children}</div>

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import {
   PayPalButtonsComponentProps,
   ReactPayPalScriptOptions,
@@ -22,7 +23,7 @@ export type ApproveVaultSetupTokenData = { vaultSetupToken: string };
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
-  orderData?: CreateOrderData;
+  orderData?: CreatePayPalOrderData;
 };
 
 export type CreateOrderData = {
@@ -31,10 +32,22 @@ export type CreateOrderData = {
   vaultId?: string;
 };
 
+export type CreateInvoiceData = {
+  fraudNetSessionId?: string;
+  birthDate?: string;
+  nationalNumber?: string;
+  countryCode?: string;
+};
+
+export type CreatePayPalOrderData = CreateOrderData & CreateInvoiceData;
+
 export type CreateOrderResponse = {
   orderData: {
     id: string;
     status: string;
+    success?: boolean;
+    message?: string;
+    details?: string;
     payment_source?: {
       card: {
         name: string;
@@ -100,6 +113,35 @@ export type HostedFieldsProps = {
 
 export type HostedFieldsSmartComponentProps = SmartComponentsProps &
   HostedFieldsThreeDSAuth;
+
+export type FraudnetPage =
+  | "home-page"
+  | "search-result-page"
+  | "category-page"
+  | "product-detail-page"
+  | "cart-page"
+  | "inline-cart-page"
+  | "checkout-page";
+
+type ratepayPaymentRestrictions = {
+  minPayableAmount: number;
+  maxPayableAmount: number;
+};
+
+export type PayUponInvoiceProps = ratepayPaymentRestrictions & {
+  merchantId: string;
+  pageId: FraudnetPage;
+  invoiceBenefitsMessage: string;
+};
+
+export type PayUponInvoiceMaskProps = {
+  fraudNetSessionId: string;
+  invoiceBenefitsMessage?: string;
+  purchaseCallback?: (result: any, options?: any) => void;
+};
+
+export type PayUponInvoiceButtonProps = ratepayPaymentRestrictions &
+  PayUponInvoiceMaskProps;
 
 export type CustomPayPalButtonsComponentProps = Omit<
   PayPalButtonsComponentProps,
@@ -335,6 +377,10 @@ export type CustomOnApproveData = {
   subscriptionID?: string | null;
   authCode?: string | null;
   saveCard?: boolean;
+};
+
+export type CustomOrderData = CreatePayPalOrderData & {
+  setRatepayMessage?: Dispatch<SetStateAction<string | undefined>>;
 };
 
 export type SettingsProviderProps = {
