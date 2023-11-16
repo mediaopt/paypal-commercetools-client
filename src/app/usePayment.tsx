@@ -203,12 +203,12 @@ export const PaymentProvider: FC<
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        const { id, status, payment_source, success, details } = orderData;
+        const { id, status, payment_source, details } = orderData;
         latestPaymentVersion = paymentVersion;
         if (setRatepayMessage) {
-          if (success) {
+          if (id) {
             setRatepayMessage && setRatepayMessage(undefined);
-            return orderData.id;
+            return id;
           } else {
             const errorDetails = details?.length && details[0];
             if (errorDetails) {
