@@ -221,14 +221,15 @@ export const PaymentProvider: FC<
             notify("Error", orderData?.message ?? t("thirdPartyIssue"));
             return "";
           }
-        }
-        if (status === "COMPLETED" && payment_source) {
-          setShowResult(true);
-          setResultSuccess(true);
-          purchaseCallback(orderData);
-          return "";
         } else {
-          return id;
+          if (status === "COMPLETED" && payment_source) {
+            setShowResult(true);
+            setResultSuccess(true);
+            purchaseCallback(orderData);
+            return "";
+          } else {
+            return id;
+          }
         }
       } else return "";
     };
