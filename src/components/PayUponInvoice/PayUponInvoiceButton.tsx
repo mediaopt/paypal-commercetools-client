@@ -24,9 +24,9 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   const invoiceError = !(settings?.payPalIntent === "Capture")
     ? ["wrongIntent"]
     : paymentInfo.id && paymentInfo.amount < minPayableAmount
-    ? ["tooSmall", { min: minPayableAmount.toString() }]
+    ? ["tooSmall", { min: minPayableAmount }]
     : paymentInfo.amount > maxPayableAmount
-    ? ["tooBig", { max: maxPayableAmount.toString() }]
+    ? ["tooBig", { max: maxPayableAmount }]
     : paymentInfo.id && !clientToken
     ? ["thirdPartyIssue"]
     : null;

@@ -39,7 +39,7 @@ i18n.use(initReactI18next).init({
         wrongIntent: "Zahlung auf Rechnung ist zur Zeit nicht verfügbar.",
         tooSmall: "Zahlung auf Rechnung ist ab {{min}} Euro möglich.",
         tooBig:
-          "Zahlung auf Rechnung ist nur bei einem Betrag unter {{max}}Euro möglich.",
+          "Zahlung auf Rechnung ist nur bei einem Betrag unter {{max}} Euro möglich.",
         pUILegalNote:
           "Mit Klicken auf den Button akzeptieren Sie die <0>Ratepay Zahlungsbedingungen</0> und erklären sich mit der Durchführung einer <1>Risikoprüfung durch Ratepay</1>, unseren Partner, einverstanden. Sie akzeptieren auch PayPals <2>Datenschutzerklärung</2>. Falls Ihre Transaktion per Kauf auf Rechnung erfolgreich abgewickelt werden kann, wird der Kaufpreis an Ratepay abgetreten und Sie dürfen nur an Ratepay überweisen, nicht an den Händler.",
         paymentSourceNotVerified:
