@@ -9,5 +9,19 @@ ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById("commercetools-paypal-root")
+);
+
+const commercetoolsPaypalComponent = document.getElementById(
+  "commercetools-paypal-component"
+);
+const paymentMethod = commercetoolsPaypalComponent?.getAttribute(
+  "data-payment-method"
+);
+ReactDOM.render(
+  <React.StrictMode>
+    {paymentMethod === "paypal" && <>paypal</>}
+    {paymentMethod === "hosted-fields" && <>hosted-fields</>}
+  </React.StrictMode>,
+  commercetoolsPaypalComponent
 );
