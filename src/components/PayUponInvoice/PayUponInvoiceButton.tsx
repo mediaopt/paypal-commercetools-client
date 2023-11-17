@@ -22,17 +22,17 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   const { settings } = useSettings();
 
   const invoiceError = !(settings?.payPalIntent === "Capture")
-    ? "wrongIntent"
+    ? ["wrongIntent"]
     : paymentInfo.id && paymentInfo.amount < minPayableAmount
-    ? "tooSmall"
+    ? ["tooSmall", { min: minPayableAmount }]
     : paymentInfo.amount > maxPayableAmount
-    ? "tooBig"
+    ? ["tooBig", { max: maxPayableAmount }]
     : paymentInfo.id && !clientToken
-    ? "thirdPartyIssue"
+    ? ["thirdPartyIssue"]
     : null;
 
   return invoiceError ? (
-    <div>{t(invoiceError)}</div>
+    <div>{t(...invoiceError)}</div>
   ) : paymentInfo.id && clientToken ? (
     <PayUponInvoiceMask
       fraudNetSessionId={fraudNetSessionId}

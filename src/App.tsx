@@ -107,6 +107,7 @@ function App() {
       "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
     minPayableAmount: 5, //euro
     maxPayableAmount: 2500, //euro
+    customLocale: "de",
   };
 
   const AllSmartButtonsJson = {
