@@ -20,7 +20,6 @@ const parsePhone = (phone: string) => {
 export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   fraudNetSessionId,
   invoiceBenefitsMessage,
-  purchaseCallback,
 }) => {
   const { handleCreateOrder } = usePayment();
   const { notify } = useNotifications();
@@ -35,15 +34,15 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
     const { countryCallingCode, nationalNumber } = {
       ...parsePhoneNumber(phone),
     };
-    if (countryCallingCode && nationalNumber) {
-      const orderStatus = await handleCreateOrder({
+    if (countryCallingCode && nationalNumber)
+      handleCreateOrder({
         fraudNetSessionId,
         nationalNumber,
         countryCode: countryCallingCode,
         birthDate,
         setRatepayMessage,
       });
-    } else notifyWrongPhone();
+    else notifyWrongPhone();
   };
 
   return (
@@ -54,10 +53,11 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         await submitForm(event.target as HTMLFormElement);
       }}
     >
-      {invoiceBenefitsMessage && (
-        <div className="my-2">{invoiceBenefitsMessage}</div>
-      )}
-      <label htmlFor="birthDate">Birth date</label>
+      <div className="my-2">
+        {invoiceBenefitsMessage ?? t("invoiceBenefitsMessage")}
+      </div>
+
+      <label htmlFor="birthDate">{t("birthDate")}</label>
       <input
         id="birthDate"
         name="birthDate"
@@ -68,7 +68,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         min="1900-01-01"
         max={maxDate}
       />
-      <label htmlFor="phone">Phone number</label>
+      <label htmlFor="phone">{t("phoneNumber")}</label>
       <input
         type="tel"
         name="phone"

@@ -67,7 +67,6 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
         <PayUponInvoiceButton
           fraudNetSessionId={fraudNetSessionId}
           invoiceBenefitsMessage={invoiceBenefitsMessage}
-          purchaseCallback={purchaseCallback}
           maxPayableAmount={maxPayableAmount}
           minPayableAmount={minPayableAmount}
         />

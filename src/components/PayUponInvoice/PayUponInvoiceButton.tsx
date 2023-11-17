@@ -14,7 +14,6 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   minPayableAmount,
   fraudNetSessionId,
   invoiceBenefitsMessage,
-  purchaseCallback,
 }) => {
   const { paymentInfo, clientToken } = usePayment();
   const { t } = useTranslation();
@@ -37,7 +36,6 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
     <PayUponInvoiceMask
       fraudNetSessionId={fraudNetSessionId}
       invoiceBenefitsMessage={invoiceBenefitsMessage}
-      purchaseCallback={purchaseCallback}
     />
   ) : (
     <></>

@@ -13,13 +13,14 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiNWI4ZjEzODUtNmU2OC00NmRjLWJlZjItZmYwZDYyYWNmODg3In0.F7OLYbLRfTwMUIO4h1Pi2JJ3PsEE7nTL1Od1U0Zi4fk";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYTg3ZGE2MjEtYWM0MS00MGU2LWI4YjYtYWMyOGM0M2E5MjZlIiwiY2FydElkIjoiYzVhZTQzYmItMGEwNy00MmQxLThhZTgtZDVhNDAzNjdhNjljIn0.mQLNm4b-a_rpSdWvQjEwgkM_e5vHP4zlhcqJPFX8ris";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
   const cartInformation = {
     account: {
-      email: "payment_source_info_cannot_be_verified@example.com",
+      //email: "payment_source_info_cannot_be_verified@example.com",
+      email: "test@example.com",
     },
     billing: {
       firstName: "John",
@@ -102,8 +103,6 @@ function App() {
   const paypalInvoiceParams: PayUponInvoiceProps = {
     merchantId: "W3KJAHBNV5BS6",
     pageId: "checkout-page",
-    invoiceBenefitsMessage:
-      "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
     minPayableAmount: 5, //euro
     maxPayableAmount: 2500, //euro
     customLocale: "de",
