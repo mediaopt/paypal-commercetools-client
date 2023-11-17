@@ -34,7 +34,7 @@ export const CardFields: React.FC<SmartComponentsProps> = ({
       enableVaulting={enableVaulting}
       getUserInfoUrl={getUserInfoUrl}
     >
-      <CardFieldsButton options={options} enableVaulting={enableVaulting} />
+      <CardFieldsButton enableVaulting={enableVaulting} />
     </RenderTemplate>
   );
 };
