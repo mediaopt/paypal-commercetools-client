@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
+import { FUNDING_SOURCE } from "@paypal/paypal-js";
 
 import "./App.css";
 
@@ -11,9 +12,9 @@ import { PaymentTokens } from "./components/PaymentTokens";
 import { PayUponInvoice } from "./components/PayUponInvoice";
 import { PayUponInvoiceProps } from "./types";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiNWI4ZjEzODUtNmU2OC00NmRjLWJlZjItZmYwZDYyYWNmODg3In0.F7OLYbLRfTwMUIO4h1Pi2JJ3PsEE7nTL1Od1U0Zi4fk";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2UzODM1ZDAtNjljNC00ZWVlLWEwY2QtYTNiODY4MmE1Njk1IiwiYWNjb3VudCI6eyJhY2NvdW50SWQiOiJmMjJhNGZlMy1jMmI4LTQ4MDEtODIwOC00MTRkMjA2MjBlMGIiLCJlbWFpbCI6Im1hamlkLmFiYmFzaUBtZWRpYW9wdC5kZSIsInNhbHV0YXRpb24iOiIiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwiYmlydGhkYXkiOiIxOTg5LTAzLTA1VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W3siYWRkcmVzc0lkIjoiamJUSlhtM00iLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInN0cmVldE51bWJlciI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInBvc3RhbENvZGUiOiIxMzM1NyIsImNpdHkiOiJERSIsImNvdW50cnkiOiJERSIsInBob25lIjoiNTk5MzU3NTYyIiwiaXNEZWZhdWx0QmlsbGluZ0FkZHJlc3MiOmZhbHNlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOmZhbHNlfSx7ImFkZHJlc3NJZCI6ImtyelI3bTBRIiwiZmlyc3ROYW1lIjoiTWFqaWQiLCJsYXN0TmFtZSI6IkFiYmFzaSIsInN0cmVldE5hbWUiOiJDb3VudHkgU3QuIE1pYW1pIiwic3RyZWV0TnVtYmVyIjoiNDMyIiwicG9zdGFsQ29kZSI6IjMzMDE4IiwiY2l0eSI6IlVTIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6dHJ1ZSwiaXNEZWZhdWx0U2hpcHBpbmdBZGRyZXNzIjp0cnVlfV19LCJjYXJ0SWQiOiIzMTU5MzA4Zi0xMTE0LTQ5YzUtODM1MS00MmY2ZTUwMzFjODcifQ.eXeSTK0eXmRo-wiDtN3PukgA-9mAOldmwp16D3KGeUs";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -108,34 +109,62 @@ function App() {
     maxPayableAmount: 2500, //euro
   };
 
+  const AllSmartButtonsJson = {
+    ...params,
+    requestHeader,
+    options: { ...options, enableFunding: "paylater" },
+  };
+  const PayPalJson = {
+    ...params,
+    requestHeader,
+    options: options,
+    fundingSource: "paypal" as FUNDING_SOURCE,
+  };
+  const PayPalVaultJson = {
+    ...params,
+    ...vaultParams,
+    requestHeader,
+    options,
+    fundingSource: "paypal" as FUNDING_SOURCE,
+  };
+  const PayPalMessagesJson = {
+    requestHeader,
+    ...payPalMessagesParams,
+    ...params,
+    options: { ...options, components: "messages" },
+  };
+
+  const HostedFieldsJson = {
+    requestHeader,
+    ...params,
+    options: {
+      ...options,
+      components: "hosted-fields,buttons",
+      vault: false,
+    },
+  };
+
+  const PaymentTokensJson = {
+    ...params,
+    ...vaultParams,
+    removePaymentTokenUrl: `${ENDPOINT_URL}/payment/removePaymentToken`,
+    requestHeader,
+    options,
+  };
+  const PayUponInvoiceJson = {
+    options,
+    requestHeader,
+    ...params,
+    ...paypalInvoiceParams,
+  };
+
   const paymentMethods: { [index: string]: React.JSX.Element } = {
     TestButton: (
       <TestButton {...params} requestHeader={requestHeader} options={options} />
     ),
-    AllSmartButtons: (
-      <PayPal
-        {...params}
-        requestHeader={requestHeader}
-        options={{ ...options, enableFunding: "paylater" }}
-      />
-    ),
-    PayPal: (
-      <PayPal
-        {...params}
-        requestHeader={requestHeader}
-        options={options}
-        fundingSource="paypal"
-      />
-    ),
-    PayPalVault: (
-      <PayPal
-        {...params}
-        {...vaultParams}
-        requestHeader={requestHeader}
-        options={options}
-        fundingSource="paypal"
-      />
-    ),
+    AllSmartButtons: <PayPal {...AllSmartButtonsJson} />,
+    PayPal: <PayPal {...PayPalJson} />,
+    PayPalVault: <PayPal {...PayPalVaultJson} />,
     PayPalVaultOnly: (
       <PayPal
         {...vaultOnlyParams}
@@ -200,25 +229,8 @@ function App() {
         paypalMessages={payPalMessagesParams}
       />
     ),
-    PayPalMessages: (
-      <PayPalMessages
-        requestHeader={requestHeader}
-        {...payPalMessagesParams}
-        {...params}
-        options={{ ...options, components: "messages" }}
-      />
-    ),
-    HostedFields: (
-      <HostedFields
-        requestHeader={requestHeader}
-        {...params}
-        options={{
-          ...options,
-          components: "hosted-fields,buttons",
-          vault: false,
-        }}
-      />
-    ),
+    PayPalMessages: <PayPalMessages {...PayPalMessagesJson} />,
+    HostedFields: <HostedFields {...HostedFieldsJson} />,
     HostedFieldsVault: (
       <HostedFields
         requestHeader={requestHeader}
@@ -231,23 +243,8 @@ function App() {
         }}
       />
     ),
-    PaymentTokens: (
-      <PaymentTokens
-        {...params}
-        {...vaultParams}
-        removePaymentTokenUrl={`${ENDPOINT_URL}/payment/removePaymentToken`}
-        requestHeader={requestHeader}
-        options={options}
-      />
-    ),
-    PayUponInvoice: (
-      <PayUponInvoice
-        options={options}
-        requestHeader={requestHeader}
-        {...params}
-        {...paypalInvoiceParams}
-      />
-    ),
+    PaymentTokens: <PaymentTokens {...PaymentTokensJson} />,
+    PayUponInvoice: <PayUponInvoice {...PayUponInvoiceJson} />,
   };
 
   const changePaymentMethod = (e: React.ChangeEvent<HTMLInputElement>) => {
