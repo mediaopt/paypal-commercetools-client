@@ -132,6 +132,7 @@ export type PayUponInvoiceProps = ratepayPaymentRestrictions & {
   merchantId: string;
   pageId: FraudnetPage;
   invoiceBenefitsMessage: string;
+  customLocale?: string;
 };
 
 export type PayUponInvoiceMaskProps = {

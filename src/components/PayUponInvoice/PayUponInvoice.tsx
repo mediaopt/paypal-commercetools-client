@@ -26,17 +26,20 @@ export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   invoiceBenefitsMessage,
   minPayableAmount,
   maxPayableAmount,
+  customLocale,
 }) => {
   const [fraudNetSessionId, setFraudNetSessionId] = useState<string>();
 
   const { notify } = useNotifications();
   const { t } = useTranslation();
-  const locale = navigator.language.substring(0, 2);
 
   useEffect(() => {
-    if (i18n.language !== locale && i18n.languages.includes(locale))
-      i18n.changeLanguage(locale);
-  }, [locale]);
+    if (customLocale) {
+      const formattedLocale = customLocale.substring(0, 2);
+      if (i18n.language !== formattedLocale)
+        i18n.changeLanguage(formattedLocale);
+    }
+  }, [customLocale]);
 
   useEffect(() => {
     if (!fraudNetSessionId)
