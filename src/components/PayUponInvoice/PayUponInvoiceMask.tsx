@@ -43,7 +43,6 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         birthDate,
         setRatepayMessage,
       });
-      if (orderStatus && purchaseCallback) purchaseCallback(orderStatus);
     } else notifyWrongPhone();
   };
 
