@@ -195,7 +195,7 @@ export const PaymentProvider: FC<
         requestHeader,
         createOrderUrl,
         paymentInfo.id,
-        paymentInfo.version,
+        latestPaymentVersion,
         {
           ...relevantOrderData,
         },
