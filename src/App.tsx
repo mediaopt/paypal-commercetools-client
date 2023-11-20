@@ -14,7 +14,7 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYTg3ZGE2MjEtYWM0MS00MGU2LWI4YjYtYWMyOGM0M2E5MjZlIiwiY2FydElkIjoiYzVhZTQzYmItMGEwNy00MmQxLThhZTgtZDVhNDAzNjdhNjljIn0.mQLNm4b-a_rpSdWvQjEwgkM_e5vHP4zlhcqJPFX8ris";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYTg3ZGE2MjEtYWM0MS00MGU2LWI4YjYtYWMyOGM0M2E5MjZlIiwiY2FydElkIjoiMzRjZjdlYjctODZkMC00MzU0LWIwOGMtMGFhZjc2N2M4NDEyIn0.S7c704CA32NqK7KGT__luH5_OFdrUouY5G7C92skhAU";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -104,7 +104,7 @@ function App() {
   const paypalInvoiceParams: PayUponInvoiceProps = {
     merchantId: "W3KJAHBNV5BS6",
     pageId: "checkout-page",
-     minPayableAmount: 5, //euro
+    minPayableAmount: 5, //euro
     maxPayableAmount: 2500, //euro
     customLocale: "de",
   };
