@@ -9,12 +9,13 @@ import { useTranslation } from "react-i18next";
 import { RatepayErrorNote } from "./RatepayErrorNote";
 
 const parsePhone = (phone: string) => {
-  const parsedPhone = parsePhoneNumber(phone.replaceAll(" ", ""));
+  const formattedPhone = `+${phone.replace(/\D/g, "")}`;
+  const parsedPhone = parsePhoneNumber(formattedPhone);
   return parsedPhone
     ? `+${parsedPhone?.countryCallingCode ?? ""} ${
         parsedPhone?.nationalNumber ?? ""
       }`
-    : phone;
+    : formattedPhone;
 };
 
 export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
