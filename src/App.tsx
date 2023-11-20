@@ -51,18 +51,22 @@ function App() {
   const ENDPOINT_URL: string =
     "https://poc-mediaopt2.frontastic.rocks/frontastic/action";
 
-  const params = {
-    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+  const commonParams = {
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
     getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
+    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+    purchaseCallback: (result: any, options: any) => {
+      console.log("Do something", result, options);
+    },
+  };
+
+  const params = {
+    ...commonParams,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
-    purchaseCallback: (result: any, options: any) => {
-      console.log("Do something", result, options);
-    },
   };
 
   const vaultParams = {
@@ -71,18 +75,11 @@ function App() {
   };
 
   const vaultOnlyParams = {
+    ...commonParams,
     getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
     enableVaulting: true,
-    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
-    getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
-    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
-
     createVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/createVaultSetupToken`,
     approveVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/approveVaultSetupToken`,
-
-    purchaseCallback: (result: any, options: any) => {
-      console.log("Do something", result, options);
-    },
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
   };
 
@@ -117,7 +114,7 @@ function App() {
   const PayPalJson = {
     ...params,
     requestHeader,
-    options: options,
+    options,
     fundingSource: "paypal" as FUNDING_SOURCE,
   };
   const PayPalVaultJson = {
@@ -157,8 +154,6 @@ function App() {
     ...params,
     ...paypalInvoiceParams,
   };
-
-  console.log(JSON.stringify(PayPalJson));
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {
     TestButton: (
