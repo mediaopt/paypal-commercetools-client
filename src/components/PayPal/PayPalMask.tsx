@@ -68,6 +68,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...actions}
         onError={errorFunc}
       />
+
       {paypalMessages && <PayPalMessages {...paypalMessages} />}
     </>
   );
