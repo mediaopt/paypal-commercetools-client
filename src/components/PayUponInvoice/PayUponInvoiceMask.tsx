@@ -76,6 +76,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         id="phone"
         pattern="^\+[0-9]{1,4} [0-9]{0,13}$$"
         placeholder="+49 1231231234"
+        maxLength={18}
         value={phone}
         onChange={({ target }) => setPhone(parsePhone(target.value))}
         className={STYLED_PAYMENT_FIELDS}
