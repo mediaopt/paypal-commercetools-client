@@ -1,6 +1,6 @@
 {
   "name": "paypal-commercetools-client",
-  "version": "0.0.59",
+  "version": "0.0.60",
   "private": false,
   "type": "module",
   "license": "MIT",
@@ -27,7 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "clean": "rimraf dist",
