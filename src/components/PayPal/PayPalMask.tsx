@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { PayPalButtons, PayPalMessages } from "@paypal/react-paypal-js";
 import { CustomPayPalButtonsComponentProps } from "../../types";
 
@@ -20,7 +20,8 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const { settings } = useSettings();
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
-  const { paypalMessages, ...restprops } = props;
+  const { enableVaulting, paypalMessages, ...restprops } = props;
+  const save = useRef<HTMLInputElement>(null);
 
   const style = useMemo(() => {
     if (restprops.style || !settings) {
@@ -55,7 +56,12 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     };
   } else {
     actions = {
-      createOrder: handleCreateOrder,
+      createOrder: () => {
+        return handleCreateOrder({
+          storeInVault: save.current?.checked,
+          paymentSource: "paypal",
+        });
+      },
       onApprove: handleOnApprove,
     };
   }
@@ -68,6 +74,18 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...actions}
         onError={errorFunc}
       />
+      {enableVaulting && (
+        <label>
+          <input
+            type="checkbox"
+            id="save"
+            name="save"
+            ref={save}
+            className="mr-1"
+          />
+          Save for future purchases
+        </label>
+      )}
 
       {paypalMessages && <PayPalMessages {...paypalMessages} />}
     </>

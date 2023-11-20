@@ -160,8 +160,6 @@ function App() {
     ...paypalInvoiceParams,
   };
 
-  console.log(JSON.stringify(PayPalJson));
-
   const paymentMethods: { [index: string]: React.JSX.Element } = {
     TestButton: (
       <TestButton {...params} requestHeader={requestHeader} options={options} />
