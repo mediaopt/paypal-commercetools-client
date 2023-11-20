@@ -14,7 +14,7 @@ i18n.use(initReactI18next).init({
         phoneNumber: "Phone number",
         thirdPartyIssue:
           "Pay upon invoice is currently not available. Please try again later.",
-        wrongIntent: "Pay upon invoice is not available at the moment.",
+        merchantIssue: "Pay upon invoice is not available at the moment.",
         tooSmall: "Pay upon invoice is available starting from {{min}} euro.",
         tooBig:
           "Pay upon invoice is available only if amount is below {{max}} euro.",
@@ -38,7 +38,7 @@ i18n.use(initReactI18next).init({
         phoneNumber: "Telefonnummer",
         thirdPartyIssue:
           "Zahlung auf Rechnung ist derzeit nicht verfügbar. Bitte versuchen Sie es später noch einmal.",
-        wrongIntent: "Zahlung auf Rechnung ist zur Zeit nicht verfügbar.",
+        merchantIssue: "Zahlung auf Rechnung ist zur Zeit nicht verfügbar.",
         tooSmall: "Zahlung auf Rechnung ist ab {{min}} Euro möglich.",
         tooBig:
           "Zahlung auf Rechnung ist nur bei einem Betrag unter {{max}} Euro möglich.",

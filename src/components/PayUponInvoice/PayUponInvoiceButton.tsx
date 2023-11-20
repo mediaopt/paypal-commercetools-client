@@ -21,7 +21,7 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   const { settings } = useSettings();
 
   const invoiceError = !(settings?.payPalIntent === "Capture")
-    ? ["wrongIntent"]
+    ? ["merchantIssue"]
     : paymentInfo.id && paymentInfo.amount < minPayableAmount
     ? ["tooSmall", { min: minPayableAmount }]
     : paymentInfo.amount > maxPayableAmount

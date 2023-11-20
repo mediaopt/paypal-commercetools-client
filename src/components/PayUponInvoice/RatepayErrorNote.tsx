@@ -14,6 +14,7 @@ const connectToRatepayError = {
     "PAYMENT_SOURCE_DECLINED_BY_PROCESSOR",
     "PAYMENT_SOURCE_CANNOT_BE_USED",
   ],
+  merchantIssue: ["INVALID_STRING_LENGTH"],
 };
 
 export const relevantError = (orderErrorDetails: string) => {
