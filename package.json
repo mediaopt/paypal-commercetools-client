@@ -1,6 +1,6 @@
 {
   "name": "paypal-commercetools-client",
-  "version": "0.0.56",
+  "version": "0.0.60",
   "private": false,
   "type": "module",
   "license": "MIT",
@@ -27,14 +27,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "clean": "rimraf dist",
     "copy-files": "copyfiles -e *.ts -e **/*.ts -e **/*.tsx -u 1 src/**/**/*.css dist/esm/src",
     "tsc-local": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && npm run copy-files",
     "prepare-local": "npm run tsc",
-    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && npm run copy-files",
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && npm run copy-files && npm run build",
     "prepare": "npm run tsc"
   },
   "eslintConfig": {

@@ -10,27 +10,27 @@ Each payment component takes a set of props that will be the same for everything
   _POST_-Request - we get a [_CreatePaymentResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to create a payment in commercetools. Communicates with commercetools backend  
-  See the examples in our [CoFe integration example repository]()
+  See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **getSettingsUrl**: `string`  
   _POST_-Request - we get a [_GetSettingsResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to get settings of PayPal in commercetools. Communicates with commercetools backend  
-  See the examples in our [CoFe integration example repository]()
+  See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **createOrderUrl**: `string`  
   _POST_-Request - we get a [_CreateOrderResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to create a PayPal order in commercetools. Communicates with commercetools backend  
-  See the examples in our [CoFe integration example repository]()
+  See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **onApproveUrl**: `string`  
   _POST_-Request - we get a [_OnApproveResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to capture a PayPal order in commercetools. Communicates with commercetools backend  
-  See the examples in our [CoFe integration example repository]()
+  See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **authorizeOrderUrl**: `string`  
   _POST_-Request - we get a [_OnApproveResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to authorize a PayPal order in commercetools. Communicates with commercetools backend  
-  See the examples in our [CoFe integration example repository]()
+  See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **cartInformation**: `object`  
   Information about the customers cart to crate payments with.
   Structure:
@@ -97,4 +97,4 @@ PayPal messages props are based on PayPalMessages props and you can see them on 
   _POST_-Request - we get a [_ClientTokenResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The URL that gets called to the endpoint of the connect app to get the client token to use in PayPalHostedFieldsProvider component in commercetools. Communicates with commercetools backend  
-  See the examples in our [CoFe integration example repository]()
+  See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
