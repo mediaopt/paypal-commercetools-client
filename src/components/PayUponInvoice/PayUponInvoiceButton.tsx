@@ -14,7 +14,6 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   minPayableAmount,
   fraudNetSessionId,
   invoiceBenefitsMessage,
-  purchaseCallback,
 }) => {
   const { paymentInfo, clientToken } = usePayment();
   const { t } = useTranslation();
@@ -22,7 +21,7 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   const { settings } = useSettings();
 
   const invoiceError = !(settings?.payPalIntent === "Capture")
-    ? ["wrongIntent"]
+    ? ["merchantIssue"]
     : paymentInfo.id && paymentInfo.amount < minPayableAmount
     ? ["tooSmall", { min: minPayableAmount }]
     : paymentInfo.amount > maxPayableAmount
@@ -37,7 +36,6 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
     <PayUponInvoiceMask
       fraudNetSessionId={fraudNetSessionId}
       invoiceBenefitsMessage={invoiceBenefitsMessage}
-      purchaseCallback={purchaseCallback}
     />
   ) : (
     <></>

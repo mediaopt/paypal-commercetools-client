@@ -65,9 +65,9 @@ export const embeddFraudNet = async (
   }
 
   const fraudnetScript = document.querySelector(`script[src="${fraudNetUrl}"]`);
-  if (fraudnetScript) setFraudnetSessionId(sessionId);
-  else
-    loadScript(fraudNetUrl).then((res) => {
-      res ? setFraudnetSessionId(sessionId) : setFraudnetSessionId("");
-    });
+
+  if (fraudnetScript) fraudnetScript.remove();
+  loadScript(fraudNetUrl).then((res) => {
+    res ? setFraudnetSessionId(sessionId) : setFraudnetSessionId("");
+  });
 };

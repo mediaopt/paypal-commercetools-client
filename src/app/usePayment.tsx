@@ -198,7 +198,7 @@ export const PaymentProvider: FC<
         requestHeader,
         createOrderUrl,
         paymentInfo.id,
-        paymentInfo.version,
+        latestPaymentVersion,
         {
           ...relevantOrderData,
         }
@@ -209,6 +209,8 @@ export const PaymentProvider: FC<
         const { id, status, payment_source, details, links } = orderData;
         latestPaymentVersion = paymentVersion;
         if (setRatepayMessage) {
+          if (paymentVersion)
+            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
           if (id) {
             setRatepayMessage && setRatepayMessage(undefined);
             setShowResult(true);

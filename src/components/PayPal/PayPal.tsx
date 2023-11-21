@@ -44,7 +44,7 @@ export const PayPal: React.FC<SmartComponentsProps> = ({
       createVaultSetupTokenUrl={createVaultSetupTokenUrl}
       approveVaultSetupTokenUrl={approveVaultSetupTokenUrl}
     >
-      <PayPalButton {...buttonProps} />
+      <PayPalButton {...buttonProps} enableVaulting={enableVaulting} />
     </RenderTemplate>
   );
 };

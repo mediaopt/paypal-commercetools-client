@@ -132,14 +132,13 @@ type ratepayPaymentRestrictions = {
 export type PayUponInvoiceProps = ratepayPaymentRestrictions & {
   merchantId: string;
   pageId: FraudnetPage;
-  invoiceBenefitsMessage: string;
+  invoiceBenefitsMessage?: string;
   customLocale?: string;
 };
 
 export type PayUponInvoiceMaskProps = {
   fraudNetSessionId: string;
   invoiceBenefitsMessage?: string;
-  purchaseCallback?: (result: any, options?: any) => void;
 };
 
 export type PayUponInvoiceButtonProps = ratepayPaymentRestrictions &
@@ -157,6 +156,7 @@ export type CustomPayPalButtonsComponentProps = Omit<
   | "onInit"
 > & {
   paypalMessages?: PayPalMessagesComponentProps;
+  enableVaulting?: boolean;
 };
 
 export type SmartComponentsProps = CustomPayPalButtonsComponentProps &

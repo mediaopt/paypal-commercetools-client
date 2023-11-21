@@ -14,7 +14,7 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJkYjQ1NzYxMy1kN2QyLTRjY2MtOGY4ZC01YjYzYjk4NTBmNjYiLCJhY2NvdW50Ijp7ImFjY291bnRJZCI6ImYyMmE0ZmUzLWMyYjgtNDgwMS04MjA4LTQxNGQyMDYyMGUwYiIsImVtYWlsIjoibWFqaWQuYWJiYXNpQG1lZGlhb3B0LmRlIiwic2FsdXRhdGlvbiI6IiIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJiaXJ0aGRheSI6IjE5ODktMDMtMDVUMDA6MDA6MDAuMDAwWiIsImNvbmZpcm1lZCI6dHJ1ZSwiYWRkcmVzc2VzIjpbeyJhZGRyZXNzSWQiOiJqYlRKWG0zTSIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJzdHJlZXROYW1lIjoiSG9jaHN0cmFcdTAwZGZlIDM3Iiwic3RyZWV0TnVtYmVyIjoiSG9jaHN0cmFcdTAwZGZlIDM3IiwicG9zdGFsQ29kZSI6IjEzMzU3IiwiY2l0eSI6IkRFIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6ZmFsc2UsImlzRGVmYXVsdFNoaXBwaW5nQWRkcmVzcyI6ZmFsc2V9LHsiYWRkcmVzc0lkIjoia3J6UjdtMFEiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkNvdW50eSBTdC4gTWlhbWkiLCJzdHJlZXROdW1iZXIiOiI0MzIiLCJwb3N0YWxDb2RlIjoiMzMwMTgiLCJjaXR5IjoiVVMiLCJjb3VudHJ5IjoiREUiLCJwaG9uZSI6IjU5OTM1NzU2MiIsImlzRGVmYXVsdEJpbGxpbmdBZGRyZXNzIjp0cnVlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOnRydWV9XX0sIndpc2hsaXN0SWQiOiJjZTM4MzVkMC02OWM0LTRlZWUtYTBjZC1hM2I4NjgyYTU2OTUifQ.f4ZXBN4JWvZcfE6u9eln0BNRY6N19Thrg6A3nkyLpWU";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJiNTQzNjU3MS04MDk2LTQ3ZmUtYjkzZC1lYWExNDgxZTExYTYiLCJhY2NvdW50Ijp7ImFjY291bnRJZCI6ImYyMmE0ZmUzLWMyYjgtNDgwMS04MjA4LTQxNGQyMDYyMGUwYiIsImVtYWlsIjoibWFqaWQuYWJiYXNpQG1lZGlhb3B0LmRlIiwic2FsdXRhdGlvbiI6IiIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJiaXJ0aGRheSI6IjE5ODktMDMtMDVUMDA6MDA6MDAuMDAwWiIsImNvbmZpcm1lZCI6dHJ1ZSwiYWRkcmVzc2VzIjpbeyJhZGRyZXNzSWQiOiJqYlRKWG0zTSIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJzdHJlZXROYW1lIjoiSG9jaHN0cmFcdTAwZGZlIDM3Iiwic3RyZWV0TnVtYmVyIjoiSG9jaHN0cmFcdTAwZGZlIDM3IiwicG9zdGFsQ29kZSI6IjEzMzU3IiwiY2l0eSI6IkRFIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6ZmFsc2UsImlzRGVmYXVsdFNoaXBwaW5nQWRkcmVzcyI6ZmFsc2V9LHsiYWRkcmVzc0lkIjoia3J6UjdtMFEiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkNvdW50eSBTdC4gTWlhbWkiLCJzdHJlZXROdW1iZXIiOiI0MzIiLCJwb3N0YWxDb2RlIjoiMzMwMTgiLCJjaXR5IjoiVVMiLCJjb3VudHJ5IjoiREUiLCJwaG9uZSI6IjU5OTM1NzU2MiIsImlzRGVmYXVsdEJpbGxpbmdBZGRyZXNzIjp0cnVlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOnRydWV9XX0sIndpc2hsaXN0SWQiOiJjZTM4MzVkMC02OWM0LTRlZWUtYTBjZC1hM2I4NjgyYTU2OTUifQ.A6UsbrTRFH1eKM6egNJQvnTckM4nBPU_N-sFIRcR9j0";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -51,18 +51,22 @@ function App() {
   const ENDPOINT_URL: string =
     "https://poc-mediaopt2.frontastic.rocks/frontastic/action";
 
-  const params = {
-    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+  const commonParams = {
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
     getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
+    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+    purchaseCallback: (result: any, options: any) => {
+      console.log("Do something", result, options);
+    },
+  };
+
+  const params = {
+    ...commonParams,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
-    purchaseCallback: (result: any, options: any) => {
-      console.log("Do something", result, options);
-    },
   };
 
   const vaultParams = {
@@ -71,18 +75,11 @@ function App() {
   };
 
   const vaultOnlyParams = {
+    ...commonParams,
     getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
     enableVaulting: true,
-    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
-    getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
-    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
-
     createVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/createVaultSetupToken`,
     approveVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/approveVaultSetupToken`,
-
-    purchaseCallback: (result: any, options: any) => {
-      console.log("Do something", result, options);
-    },
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
   };
 
@@ -104,8 +101,6 @@ function App() {
   const paypalInvoiceParams: PayUponInvoiceProps = {
     merchantId: "W3KJAHBNV5BS6",
     pageId: "checkout-page",
-    invoiceBenefitsMessage:
-      "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
     minPayableAmount: 5, //euro
     maxPayableAmount: 2500, //euro
     customLocale: "de",
@@ -119,7 +114,7 @@ function App() {
   const PayPalJson = {
     ...params,
     requestHeader,
-    options: options,
+    options,
     fundingSource: "paypal" as FUNDING_SOURCE,
   };
   const PayPalVaultJson = {
