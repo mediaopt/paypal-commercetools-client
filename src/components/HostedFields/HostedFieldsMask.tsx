@@ -108,19 +108,25 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             );
           })}
           {vaultId && (
-            <div className="h-9">
-              <button
-                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
-                onClick={() =>
-                  handleCreateOrder({
-                    paymentSource: "card",
-                    storeInVault: saveCard,
-                    vaultId: vaultId,
-                  })
-                }
-              >
-                Pay
-              </button>
+            <div>
+              <p>
+                If the 3D secure popup appears, you need to do the verification
+                and then close the window.
+              </p>
+              <div className="h-9">
+                <button
+                  className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
+                  onClick={() =>
+                    handleCreateOrder({
+                      paymentSource: "card",
+                      storeInVault: saveCard,
+                      vaultId: vaultId,
+                    })
+                  }
+                >
+                  Pay
+                </button>
+              </div>
             </div>
           )}
 

@@ -256,6 +256,7 @@ export const PaymentProvider: FC<
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
+      isLoading(true);
 
       const { orderID, saveCard } = data;
 
@@ -287,6 +288,7 @@ export const PaymentProvider: FC<
           setResultMessage(orderData.message);
         }
       }
+      isLoading(false);
     };
 
     const handleCreatePayment = async () => {
