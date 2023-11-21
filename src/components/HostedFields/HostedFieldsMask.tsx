@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 
 import {
   PayPalHostedField,
@@ -21,7 +21,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   enableVaulting,
 }) => {
-  const { handleCreateOrder, oderDataLinks } = usePayment();
+  const { handleCreateOrder, oderDataLinks, handleOnApprove } = usePayment();
   const { settings, paymentTokens } = useSettings();
   const { clientToken } = usePayment();
   const [addNew, setAddNew] = useState(false);
@@ -52,9 +52,11 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
       "width=300,height=500"
     );
     let fireOderDataGetInterval: NodeJS.Timer;
-    const fireOderDataGet = () => {
+    const fireOderDataGet = async () => {
       if (newWindow?.closed) {
         clearInterval(fireOderDataGetInterval);
+
+        //const result = await handleOnApprove({orderID: });
       }
     };
 
