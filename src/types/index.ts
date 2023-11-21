@@ -156,6 +156,7 @@ export type CustomPayPalButtonsComponentProps = Omit<
   | "onInit"
 > & {
   paypalMessages?: PayPalMessagesComponentProps;
+  enableVaulting?: boolean;
 };
 
 export type SmartComponentsProps = CustomPayPalButtonsComponentProps &
