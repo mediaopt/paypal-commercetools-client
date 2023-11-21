@@ -21,6 +21,7 @@ import {
   CustomOrderData,
   ApproveVaultSetupTokenData,
   CreateInvoiceData,
+  OrderDataLinks,
 } from "../types";
 import {
   createPayment,
@@ -58,19 +59,19 @@ type PaymentContextT = {
   handleCreateOrder: (orderData?: CustomOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
   vaultOnly: boolean;
-
+  oderDataLinks?: OrderDataLinks;
   handleCreateVaultSetupToken: (
-    paymentSource: FUNDING_SOURCE,
+    paymentSource: FUNDING_SOURCE
   ) => Promise<string>;
   handleApproveVaultSetupToken: (
-    data: ApproveVaultSetupTokenData,
+    data: ApproveVaultSetupTokenData
   ) => Promise<void>;
 };
 
 const setRelevantData = (
   orderData?: CustomOrderData,
   isInvoice?: boolean,
-  enableVaulting?: boolean,
+  enableVaulting?: boolean
 ) => {
   if (isInvoice) {
     return orderData as CreateInvoiceData;
@@ -94,6 +95,7 @@ const PaymentContext = createContext<PaymentContextT>({
     Promise.resolve(""),
   handleApproveVaultSetupToken: (data?: ApproveVaultSetupTokenData) =>
     Promise.resolve(),
+  oderDataLinks: undefined,
 });
 
 export const PaymentProvider: FC<
@@ -121,12 +123,13 @@ export const PaymentProvider: FC<
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
+  const [oderDataLinks, setOderDataLinks] = useState<OrderDataLinks>();
 
   const { settings } = useSettings();
   const { t } = useTranslation();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
-    PaymentInfoInitialObject,
+    PaymentInfoInitialObject
   );
 
   const { isLoading } = useLoader();
@@ -148,14 +151,14 @@ export const PaymentProvider: FC<
     };
 
     const handleCreateVaultSetupToken = async (
-      paymentSource: FUNDING_SOURCE,
+      paymentSource: FUNDING_SOURCE
     ) => {
       if (!createVaultSetupTokenUrl) return "";
 
       const createVaultSetupTokenResult = await createVaultSetupToken(
         requestHeader,
         createVaultSetupTokenUrl,
-        paymentSource,
+        paymentSource
       );
 
       return createVaultSetupTokenResult
@@ -170,7 +173,7 @@ export const PaymentProvider: FC<
       const result = await approveVaultSetupToken(
         requestHeader,
         approveVaultSetupTokenUrl,
-        vaultSetupToken,
+        vaultSetupToken
       );
       if (result) {
         setShowResult(true);
@@ -188,7 +191,7 @@ export const PaymentProvider: FC<
       const relevantOrderData = setRelevantData(
         orderData,
         !!setRatepayMessage,
-        enableVaulting,
+        enableVaulting
       );
 
       const createOrderResult = await createOrder(
@@ -198,12 +201,12 @@ export const PaymentProvider: FC<
         paymentInfo.version,
         {
           ...relevantOrderData,
-        },
+        }
       );
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        const { id, status, payment_source, details } = orderData;
+        const { id, status, payment_source, details, links } = orderData;
         latestPaymentVersion = paymentVersion;
         if (setRatepayMessage) {
           if (id) {
@@ -230,6 +233,13 @@ export const PaymentProvider: FC<
             setResultSuccess(true);
             purchaseCallback(orderData);
             return "";
+          } else if (
+            status === "PAYER_ACTION_REQUIRED" &&
+            payment_source &&
+            links
+          ) {
+            setOderDataLinks(links);
+            return "";
           } else {
             return id;
           }
@@ -255,7 +265,7 @@ export const PaymentProvider: FC<
         paymentInfo.id,
         latestPaymentVersion,
         orderID,
-        saveCard,
+        saveCard
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;
@@ -280,7 +290,7 @@ export const PaymentProvider: FC<
           requestHeader,
           createPaymentUrl,
           cartInformation,
-          shippingMethodId,
+          shippingMethodId
         )) as CreatePaymentResponse;
 
         if (!createPaymentResult) {
@@ -296,7 +306,7 @@ export const PaymentProvider: FC<
             getClientTokenUrl,
             createPaymentResult.id,
             createPaymentResult.version,
-            createPaymentResult.braintreeCustomerId,
+            createPaymentResult.braintreeCustomerId
           )) as ClientTokenResponse;
           setClientToken(clientTokenResult.clientToken);
           paymentVersion = clientTokenResult.paymentVersion;
@@ -333,6 +343,7 @@ export const PaymentProvider: FC<
       vaultOnly,
       handleCreateVaultSetupToken,
       handleApproveVaultSetupToken,
+      oderDataLinks,
     };
   }, [
     paymentInfo,
@@ -347,6 +358,7 @@ export const PaymentProvider: FC<
     settings,
     createVaultSetupTokenUrl,
     approveVaultSetupTokenUrl,
+    oderDataLinks,
   ]);
 
   return (

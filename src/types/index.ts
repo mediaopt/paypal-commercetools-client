@@ -58,6 +58,7 @@ export type CreateOrderResponse = {
         type: string;
       };
     };
+    links?: OrderDataLinks;
   };
   paymentVersion: number;
 };
@@ -393,3 +394,11 @@ export type SettingsProviderProps = {
 };
 
 export type RemovePaymentTokenRequest = { paymentTokenId: string };
+
+type OrderDataLink = {
+  href: string;
+  rel: string;
+  method: string;
+};
+
+export type OrderDataLinks = OrderDataLink[];

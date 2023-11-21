@@ -21,7 +21,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   enableVaulting,
 }) => {
-  const { handleCreateOrder } = usePayment();
+  const { handleCreateOrder, oderDataLinks } = usePayment();
   const { settings, paymentTokens } = useSettings();
   const { clientToken } = usePayment();
   const [addNew, setAddNew] = useState(false);
@@ -40,6 +40,28 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
       settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
     return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
   }, [settings]);
+
+  let oderDataPayerAction = oderDataLinks?.filter(
+    (oderDataLink) => oderDataLink.rel === "payer-action"
+  );
+
+  if (oderDataPayerAction && oderDataPayerAction[0]) {
+    const newWindow = window.open(
+      oderDataPayerAction[0].href,
+      "3D Secure Check",
+      "width=300,height=500"
+    );
+    let fireOderDataGetInterval: NodeJS.Timer;
+    const fireOderDataGet = () => {
+      if (newWindow?.closed) {
+        clearInterval(fireOderDataGetInterval);
+      }
+    };
+
+    if (newWindow) {
+      fireOderDataGetInterval = setInterval(fireOderDataGet, 1000);
+    }
+  }
 
   return !settings ? (
     <></>
