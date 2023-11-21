@@ -66,6 +66,7 @@ type PaymentContextT = {
   handleApproveVaultSetupToken: (
     data: ApproveVaultSetupTokenData
   ) => Promise<void>;
+  orderId?: string;
 };
 
 const setRelevantData = (
@@ -96,6 +97,7 @@ const PaymentContext = createContext<PaymentContextT>({
   handleApproveVaultSetupToken: (data?: ApproveVaultSetupTokenData) =>
     Promise.resolve(),
   oderDataLinks: undefined,
+  orderId: undefined,
 });
 
 export const PaymentProvider: FC<
@@ -124,6 +126,7 @@ export const PaymentProvider: FC<
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
   const [oderDataLinks, setOderDataLinks] = useState<OrderDataLinks>();
+  const [orderId, setOrderId] = useState<string>();
 
   const { settings } = useSettings();
   const { t } = useTranslation();
@@ -240,7 +243,9 @@ export const PaymentProvider: FC<
             payment_source &&
             links
           ) {
+            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
             setOderDataLinks(links);
+            setOrderId(id);
             return "";
           } else {
             return id;
@@ -346,6 +351,7 @@ export const PaymentProvider: FC<
       handleCreateVaultSetupToken,
       handleApproveVaultSetupToken,
       oderDataLinks,
+      orderId,
     };
   }, [
     paymentInfo,
@@ -361,6 +367,7 @@ export const PaymentProvider: FC<
     createVaultSetupTokenUrl,
     approveVaultSetupTokenUrl,
     oderDataLinks,
+    orderId,
   ]);
 
   return (

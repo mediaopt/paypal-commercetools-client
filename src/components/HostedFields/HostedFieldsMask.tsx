@@ -21,7 +21,8 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   enableVaulting,
 }) => {
-  const { handleCreateOrder, oderDataLinks, handleOnApprove } = usePayment();
+  const { handleCreateOrder, oderDataLinks, handleOnApprove, orderId } =
+    usePayment();
   const { settings, paymentTokens } = useSettings();
   const { clientToken } = usePayment();
   const [addNew, setAddNew] = useState(false);
@@ -41,29 +42,32 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
     return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
   }, [settings]);
 
-  let oderDataPayerAction = oderDataLinks?.filter(
-    (oderDataLink) => oderDataLink.rel === "payer-action"
-  );
-
-  if (oderDataPayerAction && oderDataPayerAction[0]) {
-    const newWindow = window.open(
-      oderDataPayerAction[0].href,
-      "3D Secure Check",
-      "width=300,height=500"
+  useEffect(() => {
+    let oderDataPayerAction = oderDataLinks?.filter(
+      (oderDataLink) => oderDataLink.rel === "payer-action"
     );
-    let fireOderDataGetInterval: NodeJS.Timer;
-    const fireOderDataGet = async () => {
-      if (newWindow?.closed) {
-        clearInterval(fireOderDataGetInterval);
 
-        //const result = await handleOnApprove({orderID: });
+    if (oderDataPayerAction && oderDataPayerAction[0]) {
+      const newWindow = window.open(
+        oderDataPayerAction[0].href,
+        "3D Secure Check",
+        "width=300,height=500"
+      );
+      let fireOderDataGetInterval: NodeJS.Timer;
+      const fireOderDataGet = async () => {
+        if (newWindow?.closed) {
+          clearInterval(fireOderDataGetInterval);
+          if (orderId) {
+            await handleOnApprove({ orderID: orderId });
+          }
+        }
+      };
+
+      if (newWindow) {
+        fireOderDataGetInterval = setInterval(fireOderDataGet, 1000);
       }
-    };
-
-    if (newWindow) {
-      fireOderDataGetInterval = setInterval(fireOderDataGet, 1000);
     }
-  }
+  }, [oderDataLinks, orderId]);
 
   return !settings ? (
     <></>
