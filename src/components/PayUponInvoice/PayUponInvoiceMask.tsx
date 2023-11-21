@@ -9,18 +9,18 @@ import { useTranslation } from "react-i18next";
 import { RatepayErrorNote } from "./RatepayErrorNote";
 
 const parsePhone = (phone: string) => {
-  const parsedPhone = parsePhoneNumber(phone.replaceAll(" ", ""));
+  const formattedPhone = `+${phone.replace(/\D/g, "")}`;
+  const parsedPhone = parsePhoneNumber(formattedPhone);
   return parsedPhone
     ? `+${parsedPhone?.countryCallingCode ?? ""} ${
         parsedPhone?.nationalNumber ?? ""
       }`
-    : phone;
+    : formattedPhone;
 };
 
 export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   fraudNetSessionId,
   invoiceBenefitsMessage,
-  purchaseCallback,
 }) => {
   const { handleCreateOrder } = usePayment();
   const { notify } = useNotifications();
@@ -35,15 +35,15 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
     const { countryCallingCode, nationalNumber } = {
       ...parsePhoneNumber(phone),
     };
-    if (countryCallingCode && nationalNumber) {
-      const orderStatus = await handleCreateOrder({
+    if (countryCallingCode && nationalNumber)
+      handleCreateOrder({
         fraudNetSessionId,
         nationalNumber,
         countryCode: countryCallingCode,
         birthDate,
         setRatepayMessage,
       });
-    } else notifyWrongPhone();
+    else notifyWrongPhone();
   };
 
   return (
@@ -54,10 +54,11 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         await submitForm(event.target as HTMLFormElement);
       }}
     >
-      {invoiceBenefitsMessage && (
-        <div className="my-2">{invoiceBenefitsMessage}</div>
-      )}
-      <label htmlFor="birthDate">Birth date</label>
+      <div className="my-2">
+        {invoiceBenefitsMessage ?? t("invoiceBenefitsMessage")}
+      </div>
+
+      <label htmlFor="birthDate">{t("birthDate")}</label>
       <input
         id="birthDate"
         name="birthDate"
@@ -68,13 +69,14 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         min="1900-01-01"
         max={maxDate}
       />
-      <label htmlFor="phone">Phone number</label>
+      <label htmlFor="phone">{t("phoneNumber")}</label>
       <input
         type="tel"
         name="phone"
         id="phone"
         pattern="^\+[0-9]{1,4} [0-9]{0,13}$$"
         placeholder="+49 1231231234"
+        maxLength={18}
         value={phone}
         onChange={({ target }) => setPhone(parsePhone(target.value))}
         className={STYLED_PAYMENT_FIELDS}
