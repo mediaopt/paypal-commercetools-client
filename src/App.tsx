@@ -12,16 +12,16 @@ import { PaymentTokens } from "./components/PaymentTokens";
 import { PayUponInvoice } from "./components/PayUponInvoice";
 import { PayUponInvoiceProps } from "./types";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYTg3ZGE2MjEtYWM0MS00MGU2LWI4YjYtYWMyOGM0M2E5MjZlIiwiY2FydElkIjoiMzRjZjdlYjctODZkMC00MzU0LWIwOGMtMGFhZjc2N2M4NDEyIn0.S7c704CA32NqK7KGT__luH5_OFdrUouY5G7C92skhAU";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJiNTQzNjU3MS04MDk2LTQ3ZmUtYjkzZC1lYWExNDgxZTExYTYiLCJhY2NvdW50Ijp7ImFjY291bnRJZCI6ImYyMmE0ZmUzLWMyYjgtNDgwMS04MjA4LTQxNGQyMDYyMGUwYiIsImVtYWlsIjoibWFqaWQuYWJiYXNpQG1lZGlhb3B0LmRlIiwic2FsdXRhdGlvbiI6IiIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJiaXJ0aGRheSI6IjE5ODktMDMtMDVUMDA6MDA6MDAuMDAwWiIsImNvbmZpcm1lZCI6dHJ1ZSwiYWRkcmVzc2VzIjpbeyJhZGRyZXNzSWQiOiJqYlRKWG0zTSIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJzdHJlZXROYW1lIjoiSG9jaHN0cmFcdTAwZGZlIDM3Iiwic3RyZWV0TnVtYmVyIjoiSG9jaHN0cmFcdTAwZGZlIDM3IiwicG9zdGFsQ29kZSI6IjEzMzU3IiwiY2l0eSI6IkRFIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6ZmFsc2UsImlzRGVmYXVsdFNoaXBwaW5nQWRkcmVzcyI6ZmFsc2V9LHsiYWRkcmVzc0lkIjoia3J6UjdtMFEiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkNvdW50eSBTdC4gTWlhbWkiLCJzdHJlZXROdW1iZXIiOiI0MzIiLCJwb3N0YWxDb2RlIjoiMzMwMTgiLCJjaXR5IjoiVVMiLCJjb3VudHJ5IjoiREUiLCJwaG9uZSI6IjU5OTM1NzU2MiIsImlzRGVmYXVsdEJpbGxpbmdBZGRyZXNzIjp0cnVlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOnRydWV9XX0sIndpc2hsaXN0SWQiOiJjZTM4MzVkMC02OWM0LTRlZWUtYTBjZC1hM2I4NjgyYTU2OTUifQ.A6UsbrTRFH1eKM6egNJQvnTckM4nBPU_N-sFIRcR9j0";
+
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
   const cartInformation = {
     account: {
-      //email: "payment_source_info_cannot_be_verified@example.com",
-      email: "test@example.com",
+      email: "payment_source_info_cannot_be_verified@example.com",
     },
     billing: {
       firstName: "John",
