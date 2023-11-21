@@ -204,8 +204,6 @@ export const PaymentProvider: FC<
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
         const { id, status, payment_source, details } = orderData;
-        if (paymentVersion)
-          setPaymentInfo({ ...paymentInfo, version: paymentVersion });
         latestPaymentVersion = paymentVersion;
         if (setRatepayMessage) {
           if (id) {
