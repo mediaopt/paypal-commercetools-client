@@ -28,6 +28,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
 
+  const storeInVaultOnSuccess = settings?.storeInVaultOnSuccess;
   const save = useRef<HTMLInputElement>(null);
   const hostedField = usePayPalHostedFields();
   const threeDSAuth = settings?.threeDSOption;
@@ -113,7 +114,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
           placeholder="Full name"
         />
       </label>
-      {enableVaulting && (
+      {(enableVaulting || storeInVaultOnSuccess) && (
         <label>
           <input
             type="checkbox"
