@@ -7,6 +7,7 @@ import { PayUponInvoiceMaskProps } from "../../types";
 import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
 import { useTranslation } from "react-i18next";
 import { RatepayErrorNote } from "./RatepayErrorNote";
+import { useLoader } from "../../app/useLoader";
 
 const parsePhone = (phone: string) => {
   const formattedPhone = `+${phone.replace(/\D/g, "")}`;
@@ -25,25 +26,30 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   const { handleCreateOrder } = usePayment();
   const { notify } = useNotifications();
   const { t } = useTranslation();
+  const { isLoading } = useLoader();
+
   const [phone, setPhone] = useState("+49 ");
   const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
   const maxDate = new Date().toJSON().slice(0, 10);
   const [ratepayMessage, setRatepayMessage] = useState<string>();
 
   const submitForm = async (formData: HTMLFormElement) => {
+    isLoading(true);
+    setRatepayMessage("");
     const birthDate = formData["birthDate"].value;
     const { countryCallingCode, nationalNumber } = {
       ...parsePhoneNumber(phone),
     };
-    if (countryCallingCode && nationalNumber)
-      handleCreateOrder({
+    if (countryCallingCode && nationalNumber) {
+      await handleCreateOrder({
         fraudNetSessionId,
         nationalNumber,
         countryCode: countryCallingCode,
         birthDate,
         setRatepayMessage,
       });
-    else notifyWrongPhone();
+    } else notifyWrongPhone();
+    isLoading(false);
   };
 
   return (
@@ -51,6 +57,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
       className="my-4"
       onSubmit={async (event) => {
         event.preventDefault();
+
         await submitForm(event.target as HTMLFormElement);
       }}
     >
@@ -74,7 +81,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         type="tel"
         name="phone"
         id="phone"
-        pattern="^\+[0-9]{1,4} [0-9]{0,13}$$"
+        pattern="^\+[0-9]{1,4} [0-9]{0,14}$$"
         placeholder="+49 1231231234"
         maxLength={18}
         value={phone}
