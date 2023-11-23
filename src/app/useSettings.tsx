@@ -16,6 +16,7 @@ import {
 } from "../types";
 import { getSettings, getUserInfo, removePaymentToken } from "../services";
 import { useLoader } from "./useLoader";
+import { PARTNER_ATTRIBUTION_ID } from "../constants/constants";
 
 type SettingsContextT = {
   handleGetSettings: () => void;
@@ -112,9 +113,7 @@ export const SettingsProvider: FC<
             ...options,
             intent: settings.payPalIntent.toString().toLowerCase(),
             dataUserIdToken: userIdToken,
-            dataPartnerAttributionId: settings.partnerAttributionId
-              ? (settings.partnerAttributionId as string)
-              : undefined,
+            dataPartnerAttributionId: PARTNER_ATTRIBUTION_ID,
           }}
         >
           {children}
