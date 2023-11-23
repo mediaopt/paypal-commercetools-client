@@ -11,7 +11,7 @@ import { HostedFieldsProps } from "../../types";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
 import { HOSTED_FIELDS_CARD_FIELDS, HOSTED_FIELDS_BUTTON } from "./constants";
 import { SubmitPayment } from "./SubmitPayment";
-import { PARTNER_ATTRIBUTION_ID } from "../../constants/constants";
+import { PARTNER_ATTRIBUTION_ID } from "../../constants";
 
 const CUSTOM_FIELD_STYLE = {
   border: "1px solid #606060",

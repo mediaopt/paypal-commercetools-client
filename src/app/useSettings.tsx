@@ -16,7 +16,7 @@ import {
 } from "../types";
 import { getSettings, getUserInfo, removePaymentToken } from "../services";
 import { useLoader } from "./useLoader";
-import { PARTNER_ATTRIBUTION_ID } from "../constants/constants";
+import { PARTNER_ATTRIBUTION_ID } from "../constants";
 
 type SettingsContextT = {
   handleGetSettings: () => void;
