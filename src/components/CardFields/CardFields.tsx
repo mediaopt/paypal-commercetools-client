@@ -18,6 +18,7 @@ export const CardFields: React.FC<SmartComponentsProps> = ({
   onApproveUrl,
   purchaseCallback,
   enableVaulting,
+  authenticateThreeDSOrderUrl,
 }) => {
   return (
     <RenderTemplate
@@ -33,6 +34,7 @@ export const CardFields: React.FC<SmartComponentsProps> = ({
       purchaseCallback={purchaseCallback}
       enableVaulting={enableVaulting}
       getUserInfoUrl={getUserInfoUrl}
+      authenticateThreeDSOrderUrl={authenticateThreeDSOrderUrl}
     >
       <CardFieldsButton enableVaulting={enableVaulting} />
     </RenderTemplate>

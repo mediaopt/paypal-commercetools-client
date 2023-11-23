@@ -27,12 +27,14 @@ import {
   onApprove,
   createVaultSetupToken,
   approveVaultSetupToken,
+  authenticateThreeDSOrder,
 } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
+import { getActionIndex } from "../components/CardFields/constants";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -62,6 +64,7 @@ type PaymentContextT = {
   handleApproveVaultSetupToken: (
     data: ApproveVaultSetupTokenData
   ) => Promise<void>;
+  handleAuthenticateThreeDSOrder: (orderID: string) => Promise<number>;
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -77,6 +80,7 @@ const PaymentContext = createContext<PaymentContextT>({
     Promise.resolve(""),
   handleApproveVaultSetupToken: (data?: ApproveVaultSetupTokenData) =>
     Promise.resolve(),
+  handleAuthenticateThreeDSOrder: (orderID: string) => Promise.resolve(0),
 });
 
 export const PaymentProvider: FC<
@@ -89,6 +93,7 @@ export const PaymentProvider: FC<
   createOrderUrl,
   onApproveUrl,
   authorizeOrderUrl,
+  authenticateThreeDSOrderUrl,
 
   createVaultSetupTokenUrl,
   approveVaultSetupTokenUrl,
@@ -277,6 +282,32 @@ export const PaymentProvider: FC<
     let vaultOnly: boolean =
       createVaultSetupTokenUrl && approveVaultSetupTokenUrl ? true : false;
 
+    const handleAuthenticateThreeDSOrder = async (
+      orderID: string
+    ): Promise<number> => {
+      if (!authenticateThreeDSOrderUrl) {
+        return 0;
+      }
+      const result = await authenticateThreeDSOrder(
+        requestHeader,
+        authenticateThreeDSOrderUrl,
+        orderID,
+        latestPaymentVersion,
+        paymentInfo.id
+      );
+
+      if (!result) {
+        return 0;
+      }
+
+      const action = getActionIndex(
+        result.approve.three_d_secure.enrollment_status,
+        result.approve.three_d_secure.authentication_status,
+        result.approve.liability_shift
+      );
+      return settings?.threeDSAction[action];
+    };
+
     return {
       setSuccess,
       requestHeader,
@@ -288,6 +319,7 @@ export const PaymentProvider: FC<
       vaultOnly,
       handleCreateVaultSetupToken,
       handleApproveVaultSetupToken,
+      handleAuthenticateThreeDSOrder,
     };
   }, [
     paymentInfo,

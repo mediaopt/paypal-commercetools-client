@@ -12,7 +12,7 @@ import { CardFields } from "./components/CardFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIyOGVhMjMxYS00Mzg3LTQwMTctYWQ3Yi03YTMxMWFiMTdhNzkifQ.oq6K9l8oZZbGy2JAyCFb4TPtfiy14k4K9Q8Kz7JSgxM";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIyZWIzMjQwZC1jM2FmLTRlMmUtYTIwOC0wM2E4YWJhZjhlMjcifQ.PU-DvJWqU_Cy1iJCOf1hVrklzDmVuvWPACkSAh6v64c";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -51,8 +51,9 @@ function App() {
 
   const params = {
     createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+    authenticateThreeDSOrderUrl: `${ENDPOINT_URL}/payment/authenticateThreeDSOrder`,
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
-    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
+    /*getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,*/
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,

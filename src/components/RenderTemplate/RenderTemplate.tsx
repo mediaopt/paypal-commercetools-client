@@ -23,6 +23,7 @@ export const RenderTemplate: FC<
   authorizeOrderUrl,
   getUserInfoUrl,
   removePaymentTokenUrl,
+  authenticateThreeDSOrderUrl,
 
   createVaultSetupTokenUrl,
   approveVaultSetupTokenUrl,
@@ -58,6 +59,7 @@ export const RenderTemplate: FC<
             enableVaulting={enableVaulting}
             createVaultSetupTokenUrl={createVaultSetupTokenUrl}
             approveVaultSetupTokenUrl={approveVaultSetupTokenUrl}
+            authenticateThreeDSOrderUrl={authenticateThreeDSOrderUrl}
           >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>

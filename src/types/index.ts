@@ -80,6 +80,7 @@ export type GeneralComponentsProps = {
   authorizeOrderUrl?: string;
   getUserInfoUrl?: string;
   removePaymentTokenUrl?: string;
+  authenticateThreeDSOrderUrl?: string;
 
   createVaultSetupTokenUrl?: string;
   approveVaultSetupTokenUrl?: string;
@@ -331,6 +332,7 @@ export type GetSettingsResponse = {
   };
   hostedFieldsPayButtonClasses: string;
   hostedFieldsInputFieldClasses: string;
+  threeDSAction: Record<string, any>;
 };
 
 export type CustomOnApproveData = {

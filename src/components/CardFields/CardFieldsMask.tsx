@@ -10,7 +10,8 @@ import { useLoader } from "../../app/useLoader";
 export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   enableVaulting,
 }) => {
-  const { handleCreateOrder, handleOnApprove } = usePayment();
+  const { handleCreateOrder, handleOnApprove, handleAuthenticateThreeDSOrder } =
+    usePayment();
   const { settings, paymentTokens } = useSettings();
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
@@ -68,7 +69,10 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
         };
 
         if (threeDSAuth) {
-          if (data.liabilityShift === "POSSIBLE") {
+          handleAuthenticateThreeDSOrder(data.orderID).then((result) => {
+            console.log(result);
+          });
+          /*if (data.liabilityShift === "POSSIBLE") {
             console.log("approve from click func");
             approveTransaction(approveData);
           } else {
@@ -76,7 +80,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
             console.log("ERROR 2");
             isLoading(false);
             setPaying(false);
-          }
+          }*/
         } else {
           console.log("approve from click func");
           approveTransaction(approveData);
