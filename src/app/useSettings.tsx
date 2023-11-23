@@ -15,6 +15,7 @@ import {
   PaymentTokens,
 } from "../types";
 import { getSettings, getUserInfo, removePaymentToken } from "../services";
+import { useLoader } from "./useLoader";
 
 type SettingsContextT = {
   handleGetSettings: () => void;
@@ -43,9 +44,12 @@ export const SettingsProvider: FC<
   const [settings, setSettings] = useState<GetSettingsResponse>();
   const [userIdToken, setUserIdToken] = useState<string>();
   const [paymentTokens, setPaymentTokens] = useState<PaymentTokens>();
+  const { isLoading } = useLoader();
 
   const value = useMemo(() => {
     const handleGetSettings = async () => {
+      isLoading(true);
+
       if (getUserInfoUrl && !userIdToken) {
         const { userIdToken, paymentTokens } = (await getUserInfo(
           requestHeader,
@@ -64,8 +68,10 @@ export const SettingsProvider: FC<
 
         setSettings(getSettingsResult);
       }
+      isLoading(false);
     };
     const handleRemovePaymentToken = async (paymentTokenId: string) => {
+      isLoading(true);
       if (removePaymentTokenUrl) {
         await removePaymentToken(
           requestHeader,
@@ -81,6 +87,7 @@ export const SettingsProvider: FC<
           setPaymentTokens({ ...paymentTokens });
         }
       }
+      isLoading(false);
     };
 
     return {

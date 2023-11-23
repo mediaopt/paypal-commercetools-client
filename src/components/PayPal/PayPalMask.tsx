@@ -23,6 +23,8 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const { enableVaulting, paypalMessages, ...restprops } = props;
   const save = useRef<HTMLInputElement>(null);
 
+  const storeInVaultOnSuccess = settings?.storeInVaultOnSuccess;
+
   const style = useMemo(() => {
     if (restprops.style || !settings) {
       return restprops.style;
@@ -74,7 +76,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...actions}
         onError={errorFunc}
       />
-      {enableVaulting && (
+      {(enableVaulting || storeInVaultOnSuccess) && (
         <label>
           <input
             type="checkbox"

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 
 import {
   PayPalHostedField,
@@ -21,7 +21,8 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   enableVaulting,
 }) => {
-  const { handleCreateOrder } = usePayment();
+  const { handleCreateOrder, oderDataLinks, handleOnApprove, orderId } =
+    usePayment();
   const { settings, paymentTokens } = useSettings();
   const { clientToken } = usePayment();
   const [addNew, setAddNew] = useState(false);
@@ -40,6 +41,33 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
       settings?.hostedFieldsInputFieldClasses || HOSTED_FIELDS_CARD_FIELDS;
     return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
   }, [settings]);
+
+  useEffect(() => {
+    let oderDataPayerAction = oderDataLinks?.filter(
+      (oderDataLink) => oderDataLink.rel === "payer-action"
+    );
+
+    if (oderDataPayerAction && oderDataPayerAction[0]) {
+      const newWindow = window.open(
+        oderDataPayerAction[0].href,
+        "3D Secure Check",
+        "width=300,height=500"
+      );
+      let fireOderDataGetInterval: NodeJS.Timer;
+      const fireOderDataGet = async () => {
+        if (newWindow?.closed) {
+          clearInterval(fireOderDataGetInterval);
+          if (orderId) {
+            await handleOnApprove({ orderID: orderId });
+          }
+        }
+      };
+
+      if (newWindow) {
+        fireOderDataGetInterval = setInterval(fireOderDataGet, 1000);
+      }
+    }
+  }, [oderDataLinks, orderId]);
 
   return !settings ? (
     <></>
@@ -80,19 +108,25 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
             );
           })}
           {vaultId && (
-            <div className="h-9">
-              <button
-                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
-                onClick={() =>
-                  handleCreateOrder({
-                    paymentSource: "card",
-                    storeInVault: saveCard,
-                    vaultId: vaultId,
-                  })
-                }
-              >
-                Pay
-              </button>
+            <div>
+              <p>
+                If the 3D secure popup appears, you need to do the verification
+                and then close the window.
+              </p>
+              <div className="h-9">
+                <button
+                  className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
+                  onClick={() =>
+                    handleCreateOrder({
+                      paymentSource: "card",
+                      storeInVault: saveCard,
+                      vaultId: vaultId,
+                    })
+                  }
+                >
+                  Pay
+                </button>
+              </div>
             </div>
           )}
 
