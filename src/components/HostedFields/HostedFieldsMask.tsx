@@ -11,6 +11,7 @@ import { HostedFieldsProps } from "../../types";
 import HostedFieldsInvalid from "./HostedFieldsInvalid";
 import { HOSTED_FIELDS_CARD_FIELDS, HOSTED_FIELDS_BUTTON } from "./constants";
 import { SubmitPayment } from "./SubmitPayment";
+import { PARTNER_ATTRIBUTION_ID } from "../../constants";
 
 const CUSTOM_FIELD_STYLE = {
   border: "1px solid #606060",
@@ -78,9 +79,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
         dataClientToken: clientToken,
         components: options.components,
         vault: options.vault,
-        dataPartnerAttributionId: settings.partnerAttributionId
-          ? (settings.partnerAttributionId as string)
-          : undefined,
+        dataPartnerAttributionId: PARTNER_ATTRIBUTION_ID,
       }}
     >
       {cardPaymentTokens &&
