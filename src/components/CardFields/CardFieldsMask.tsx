@@ -44,7 +44,6 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
   const approveTransaction = (approveData: CustomOnApproveData) => {
     handleOnApprove(approveData).catch((err) => {
-      console.log("ERROR 1");
       setPaying(false);
       isLoading(false);
       notify("Error", err.message);
@@ -62,7 +61,6 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
         });
       },
       onApprove: (data: CustomOnApproveData) => {
-        console.log(data);
         const approveData: CustomOnApproveData = {
           orderID: data.orderID,
           saveCard: save.current?.checked,
@@ -70,19 +68,24 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
         if (threeDSAuth) {
           handleAuthenticateThreeDSOrder(data.orderID).then((result) => {
-            console.log(result);
+            switch (result.toString(10)) {
+              case "2":
+                approveTransaction(approveData);
+                break;
+              case "1":
+                notify("Warning", "Try again");
+                isLoading(false);
+                setPaying(false);
+                break;
+              case "0":
+              default:
+                notify("Error", "Please select different payment method");
+                isLoading(false);
+                setPaying(false);
+                break;
+            }
           });
-          /*if (data.liabilityShift === "POSSIBLE") {
-            console.log("approve from click func");
-            approveTransaction(approveData);
-          } else {
-            notify("Error", "3D Secure check has failed");
-            console.log("ERROR 2");
-            isLoading(false);
-            setPaying(false);
-          }*/
         } else {
-          console.log("approve from click func");
           approveTransaction(approveData);
         }
       },
@@ -90,7 +93,6 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
         setPaying(false);
         isLoading(false);
         notify("Error", error.message);
-        console.log("ERROR 4");
       },
     });
   }, []);
@@ -99,17 +101,11 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
     setPaying(true);
     isLoading(true);
 
-    cardField
-      .submit()
-      .then(() => {
-        console.log("success");
-      })
-      .catch((err: Record<string, never>) => {
-        notify("Error", err.message);
-        console.log("ERROR 3");
-        isLoading(false);
-        setPaying(false);
-      });
+    cardField.submit().catch((err: Record<string, never>) => {
+      notify("Error", err.message);
+      isLoading(false);
+      setPaying(false);
+    });
   };
 
   useEffect(() => {

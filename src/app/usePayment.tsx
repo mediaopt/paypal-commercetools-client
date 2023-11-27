@@ -300,6 +300,8 @@ export const PaymentProvider: FC<
         return 0;
       }
 
+      latestPaymentVersion = result.version;
+
       const action = getActionIndex(
         result.approve.three_d_secure.enrollment_status,
         result.approve.three_d_secure.authentication_status,

@@ -12,7 +12,7 @@ import { CardFields } from "./components/CardFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIyZWIzMjQwZC1jM2FmLTRlMmUtYTIwOC0wM2E4YWJhZjhlMjcifQ.PU-DvJWqU_Cy1iJCOf1hVrklzDmVuvWPACkSAh6v64c";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50Ijp7ImFjY291bnRJZCI6ImUyYzc3MzgxLTkyMzgtNGYzOS04NmM5LTRlMGFlNmE2M2JkNCIsImVtYWlsIjoiam9uYXRoYW4ueWVib2FoQG1lZGlhb3B0LmRlIiwiY29uZmlybWVkIjp0cnVlLCJhZGRyZXNzZXMiOltdfSwiY2FydElkIjoiYzc1OTI1MGMtNjQ1OS00MWNkLTlmNGYtNWE2ZmU2YjlhODY4Iiwid2lzaGxpc3RJZCI6IjIwYWEzYjhhLTc5MmUtNDNkYy1hMzFjLWRlMDA3NmZjZjVlNyJ9.p9vw9C6c8I_1rFgLMzcGrvxYs0skTYFgWy1JJ2WEKMk";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -218,8 +218,9 @@ function App() {
         options={{
           ...options,
           components: "card-fields,buttons",
-          vault: false,
+          vault: true,
         }}
+        {...vaultParams}
       />
     ),
     HostedFieldsVault: (
