@@ -22,6 +22,8 @@ import {
   ApproveVaultSetupTokenData,
   CreateInvoiceData,
   OrderDataLinks,
+  OrderData,
+  SetStringState,
 } from "../types";
 import {
   createPayment,
@@ -35,8 +37,10 @@ import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
+import { NotificationType } from "../components/Notifications";
+import { relevantError } from "../messages/errorMessages";
 import { useTranslation } from "react-i18next";
-import { relevantError } from "../components/PayUponInvoice/RatepayErrorNote";
+import { TFunction } from "i18next";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -61,10 +65,10 @@ type PaymentContextT = {
   vaultOnly: boolean;
   oderDataLinks?: OrderDataLinks;
   handleCreateVaultSetupToken: (
-    paymentSource: FUNDING_SOURCE
+    paymentSource: FUNDING_SOURCE,
   ) => Promise<string>;
   handleApproveVaultSetupToken: (
-    data: ApproveVaultSetupTokenData
+    data: ApproveVaultSetupTokenData,
   ) => Promise<void>;
   orderId?: string;
 };
@@ -72,7 +76,7 @@ type PaymentContextT = {
 const setRelevantData = (
   orderData?: CustomOrderData,
   isInvoice?: boolean,
-  enableVaulting?: boolean
+  enableVaulting?: boolean,
 ) => {
   if (isInvoice) {
     return orderData as CreateInvoiceData;
@@ -81,6 +85,25 @@ const setRelevantData = (
       storeInVault: enableVaulting,
       ...orderData,
     };
+};
+
+const handleResponceError = (
+  notify: (type: NotificationType, text: string) => void,
+  t: TFunction<any, any>,
+  errorDetails?: string,
+  errorMessage?: string,
+  showError?: SetStringState,
+) => {
+  if (!errorDetails) notify("Warning", errorMessage ?? t("ui.generalError"));
+  else if (showError) {
+    const ratepayError = relevantError(errorDetails, "pui");
+    ratepayError && showError
+      ? showError(ratepayError)
+      : notify("Warning", errorDetails ?? "Please try again later");
+  } else {
+    const paypalError = relevantError(errorDetails, "pp");
+    notify("Warning", paypalError ?? "Please try again later");
+  }
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -129,14 +152,20 @@ export const PaymentProvider: FC<
   const [orderId, setOrderId] = useState<string>();
 
   const { settings } = useSettings();
-  const { t } = useTranslation();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
-    PaymentInfoInitialObject
+    PaymentInfoInitialObject,
   );
 
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
+  const { t } = useTranslation();
+
+  const onSuccess = (orderData: OrderData) => {
+    setShowResult(true);
+    setResultSuccess(true);
+    purchaseCallback(orderData);
+  };
 
   let latestPaymentVersion = paymentInfo.version;
 
@@ -154,14 +183,14 @@ export const PaymentProvider: FC<
     };
 
     const handleCreateVaultSetupToken = async (
-      paymentSource: FUNDING_SOURCE
+      paymentSource: FUNDING_SOURCE,
     ) => {
       if (!createVaultSetupTokenUrl) return "";
 
       const createVaultSetupTokenResult = await createVaultSetupToken(
         requestHeader,
         createVaultSetupTokenUrl,
-        paymentSource
+        paymentSource,
       );
 
       return createVaultSetupTokenResult
@@ -176,7 +205,7 @@ export const PaymentProvider: FC<
       const result = await approveVaultSetupToken(
         requestHeader,
         approveVaultSetupTokenUrl,
-        vaultSetupToken
+        vaultSetupToken,
       );
       if (result) {
         setShowResult(true);
@@ -194,7 +223,7 @@ export const PaymentProvider: FC<
       const relevantOrderData = setRelevantData(
         orderData,
         !!setRatepayMessage,
-        enableVaulting
+        enableVaulting,
       );
 
       const createOrderResult = await createOrder(
@@ -204,53 +233,44 @@ export const PaymentProvider: FC<
         latestPaymentVersion,
         {
           ...relevantOrderData,
-        }
+        },
       );
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        const { id, status, payment_source, details, links } = orderData;
+        const { id, status, payment_source, details, links, message } =
+          orderData;
         latestPaymentVersion = paymentVersion;
-        if (setRatepayMessage) {
-          if (paymentVersion)
-            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
-          if (id) {
-            setRatepayMessage && setRatepayMessage(undefined);
-            setShowResult(true);
-            setResultSuccess(true);
-            purchaseCallback(orderData);
-            return id;
-          } else {
-            const errorDetails = details?.length && details[0];
-            if (errorDetails) {
-              const ratepayError = relevantError(errorDetails);
-              if (ratepayError) {
-                setRatepayMessage && setRatepayMessage(ratepayError);
-                return "";
-              }
-            }
-            notify("Error", orderData?.message ?? t("thirdPartyIssue"));
-            return "";
-          }
+        if (!id) {
+          handleResponceError(
+            notify,
+            t,
+            details?.toString(),
+            message,
+            setRatepayMessage,
+          );
+          return "";
         } else {
-          if (status === "COMPLETED" && payment_source) {
-            setShowResult(true);
-            setResultSuccess(true);
-            purchaseCallback(orderData);
-            return "";
-          } else if (
-            status === "PAYER_ACTION_REQUIRED" &&
-            payment_source &&
-            links
-          ) {
-            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
-            setOderDataLinks(links);
-            setOrderId(id);
-            return "";
+          if (setRatepayMessage) {
+            if (paymentVersion)
+              setPaymentInfo({ ...paymentInfo, version: paymentVersion });
+            setRatepayMessage && setRatepayMessage(undefined);
+            onSuccess(orderData);
           } else {
-            return id;
+            if (status === "COMPLETED" && payment_source) {
+              onSuccess(orderData);
+            } else if (
+              status === "PAYER_ACTION_REQUIRED" &&
+              payment_source &&
+              links
+            ) {
+              setPaymentInfo({ ...paymentInfo, version: paymentVersion });
+              setOderDataLinks(links);
+              setOrderId(id);
+            }
           }
         }
+        return id;
       } else return "";
     };
 
@@ -273,7 +293,7 @@ export const PaymentProvider: FC<
         paymentInfo.id,
         latestPaymentVersion,
         orderID,
-        saveCard
+        saveCard,
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;
@@ -299,7 +319,7 @@ export const PaymentProvider: FC<
           requestHeader,
           createPaymentUrl,
           cartInformation,
-          shippingMethodId
+          shippingMethodId,
         )) as CreatePaymentResponse;
 
         if (!createPaymentResult) {
@@ -315,7 +335,7 @@ export const PaymentProvider: FC<
             getClientTokenUrl,
             createPaymentResult.id,
             createPaymentResult.version,
-            createPaymentResult.braintreeCustomerId
+            createPaymentResult.braintreeCustomerId,
           )) as ClientTokenResponse;
           setClientToken(clientTokenResult.clientToken);
           paymentVersion = clientTokenResult.paymentVersion;
