@@ -11,6 +11,7 @@ i18n.use(initReactI18next).init({
         ui: {
           birthDate: "Birth date",
           phoneNumber: "Phone number",
+          generalError: "Something went wrong. Please try again later",
         },
         pui: {
           wrongPhone:
@@ -32,7 +33,7 @@ i18n.use(initReactI18next).init({
           duplicatePui:
             "A Pay Upon Invoice (Rechnungskauf) order with the same payload has already been successfully processed in the last few seconds. To process a new order, please try again in a few seconds.",
         },
-        ppError: { invalidCurrency: "", invalidAddress: "", unknownIssue: "" },
+        pp: { invalidCurrency: "", invalidAddress: "", unknownIssue: "" },
       },
     },
     de: {
@@ -58,7 +59,7 @@ i18n.use(initReactI18next).init({
           duplicatePui:
             "Ein Rechnungskauf-Auftrag mit der gleichen Nutzlast wurde in den letzten Sekunden bereits erfolgreich bearbeitet. Um eine neue Bestellung zu verarbeiten, versuchen Sie es bitte in einigen Sekunden erneut.",
         },
-        ppError: {},
+        pp: {},
       },
     },
   },
