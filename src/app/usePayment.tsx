@@ -87,7 +87,7 @@ const setRelevantData = (
     };
 };
 
-const handleResponceError = (
+const handleResponseError = (
   notify: (type: NotificationType, text: string) => void,
   t: TFunction<any, any>,
   errorDetails?: string,
@@ -242,7 +242,7 @@ export const PaymentProvider: FC<
           orderData;
         latestPaymentVersion = paymentVersion;
         if (!id) {
-          handleResponceError(
+          handleResponseError(
             notify,
             t,
             details?.toString(),
