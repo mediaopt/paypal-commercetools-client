@@ -41,25 +41,27 @@ export type CreateInvoiceData = {
 
 export type CreatePayPalOrderData = CreateOrderData & CreateInvoiceData;
 
-export type CreateOrderResponse = {
-  orderData: {
-    id: string;
-    status: string;
-    success?: boolean;
-    message?: string;
-    details?: string;
-    payment_source?: {
-      card: {
-        name: string;
-        last_digits: string;
-        expiry: string;
-        brand: string;
-        available_networks: string[];
-        type: string;
-      };
+export type OrderData = {
+  id: string;
+  status: string;
+  success?: boolean;
+  message?: string;
+  details?: string;
+  payment_source?: {
+    card: {
+      name: string;
+      last_digits: string;
+      expiry: string;
+      brand: string;
+      available_networks: string[];
+      type: string;
     };
-    links?: OrderDataLinks;
   };
+  links?: OrderDataLinks;
+};
+
+export type CreateOrderResponse = {
+  orderData: OrderData;
   paymentVersion: number;
 };
 
@@ -380,8 +382,10 @@ export type CustomOnApproveData = {
   saveCard?: boolean;
 };
 
+export type SetStringState = Dispatch<SetStateAction<string | undefined>>;
+
 export type CustomOrderData = CreatePayPalOrderData & {
-  setRatepayMessage?: Dispatch<SetStateAction<string | undefined>>;
+  setRatepayMessage?: SetStringState;
 };
 
 export type SettingsProviderProps = {

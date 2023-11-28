@@ -6,8 +6,9 @@ import { InvoiceLegalNote } from "./InvoiceLegalNote";
 import { PayUponInvoiceMaskProps } from "../../types";
 import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
 import { useTranslation } from "react-i18next";
-import { RatepayErrorNote } from "./RatepayErrorNote";
+
 import { useLoader } from "../../app/useLoader";
+import { RatepayErrorNote } from "./RatepayErrorNote";
 
 const parsePhone = (phone: string) => {
   const formattedPhone = `+${phone.replace(/\D/g, "")}`;

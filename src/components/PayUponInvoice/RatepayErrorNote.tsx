@@ -1,31 +1,6 @@
-import { Trans } from "react-i18next";
-import { ERROR_TEXT_STYLE, STYLED_LINK } from "../../styles";
 import i18n from "i18next";
-
-type RatepayErrorType = "paymentSourceNotVerified" | "paymentSourceDeclined";
-
-const connectToRatepayError = {
-  paymentSourceNotVerified: [
-    "PAYMENT_SOURCE_INFO_CANNOT_BE_VERIFIED",
-    "BILLING_ADDRESS_INVALID",
-    "SHIPPING_ADDRESS_INVALID",
-  ],
-  paymentSourceDeclined: [
-    "PAYMENT_SOURCE_DECLINED_BY_PROCESSOR",
-    "PAYMENT_SOURCE_CANNOT_BE_USED",
-  ],
-  merchantIssue: ["INVALID_STRING_LENGTH"],
-};
-
-export const relevantError = (orderErrorDetails: string) => {
-  const formattedError = orderErrorDetails.replace(/\W/g, "");
-  const parcedError = Object.keys(connectToRatepayError).find((key) =>
-    connectToRatepayError[key as RatepayErrorType].includes(formattedError),
-  );
-  return parcedError && i18n.exists(`pui.${parcedError}`)
-    ? parcedError
-    : undefined;
-};
+import { ERROR_TEXT_STYLE, STYLED_LINK } from "../../styles";
+import { Trans } from "react-i18next";
 
 export const RatepayErrorNote = (errorKind: string) => {
   const isGerman = i18n.language === "de";

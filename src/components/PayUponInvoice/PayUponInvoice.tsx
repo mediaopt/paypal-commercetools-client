@@ -8,7 +8,7 @@ import { PayUponInvoiceProps, SmartComponentsProps } from "../../types";
 import { RenderTemplate } from "../RenderTemplate";
 import { embeddFraudNet } from "./fraudNetIntegration";
 import { PayUponInvoiceButton } from "./PayUponInvoiceButton";
-import i18n from "../../languages/i18n";
+import i18n from "../../messages/i18n";
 
 export const PayUponInvoice: FC<SmartComponentsProps & PayUponInvoiceProps> = ({
   options,
