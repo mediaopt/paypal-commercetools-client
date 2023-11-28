@@ -32,10 +32,10 @@ export const relevantError = (
   errorDomain: ErrorDomain,
 ) => {
   const formattedError = orderErrorDetails.replace(/\W/g, "");
-  const parcedError = Object.keys(errorDomains[errorDomain]).find((key) =>
+  const parsedError = Object.keys(errorDomains[errorDomain]).find((key) =>
     connectToRatepayError[key as RatepayErrorType].includes(formattedError),
   );
-  return parcedError && i18n.exists(`pui.${parcedError}`)
-    ? parcedError
+  return parsedError && i18n.exists(`pui.${parsedError}`)
+    ? parsedError
     : undefined;
 };
