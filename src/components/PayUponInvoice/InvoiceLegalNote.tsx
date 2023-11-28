@@ -4,7 +4,7 @@ import { STYLED_LINK } from "../../styles";
 export const InvoiceLegalNote = (
   <div className="w-full text-sm te">
     <Trans
-      i18nKey="pUILegalNote"
+      i18nKey="pui.pUILegalNote"
       components={[
         <a
           className={STYLED_LINK}

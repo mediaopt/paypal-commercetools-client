@@ -29,7 +29,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   const { isLoading } = useLoader();
 
   const [phone, setPhone] = useState("+49 ");
-  const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
+  const notifyWrongPhone = () => notify("Warning", t("pui.wrongPhone"));
   const maxDate = new Date().toJSON().slice(0, 10);
   const [ratepayMessage, setRatepayMessage] = useState<string>();
 
@@ -62,10 +62,10 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
       }}
     >
       <div className="my-2">
-        {invoiceBenefitsMessage ?? t("invoiceBenefitsMessage")}
+        {invoiceBenefitsMessage ?? t("pui.invoiceBenefitsMessage")}
       </div>
 
-      <label htmlFor="birthDate">{t("birthDate")}</label>
+      <label htmlFor="birthDate">{t("ui.birthDate")}</label>
       <input
         id="birthDate"
         name="birthDate"
@@ -76,7 +76,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         min="1900-01-01"
         max={maxDate}
       />
-      <label htmlFor="phone">{t("phoneNumber")}</label>
+      <label htmlFor="phone">{t("ui.phoneNumber")}</label>
       <input
         type="tel"
         name="phone"

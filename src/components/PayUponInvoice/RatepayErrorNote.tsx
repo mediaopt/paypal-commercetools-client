@@ -18,10 +18,13 @@ const connectToRatepayError = {
 };
 
 export const relevantError = (orderErrorDetails: string) => {
+  const formattedError = orderErrorDetails.replace(/\W/g, "");
   const parcedError = Object.keys(connectToRatepayError).find((key) =>
-    connectToRatepayError[key as RatepayErrorType].includes(orderErrorDetails),
+    connectToRatepayError[key as RatepayErrorType].includes(formattedError),
   );
-  return parcedError && i18n.exists(parcedError) ? parcedError : undefined;
+  return parcedError && i18n.exists(`pui.${parcedError}`)
+    ? parcedError
+    : undefined;
 };
 
 export const RatepayErrorNote = (errorKind: string) => {
@@ -39,7 +42,7 @@ export const RatepayErrorNote = (errorKind: string) => {
   return (
     <div className={ERROR_TEXT_STYLE}>
       <Trans
-        i18nKey={errorKind}
+        i18nKey={`pui.${errorKind}`}
         components={[
           <a className={STYLED_LINK} href={references[0]} />,
           <a className={STYLED_LINK} href={references[1]} />,
