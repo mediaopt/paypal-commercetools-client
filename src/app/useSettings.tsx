@@ -17,6 +17,7 @@ import {
 import { getSettings, getUserInfo, removePaymentToken } from "../services";
 import { useLoader } from "./useLoader";
 import { PARTNER_ATTRIBUTION_ID } from "../constants";
+import { useNotifications } from "./useNotifications";
 
 type SettingsContextT = {
   handleGetSettings: () => void;
@@ -46,6 +47,7 @@ export const SettingsProvider: FC<
   const [userIdToken, setUserIdToken] = useState<string>();
   const [paymentTokens, setPaymentTokens] = useState<PaymentTokens>();
   const { isLoading } = useLoader();
+  const { notify } = useNotifications();
 
   const value = useMemo(() => {
     const handleGetSettings = async () => {
@@ -65,9 +67,17 @@ export const SettingsProvider: FC<
         const getSettingsResult = (await getSettings(
           requestHeader,
           getSettingsUrl
-        )) as GetSettingsResponse;
+        )) as Record<any, any>;
 
-        setSettings(getSettingsResult);
+        if (
+          !getSettingsResult ||
+          (getSettingsResult.hasOwnProperty("ok") && !getSettingsResult.ok)
+        ) {
+          notify("Error", "Could not fetch settings");
+          isLoading(false);
+        } else {
+          setSettings(getSettingsResult as GetSettingsResponse);
+        }
       }
       isLoading(false);
     };
@@ -102,6 +112,8 @@ export const SettingsProvider: FC<
   useEffect(() => {
     if (!settings) {
       value.handleGetSettings();
+    } else if (settings?.merchantId) {
+      options.merchantId = settings.merchantId;
     }
   }, [settings]);
 
