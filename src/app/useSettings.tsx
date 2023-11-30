@@ -112,8 +112,6 @@ export const SettingsProvider: FC<
   useEffect(() => {
     if (!settings) {
       value.handleGetSettings();
-    } else if (settings?.merchantId) {
-      options.merchantId = settings.merchantId;
     }
   }, [settings]);
 
@@ -126,6 +124,7 @@ export const SettingsProvider: FC<
             intent: settings.payPalIntent.toString().toLowerCase(),
             dataUserIdToken: userIdToken,
             dataPartnerAttributionId: PARTNER_ATTRIBUTION_ID,
+            merchantId: settings.merchantId,
           }}
         >
           {children}
