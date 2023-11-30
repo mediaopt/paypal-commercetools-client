@@ -1,9 +1,12 @@
 import i18n from "i18next";
 
-type RatepayErrorType = "paymentSourceNotVerified" | "paymentSourceDeclined";
 type ErrorDomain = "pui" | "pp";
 
-const connectToRatepayError = {
+interface Messages {
+  [name: string]: string[];
+}
+
+const connectToRatepayError: Messages = {
   paymentSourceNotVerified: [
     "PAYMENT_SOURCE_INFO_CANNOT_BE_VERIFIED",
     "BILLING_ADDRESS_INVALID",
@@ -16,7 +19,7 @@ const connectToRatepayError = {
   merchantIssue: ["INVALID_STRING_LENGTH"],
 };
 
-const connectToPaypalError = {
+const connectToPaypalError: Messages = {
   invalidAddress: [
     "SHIPPING_ADDRESS_INVALID",
     "INVALID_COUNTRY_CODE",
@@ -27,15 +30,20 @@ const connectToPaypalError = {
 
 const errorDomains = { pui: connectToRatepayError, pp: connectToPaypalError };
 
+const findStringInArray = (errorsList: Messages, error: string) => {
+  return Object.keys(errorsList).find((key) => errorsList[key].includes(error));
+};
+
 export const relevantError = (
   orderErrorDetails: string,
   errorDomain: ErrorDomain,
 ) => {
   const formattedError = orderErrorDetails.replace(/\W/g, "");
-  const parsedError = Object.keys(errorDomains[errorDomain]).find((key) =>
-    connectToRatepayError[key as RatepayErrorType].includes(formattedError),
+  const parsedError = findStringInArray(
+    errorDomains[errorDomain],
+    formattedError,
   );
-  return parsedError && i18n.exists(`pui.${parsedError}`)
+  return parsedError && i18n.exists(`${errorDomain}.${parsedError}`)
     ? parsedError
     : undefined;
 };

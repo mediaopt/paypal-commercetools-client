@@ -102,7 +102,7 @@ const handleResponseError = (
       : notify("Warning", errorDetails ?? "Please try again later");
   } else {
     const paypalError = relevantError(errorDetails, "pp");
-    notify("Warning", paypalError ?? "Please try again later");
+    throw new Error(t(`pp.${paypalError}`) ?? t("pp.unknownIssue"));
   }
 };
 
@@ -276,9 +276,10 @@ export const PaymentProvider: FC<
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
-      isLoading(true);
 
       const { orderID, saveCard } = data;
+      if (!orderID) return;
+      isLoading(true);
 
       const onAuthorizeOrderUrl =
         settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;

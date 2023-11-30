@@ -8,7 +8,7 @@ import { useLoader } from "../../app/useLoader";
 import { useNotifications } from "../../app/useNotifications";
 
 export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
-  props
+  props,
 ) => {
   const {
     handleCreateOrder,
@@ -45,7 +45,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
   const errorFunc = (err: Record<string, unknown>) => {
     isLoading(false);
-    notify("Error", "an error occurred");
+    notify("Error", (err.message as string) ?? "an error occurred");
     console.error(err);
   };
 

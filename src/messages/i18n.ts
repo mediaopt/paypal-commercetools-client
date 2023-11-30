@@ -33,7 +33,13 @@ i18n.use(initReactI18next).init({
           duplicatePui:
             "A Pay Upon Invoice (Rechnungskauf) order with the same payload has already been successfully processed in the last few seconds. To process a new order, please try again in a few seconds.",
         },
-        pp: { invalidCurrency: "", invalidAddress: "", unknownIssue: "" },
+        pp: {
+          invalidCurrency: "Please change the payment currency and try again.",
+          invalidAddress:
+            "The combination of your name and address could not be validated. Please correct your data and try again.",
+          unknownIssue:
+            "Something went wrong. Please correct your data and try again.",
+        },
       },
     },
     de: {
