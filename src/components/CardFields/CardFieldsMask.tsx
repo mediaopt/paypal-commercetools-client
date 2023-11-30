@@ -16,7 +16,6 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
 
-  const [addNew, setAddNew] = useState(false);
   const [vaultId, setVaultId] = useState<string>();
   const [paying, setPaying] = useState(false);
 
@@ -127,8 +126,8 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
   if (!settings) return <></>;
 
-  if (cardPaymentTokens && cardPaymentTokens?.length > 0 && !addNew) {
-    return (
+  let cardPaymentTokensElement =
+    cardPaymentTokens && cardPaymentTokens?.length > 0 ? (
       <>
         {cardPaymentTokens.map((paymentToken) => {
           const { id, payment_source } = paymentToken;
@@ -166,45 +165,47 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
             </button>
           </div>
         )}
-
-        <button onClick={() => setAddNew(true)}>Add A New Card</button>
       </>
+    ) : (
+      <></>
     );
-  }
 
   return (
-    <div id="checkout-form">
-      <div ref={nameField} id="card-name-field-container"></div>
+    <>
+      {cardPaymentTokensElement}
+      <div id="checkout-form">
+        <div ref={nameField} id="card-name-field-container"></div>
 
-      <div ref={numberField} id="card-number-field-container"></div>
+        <div ref={numberField} id="card-number-field-container"></div>
 
-      <div ref={expiryField} id="card-expiry-field-container"></div>
+        <div ref={expiryField} id="card-expiry-field-container"></div>
 
-      <div ref={cvvField} id="card-cvv-field-container"></div>
+        <div ref={cvvField} id="card-cvv-field-container"></div>
 
-      {enableVaulting && (
-        <label>
-          <input
-            type="checkbox"
-            id="save"
-            name="save"
-            ref={save}
-            className="mr-1"
-            onChange={({ target }) => {
-              saveCard = target.checked;
-            }}
-          />
-          Save this card for future purchases
-        </label>
-      )}
+        {enableVaulting && (
+          <label>
+            <input
+              type="checkbox"
+              id="save"
+              name="save"
+              ref={save}
+              className="mr-1"
+              onChange={({ target }) => {
+                saveCard = target.checked;
+              }}
+            />
+            Save this card for future purchases
+          </label>
+        )}
 
-      <button
-        className={hostedFieldClasses.hostedFieldsPayButtonClasses}
-        onClick={handleClick}
-        disabled={paying}
-      >
-        Pay
-      </button>
-    </div>
+        <button
+          className={hostedFieldClasses.hostedFieldsPayButtonClasses}
+          onClick={handleClick}
+          disabled={paying}
+        >
+          Pay
+        </button>
+      </div>
+    </>
   );
 };
