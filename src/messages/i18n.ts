@@ -36,7 +36,7 @@ i18n.use(initReactI18next).init({
         pp: {
           invalidCurrency: "Please change the payment currency and try again.",
           invalidAddress:
-            "The combination of your name and address could not be validated. Please correct your data and try again.",
+            "Your address could not be validated. Please correct your data and try again.",
           unknownIssue:
             "Something went wrong. Please correct your data and try again.",
         },
