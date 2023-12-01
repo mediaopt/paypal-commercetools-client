@@ -324,6 +324,7 @@ type CustomDataStringObject = { [key: string]: string };
 type PayPalButtonColors = "gold" | "blue" | "white" | "silver" | "black";
 
 export type GetSettingsResponse = {
+  merchantId: string;
   email: string;
   acceptPayPal: boolean;
   acceptPayLater: boolean;

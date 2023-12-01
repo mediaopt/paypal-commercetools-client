@@ -35,14 +35,14 @@ export const RenderTemplate: FC<
 }) => {
   return (
     <LoaderProvider>
-      <SettingsProvider
-        options={options}
-        getSettingsUrl={getSettingsUrl}
-        requestHeader={requestHeader}
-        getUserInfoUrl={getUserInfoUrl}
-        removePaymentTokenUrl={removePaymentTokenUrl}
-      >
-        <NotificationsProvider>
+      <NotificationsProvider>
+        <SettingsProvider
+          options={options}
+          getSettingsUrl={getSettingsUrl}
+          requestHeader={requestHeader}
+          getUserInfoUrl={getUserInfoUrl}
+          removePaymentTokenUrl={removePaymentTokenUrl}
+        >
           <PaymentProvider
             options={options}
             createPaymentUrl={createPaymentUrl}
@@ -61,8 +61,8 @@ export const RenderTemplate: FC<
           >
             <RenderPurchase>{children}</RenderPurchase>
           </PaymentProvider>
-        </NotificationsProvider>
-      </SettingsProvider>
+        </SettingsProvider>
+      </NotificationsProvider>
     </LoaderProvider>
   );
 };
