@@ -12,7 +12,7 @@ import { CardFields } from "./components/CardFields";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIxMTM1NTVlZi1jOGVlLTRhMWItYTFiMi01NjI4ZjYwODNkOTYiLCJhY2NvdW50Ijp7ImFjY291bnRJZCI6Ijk2ZmM1YzE2LTg5OWEtNGYwNS1hMWU5LTkyMjY3NmY3MDU1MCIsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJiaXJ0aGRheSI6IjE5NDMtMTItMThUMDA6MDA6MDAuMDAwWiIsImNvbmZpcm1lZCI6dHJ1ZSwiYWRkcmVzc2VzIjpbeyJhZGRyZXNzSWQiOiI0MXU5VlozeCIsImZpcnN0TmFtZSI6IkpvaG4iLCJsYXN0TmFtZSI6IkRvZSIsInN0cmVldE5hbWUiOiJTZWNvbmQgU3RyZWV0Iiwic3RyZWV0TnVtYmVyIjoiMTMiLCJwb3N0YWxDb2RlIjoiMTIzNDUiLCJjaXR5IjoiRXhhbXBsZSBDaXR5IiwiY291bnRyeSI6Ik5MIiwicGhvbmUiOiIrMzExMjM0NTY3ODAiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6ZmFsc2UsImlzRGVmYXVsdFNoaXBwaW5nQWRkcmVzcyI6ZmFsc2V9XX0sIndpc2hsaXN0SWQiOiJlNzFhYTEyNC1kZGZmLTQxYzktYmYxOC0wZDk2ZjNhODI0Y2QifQ.18fv-aNJc-Ft4BRPoF5ReFYGjg576pVOkTUqbDVe1Tw";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI3OGMxODdmZC03OWU4LTQ3ZmMtYjJhOS1jZTI1NTYyNTVjNTYiLCJhY2NvdW50Ijp7ImFjY291bnRJZCI6Ijk2ZmM1YzE2LTg5OWEtNGYwNS1hMWU5LTkyMjY3NmY3MDU1MCIsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJEb2UiLCJiaXJ0aGRheSI6IjE5NDMtMTItMThUMDA6MDA6MDAuMDAwWiIsImNvbmZpcm1lZCI6dHJ1ZSwiYWRkcmVzc2VzIjpbeyJhZGRyZXNzSWQiOiI0MXU5VlozeCIsImZpcnN0TmFtZSI6IkpvaG4iLCJsYXN0TmFtZSI6IkRvZSIsInN0cmVldE5hbWUiOiJTZWNvbmQgU3RyZWV0Iiwic3RyZWV0TnVtYmVyIjoiMTMiLCJwb3N0YWxDb2RlIjoiMTIzNDUiLCJjaXR5IjoiRXhhbXBsZSBDaXR5IiwiY291bnRyeSI6Ik5MIiwicGhvbmUiOiIrMzExMjM0NTY3ODAiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6ZmFsc2UsImlzRGVmYXVsdFNoaXBwaW5nQWRkcmVzcyI6ZmFsc2V9XX0sIndpc2hsaXN0SWQiOiJlNzFhYTEyNC1kZGZmLTQxYzktYmYxOC0wZDk2ZjNhODI0Y2QifQ.ZIYl_YDppcyf27xmCqAF8yUf2wrbmr46nbqw1qmX9Qo";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -200,17 +200,6 @@ function App() {
         options={{ ...options, components: "messages" }}
       />
     ),
-    HostedFields: (
-      <HostedFields
-        requestHeader={requestHeader}
-        {...params}
-        options={{
-          ...options,
-          components: "hosted-fields,buttons",
-          vault: false,
-        }}
-      />
-    ),
     CardFields: (
       <CardFields
         requestHeader={requestHeader}
@@ -221,6 +210,29 @@ function App() {
           vault: true,
         }}
         {...vaultParams}
+      />
+    ),
+    CardFieldsVaultOnly: (
+      <CardFields
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "card-fields,buttons",
+          vault: true,
+        }}
+        {...vaultParams}
+        {...vaultOnlyParams}
+      />
+    ),
+    HostedFields: (
+      <HostedFields
+        requestHeader={requestHeader}
+        {...params}
+        options={{
+          ...options,
+          components: "hosted-fields,buttons",
+          vault: false,
+        }}
       />
     ),
     HostedFieldsVault: (

@@ -8,10 +8,10 @@ import { useHandleCreatePayment } from "../../app/useHandleCreatePayment";
 export const CardFieldsButton: React.FC<CardFieldsProps> = ({
   enableVaulting,
 }) => {
-  const { paymentInfo } = usePayment();
+  const { paymentInfo, vaultOnly } = usePayment();
   useHandleCreatePayment();
 
-  return paymentInfo.id && window.paypal ? (
+  return (paymentInfo.id || vaultOnly) && window.paypal ? (
     <CardFieldsMask enableVaulting={enableVaulting} />
   ) : (
     <></>

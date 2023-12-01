@@ -2,7 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { usePayment } from "../../app/usePayment";
 import { useSettings } from "../../app/useSettings";
-import { CardFieldsProps, CustomOnApproveData } from "../../types";
+import {
+  ApproveVaultSetupTokenData,
+  CardFieldsProps,
+  CustomOnApproveData,
+} from "../../types";
 import { CARD_FIELDS_INPUTS, CARD_FIELDS_BUTTON } from "./constants";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
@@ -10,8 +14,14 @@ import { useLoader } from "../../app/useLoader";
 export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   enableVaulting,
 }) => {
-  const { handleCreateOrder, handleOnApprove, handleAuthenticateThreeDSOrder } =
-    usePayment();
+  const {
+    handleCreateOrder,
+    handleOnApprove,
+    handleAuthenticateThreeDSOrder,
+    vaultOnly,
+    handleApproveVaultSetupToken,
+    handleCreateVaultSetupToken,
+  } = usePayment();
   const { settings, paymentTokens } = useSettings();
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
@@ -41,18 +51,31 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
     return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
   }, [settings]);
 
-  const approveTransaction = (approveData: CustomOnApproveData) => {
-    handleOnApprove(approveData).catch((err) => {
-      setPaying(false);
-      isLoading(false);
-      notify("Error", err.message);
-    });
+  const approveTransaction = (approveData: any) => {
+    if (vaultOnly) {
+      handleApproveVaultSetupToken(
+        approveData as ApproveVaultSetupTokenData
+      ).catch((err) => {
+        setPaying(false);
+        isLoading(false);
+        notify("Error", err.message);
+      });
+    } else {
+      handleOnApprove(approveData as CustomOnApproveData).catch((err) => {
+        setPaying(false);
+        isLoading(false);
+        notify("Error", err.message);
+      });
+    }
   };
 
   const cardField = useMemo(() => {
     // @ts-ignore
     return window.paypal!.CardFields({
       createOrder: () => {
+        if (vaultOnly) {
+          return handleCreateVaultSetupToken("card");
+        }
         return handleCreateOrder({
           paymentSource: "card",
           storeInVault: saveCard,
@@ -127,7 +150,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   if (!settings) return <></>;
 
   let cardPaymentTokensElement =
-    cardPaymentTokens && cardPaymentTokens?.length > 0 ? (
+    !vaultOnly && cardPaymentTokens && cardPaymentTokens?.length > 0 ? (
       <>
         {cardPaymentTokens.map((paymentToken) => {
           const { id, payment_source } = paymentToken;
