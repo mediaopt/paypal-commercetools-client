@@ -92,7 +92,6 @@ const handleResponseError = (
   errorMessage?: string,
   showError?: SetStringState,
 ) => {
-  console.log(errorMessage, errorDetails);
   if (!errorDetails)
     throw new Error(errorMessage ?? "", { cause: t("ui.generalError") });
   else if (showError) {
