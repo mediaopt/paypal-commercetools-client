@@ -6,7 +6,6 @@ export const errorFunc = (
   notify: (type: NotificationType, text: string) => void,
 ) => {
   isLoading(false);
-  console.log(err);
   notify("Error", (err.cause as string) ?? "An error occurred.");
   console.error(err);
 };
