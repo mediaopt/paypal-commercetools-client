@@ -7,6 +7,7 @@ import { CustomOnApproveData } from "../../types";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import { HOSTED_FIELDS_CARD_FIELDS, HOSTED_FIELDS_BUTTON } from "./constants";
+import { errorFunc } from "../errorNotification";
 
 type SubmitPaymentProps = {
   enableVaulting?: boolean;
@@ -43,8 +44,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
   const approveTransaction = (approveData: CustomOnApproveData) => {
     handleOnApprove(approveData).catch((err) => {
       setPaying(false);
-      isLoading(false);
-      notify("Error", err.message);
+      errorFunc(err, isLoading, notify);
     });
   };
 
@@ -58,7 +58,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
     }
     const isFormInvalid =
       Object.values(hostedField.cardFields.getState().fields).some(
-        (field) => !field.isValid
+        (field) => !field.isValid,
       ) || !cardHolderName?.current?.value;
 
     if (isFormInvalid) {
@@ -95,9 +95,8 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
         }
       })
       .catch((err) => {
-        notify("Error", err.message);
-        isLoading(false);
         setPaying(false);
+        errorFunc(err, isLoading, notify);
       });
   };
 

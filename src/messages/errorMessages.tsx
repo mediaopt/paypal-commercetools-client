@@ -44,6 +44,6 @@ export const relevantError = (
     formattedError,
   );
   return parsedError && i18n.exists(`${errorDomain}.${parsedError}`)
-    ? parsedError
+    ? `${errorDomain}.${parsedError}`
     : undefined;
 };

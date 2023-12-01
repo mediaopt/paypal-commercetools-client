@@ -37,7 +37,6 @@ import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
-import { NotificationType } from "../components/Notifications";
 import { relevantError } from "../messages/errorMessages";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
@@ -88,21 +87,26 @@ const setRelevantData = (
 };
 
 const handleResponseError = (
-  notify: (type: NotificationType, text: string) => void,
   t: TFunction<any, any>,
   errorDetails?: string,
   errorMessage?: string,
   showError?: SetStringState,
 ) => {
-  if (!errorDetails) notify("Warning", errorMessage ?? t("ui.generalError"));
+  console.log(errorMessage, errorDetails);
+  if (!errorDetails)
+    throw new Error(errorMessage ?? "", { cause: t("ui.generalError") });
   else if (showError) {
     const ratepayError = relevantError(errorDetails, "pui");
-    ratepayError && showError
-      ? showError(ratepayError)
-      : notify("Warning", errorDetails ?? "Please try again later");
+    if (ratepayError && showError) showError(ratepayError);
+    else
+      throw new Error(errorMessage ?? "", {
+        cause: ratepayError ?? errorDetails ?? t("pui.thirdPartyIssue"),
+      });
   } else {
     const paypalError = relevantError(errorDetails, "pp");
-    throw new Error(t(`pp.${paypalError}`) ?? t("pp.unknownIssue"));
+    throw new Error(errorMessage ?? "", {
+      cause: paypalError ? t(paypalError) : t("pp.unknownIssue"),
+    });
   }
 };
 
@@ -241,9 +245,10 @@ export const PaymentProvider: FC<
         const { id, status, payment_source, details, links, message } =
           orderData;
         latestPaymentVersion = paymentVersion;
+        if (paymentVersion && !(status === "COMPLETED"))
+          setPaymentInfo({ ...paymentInfo, version: paymentVersion });
         if (!id) {
           handleResponseError(
-            notify,
             t,
             details?.toString(),
             message,
@@ -252,8 +257,6 @@ export const PaymentProvider: FC<
           return "";
         } else {
           if (setRatepayMessage) {
-            if (paymentVersion)
-              setPaymentInfo({ ...paymentInfo, version: paymentVersion });
             setRatepayMessage && setRatepayMessage(undefined);
             onSuccess(orderData);
           } else {
@@ -264,7 +267,6 @@ export const PaymentProvider: FC<
               payment_source &&
               links
             ) {
-              setPaymentInfo({ ...paymentInfo, version: paymentVersion });
               setOderDataLinks(links);
               setOrderId(id);
             }

@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 
 import { useLoader } from "../../app/useLoader";
 import { RatepayErrorNote } from "./RatepayErrorNote";
+import { errorFunc } from "../errorNotification";
 
 const parsePhone = (phone: string) => {
   const formattedPhone = `+${phone.replace(/\D/g, "")}`;
@@ -42,13 +43,17 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
       ...parsePhoneNumber(phone),
     };
     if (countryCallingCode && nationalNumber) {
-      await handleCreateOrder({
-        fraudNetSessionId,
-        nationalNumber,
-        countryCode: countryCallingCode,
-        birthDate,
-        setRatepayMessage,
-      });
+      try {
+        await handleCreateOrder({
+          fraudNetSessionId,
+          nationalNumber,
+          countryCode: countryCallingCode,
+          birthDate,
+          setRatepayMessage,
+        });
+      } catch (err: any) {
+        errorFunc(err.message, isLoading, notify);
+      }
     } else notifyWrongPhone();
     isLoading(false);
   };
