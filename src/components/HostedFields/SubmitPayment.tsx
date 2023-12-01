@@ -49,6 +49,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
   };
 
   const handleClick = () => {
+    console.log("handle click");
     if (!hostedField?.cardFields) {
       const childErrorMessage =
         "Unable to find any child components in the <PayPalHostedFieldsProvider />";
@@ -71,12 +72,15 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
     const hostedFieldsOptions: Record<string, unknown> = {
       cardholderName: cardHolderName?.current?.value,
     };
+
+    console.log("before 3ds");
     if (threeDSAuth) {
       hostedFieldsOptions.contingencies = [threeDSAuth];
     }
     hostedField.cardFields
       .submit(hostedFieldsOptions)
       .then((data) => {
+        console.log("data", data);
         const approveData: CustomOnApproveData = {
           orderID: data.orderId,
           saveCard: save.current?.checked,
@@ -91,7 +95,9 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
             setPaying(false);
           }
         } else {
-          approveTransaction(approveData);
+          {
+            approveTransaction(approveData);
+          }
         }
       })
       .catch((err) => {

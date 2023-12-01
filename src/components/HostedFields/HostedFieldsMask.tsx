@@ -22,17 +22,22 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   enableVaulting,
 }) => {
-  const { handleCreateOrder, oderDataLinks, handleOnApprove, orderId } =
-    usePayment();
+  const {
+    handleCreateOrder,
+    oderDataLinks,
+    handleOnApprove,
+    orderId,
+    clientToken,
+  } = usePayment();
   const { settings, paymentTokens } = useSettings();
-  const { clientToken } = usePayment();
+
   const [addNew, setAddNew] = useState(false);
   const [vaultId, setVaultId] = useState<string>();
 
   let saveCard = false;
 
   const cardPaymentTokens = paymentTokens?.payment_tokens?.filter(
-    (paymentToken) => paymentToken.payment_source.card !== undefined
+    (paymentToken) => paymentToken.payment_source.card !== undefined,
   );
 
   const hostedFieldClasses = useMemo(() => {
@@ -45,14 +50,14 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
 
   useEffect(() => {
     let oderDataPayerAction = oderDataLinks?.filter(
-      (oderDataLink) => oderDataLink.rel === "payer-action"
+      (oderDataLink) => oderDataLink.rel === "payer-action",
     );
 
     if (oderDataPayerAction && oderDataPayerAction[0]) {
       const newWindow = window.open(
         oderDataPayerAction[0].href,
         "3D Secure Check",
-        "width=300,height=500"
+        "width=300,height=500",
       );
       let fireOderDataGetInterval: NodeJS.Timer;
       const fireOderDataGet = async () => {
@@ -82,9 +87,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
         dataPartnerAttributionId: PARTNER_ATTRIBUTION_ID,
       }}
     >
-      {cardPaymentTokens &&
-      cardPaymentTokens?.length > 0 &&
-      addNew === false ? (
+      {cardPaymentTokens && cardPaymentTokens?.length > 0 && !addNew ? (
         <>
           {cardPaymentTokens.map((paymentToken) => {
             const { id, payment_source } = paymentToken;

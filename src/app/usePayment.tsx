@@ -100,7 +100,7 @@ const handleResponseError = (
     if (ratepayError && showError) showError(ratepayError);
     else
       throw new Error(errorMessage ?? "", {
-        cause: ratepayError ?? errorDetails ?? t("pui.thirdPartyIssue"),
+        cause: ratepayError ?? t("pui.thirdPartyIssue"),
       });
   } else {
     const paypalError = relevantError(errorDetails, "pp");
@@ -245,7 +245,10 @@ export const PaymentProvider: FC<
         const { id, status, payment_source, details, links, message } =
           orderData;
         latestPaymentVersion = paymentVersion;
-        if (paymentVersion && !(status === "COMPLETED"))
+        if (
+          paymentVersion &&
+          (status === "PAYER_ACTION_REQUIRED" || setRatepayMessage)
+        )
           setPaymentInfo({ ...paymentInfo, version: paymentVersion });
         if (!id) {
           handleResponseError(
