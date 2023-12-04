@@ -23,7 +23,6 @@ import {
   CreateInvoiceData,
   OrderDataLinks,
   OrderData,
-  SetStringState,
 } from "../types";
 import {
   createPayment,
@@ -37,9 +36,8 @@ import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
-import { relevantError } from "../messages/errorMessages";
 import { useTranslation } from "react-i18next";
-import { TFunction } from "i18next";
+import { handleResponseError } from "../messages/errorMessages";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -84,29 +82,6 @@ const setRelevantData = (
       storeInVault: enableVaulting,
       ...orderData,
     };
-};
-
-const handleResponseError = (
-  t: TFunction<any, any>,
-  errorDetails?: string,
-  errorMessage?: string,
-  showError?: SetStringState,
-) => {
-  if (!errorDetails)
-    throw new Error(errorMessage ?? "", { cause: t("ui.generalError") });
-  else if (showError) {
-    const ratepayError = relevantError(errorDetails, "pui");
-    if (ratepayError && showError) showError(ratepayError);
-    else
-      throw new Error(errorMessage ?? "", {
-        cause: ratepayError ?? t("pui.thirdPartyIssue"),
-      });
-  } else {
-    const paypalError = relevantError(errorDetails, "pp");
-    throw new Error(errorMessage ?? "", {
-      cause: paypalError ? t(paypalError) : t("pp.unknownIssue"),
-    });
-  }
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -244,11 +219,14 @@ export const PaymentProvider: FC<
         const { id, status, payment_source, details, links, message } =
           orderData;
         latestPaymentVersion = paymentVersion;
+
         if (
           paymentVersion &&
           (status === "PAYER_ACTION_REQUIRED" || setRatepayMessage)
-        )
+        ) {
           setPaymentInfo({ ...paymentInfo, version: paymentVersion });
+        }
+
         if (!id) {
           handleResponseError(
             t,

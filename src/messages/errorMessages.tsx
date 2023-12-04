@@ -1,6 +1,8 @@
 import i18n from "i18next";
+import { TFunction } from "i18next";
+import { SetStringState } from "../types";
 
-type ErrorDomain = "pui" | "pp";
+type ErrorDomain = "invoice" | "payPal";
 
 interface Messages {
   [name: string]: string[];
@@ -27,7 +29,10 @@ const connectToPaypalError: Messages = {
   invalidCurrency: ["INVALID_CURRENCY_CODE"],
 };
 
-const errorDomains = { pui: connectToRatepayError, pp: connectToPaypalError };
+const errorDomains = {
+  invoice: connectToRatepayError,
+  payPal: connectToPaypalError,
+};
 
 const findStringInArray = (errorsList: Messages, error: string) => {
   return Object.keys(errorsList).find((key) => errorsList[key].includes(error));
@@ -45,4 +50,27 @@ export const relevantError = (
   return parsedError && i18n.exists(`${errorDomain}.${parsedError}`)
     ? `${errorDomain}.${parsedError}`
     : undefined;
+};
+
+export const handleResponseError = (
+  t: TFunction<any, any>,
+  errorDetails?: string,
+  errorMessage?: string,
+  showError?: SetStringState,
+) => {
+  if (!errorDetails)
+    throw new Error(errorMessage ?? "", { cause: t("interface.generalError") });
+  else if (showError) {
+    const ratepayError = relevantError(errorDetails, "invoice");
+    if (ratepayError && showError) showError(ratepayError);
+    else
+      throw new Error(errorMessage ?? "", {
+        cause: ratepayError ?? t("invoice.thirdPartyIssue"),
+      });
+  } else {
+    const paypalError = relevantError(errorDetails, "payPal");
+    throw new Error(errorMessage ?? "", {
+      cause: paypalError ? t(paypalError) : t("payPal.unknownIssue"),
+    });
+  }
 };

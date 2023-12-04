@@ -71,7 +71,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         {invoiceBenefitsMessage ?? t("pui.invoiceBenefitsMessage")}
       </div>
 
-      <label htmlFor="birthDate">{t("ui.birthDate")}</label>
+      <label htmlFor="birthDate">{t("interface.birthDate")}</label>
       <input
         id="birthDate"
         name="birthDate"
@@ -82,7 +82,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         min="1900-01-01"
         max={maxDate}
       />
-      <label htmlFor="phone">{t("ui.phoneNumber")}</label>
+      <label htmlFor="phone">{t("interface.phoneNumber")}</label>
       <input
         type="tel"
         name="phone"

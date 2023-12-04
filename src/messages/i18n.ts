@@ -8,12 +8,12 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       translation: {
-        ui: {
+        interface: {
           birthDate: "Birth date",
           phoneNumber: "Phone number",
           generalError: "Something went wrong. Please try again later",
         },
-        pui: {
+        invoice: {
           wrongPhone:
             "Could not identify country code or national phone number, please check the data.",
           thirdPartyIssue:
@@ -33,7 +33,7 @@ i18n.use(initReactI18next).init({
           duplicatePui:
             "A Pay Upon Invoice (Rechnungskauf) order with the same payload has already been successfully processed in the last few seconds. To process a new order, please try again in a few seconds.",
         },
-        pp: {
+        payPal: {
           invalidAddress:
             "Your address could not be validated. Please correct your data and try again.",
           unknownIssue:
@@ -43,7 +43,7 @@ i18n.use(initReactI18next).init({
     },
     de: {
       translation: {
-        ui: { birthDate: "Geburtsdatum", phoneNumber: "Telefonnummer" },
+        interface: { birthDate: "Geburtsdatum", phoneNumber: "Telefonnummer" },
         pui: {
           wrongPhone:
             "Die Landesvorwahl oder die nationale Telefonnummer konnte nicht identifiziert werden, bitte überprüfen Sie die Daten",
@@ -64,7 +64,7 @@ i18n.use(initReactI18next).init({
           duplicatePui:
             "Ein Rechnungskauf-Auftrag mit der gleichen Nutzlast wurde in den letzten Sekunden bereits erfolgreich bearbeitet. Um eine neue Bestellung zu verarbeiten, versuchen Sie es bitte in einigen Sekunden erneut.",
         },
-        pp: {},
+        payPal: {},
       },
     },
   },
