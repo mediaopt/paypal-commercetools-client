@@ -36,9 +36,7 @@ test("Mask is shown", () => {
   (usePayment as jest.Mock).mockReturnValue({
     handleCreateOrder: () => {},
   });
-  const form = render(
-    <PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />,
-  );
+  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
   const birthDate = screen.getByLabelText("birthDate") as HTMLInputElement;
   fireEvent.change(birthDate, {
     target: { value: "2020-05-12" },

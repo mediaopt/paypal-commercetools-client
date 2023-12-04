@@ -34,7 +34,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   const maxDate = new Date().toJSON().slice(0, 10);
   const [ratepayMessage, setRatepayMessage] = useState<string>();
 
-  const submitForm = async (formData: HTMLFormElement) => {
+  const submitForm = async () => {
     isLoading(true);
     setRatepayMessage("");
     const { countryCallingCode, nationalNumber } = {
@@ -59,7 +59,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
       onSubmit={async (event) => {
         event.preventDefault();
 
-        await submitForm(event.target as HTMLFormElement);
+        await submitForm();
       }}
     >
       <div className="my-2">
