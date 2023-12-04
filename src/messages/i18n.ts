@@ -24,13 +24,13 @@ i18n.use(initReactI18next).init({
             "Pay upon invoice is available only if amount is below {{max}} euro.",
           invoiceBenefitsMessage:
             "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
-          pUILegalNote:
+          legalNote:
             "By clicking on the button, you agree to the <0>terms of payment</0> and <1>performance of a risk check</1> from the payment partner, Ratepay. You also agree to PayPal’s <2>privacy statement</2>. If your request to purchase upon invoice is accepted, the purchase price claim will be assigned to Ratepay, and you may only pay Ratepay, not the merchant.",
           paymentSourceNotVerified:
             "The combination of your name and address could not be validated. Please correct your data and try again. You can find further information in the <0>Ratepay Data Privacy Statement</0> or you can contact Ratepay using this <1>contact form</1>.",
           paymentSourceDeclined:
             "It is not possible to use the selected payment method. This decision is based on automated data processing. You can find further information in the <0>Ratepay Data Privacy Statement</0> or you can contact Ratepay using this <1>contact form</1>.",
-          duplicatePui:
+          duplicate:
             "A Pay Upon Invoice (Rechnungskauf) order with the same payload has already been successfully processed in the last few seconds. To process a new order, please try again in a few seconds.",
         },
         payPal: {
@@ -55,13 +55,13 @@ i18n.use(initReactI18next).init({
             "Zahlung auf Rechnung ist nur bei einem Betrag unter {{max}} Euro möglich.",
           invoiceBenefitsMessage:
             "Sobald Sie eine Bestellung aufgeben haben, zahlen Sie innerhalb von 30 Tagen. Unser Partner Ratepay wird Ihnen die Anweisungen hierzu schicken.",
-          pUILegalNote:
+          legalNote:
             "Mit Klicken auf den Button akzeptieren Sie die <0>Ratepay Zahlungsbedingungen</0> und erklären sich mit der Durchführung einer <1>Risikoprüfung durch Ratepay</1>, unseren Partner, einverstanden. Sie akzeptieren auch PayPals <2>Datenschutzerklärung</2>. Falls Ihre Transaktion per Kauf auf Rechnung erfolgreich abgewickelt werden kann, wird der Kaufpreis an Ratepay abgetreten und Sie dürfen nur an Ratepay überweisen, nicht an den Händler.",
           paymentSourceNotVerified:
             "Die Kombination aus Ihrem Namen und Ihrer Anschrift konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut. Weitere Informationen finden Sie in den Ratepay <0>Datenschutzbestimmungen</0> oder nutzen Sie das Ratepay <1>Kontaktformular</1>.",
           paymentSourceDeclined:
             "Die gewählte Zahlungsart kann nicht genutzt werden. Diese Entscheidung basiert auf einem automatisierten Datenverarbeitungsverfahren. Weitere Informationen finden Sie in den Ratepay <0>Datenschutzbestimmungen</0> oder nutzen Sie das Ratepay <1>Kontaktformular</1>.",
-          duplicatePui:
+          duplicate:
             "Ein Rechnungskauf-Auftrag mit der gleichen Nutzlast wurde in den letzten Sekunden bereits erfolgreich bearbeitet. Um eine neue Bestellung zu verarbeiten, versuchen Sie es bitte in einigen Sekunden erneut.",
         },
         payPal: {},
