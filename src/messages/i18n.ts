@@ -11,7 +11,7 @@ i18n.use(initReactI18next).init({
         interface: {
           birthDate: "Birth date",
           phoneNumber: "Phone number",
-          generalError: "Something went wrong. Please try again later",
+          generalError: "Something went wrong. Please try again later.",
         },
         invoice: {
           wrongPhone:
@@ -43,7 +43,12 @@ i18n.use(initReactI18next).init({
     },
     de: {
       translation: {
-        interface: { birthDate: "Geburtsdatum", phoneNumber: "Telefonnummer" },
+        interface: {
+          birthDate: "Geburtsdatum",
+          phoneNumber: "Telefonnummer",
+          generalError:
+            "Etwas ist schief gelaufen. Bitte versuchen Sie es später noch einmal.",
+        },
         pui: {
           wrongPhone:
             "Die Landesvorwahl oder die nationale Telefonnummer konnte nicht identifiziert werden, bitte überprüfen Sie die Daten",
@@ -64,7 +69,12 @@ i18n.use(initReactI18next).init({
           duplicate:
             "Ein Rechnungskauf-Auftrag mit der gleichen Nutzlast wurde in den letzten Sekunden bereits erfolgreich bearbeitet. Um eine neue Bestellung zu verarbeiten, versuchen Sie es bitte in einigen Sekunden erneut.",
         },
-        payPal: {},
+        payPal: {
+          invalidAddress:
+            "Ihre Adresse konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut.",
+          unknownIssue:
+            "Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Daten und versuchen Sie es erneut.",
+        },
       },
     },
   },
