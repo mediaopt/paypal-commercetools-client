@@ -227,6 +227,18 @@ function App() {
       />
     ),
     PayPalMessages: <PayPalMessages {...PayPalMessagesJson} />,
+    Card: (
+      <PayPal
+        {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "messages,buttons",
+          enableFunding: "card",
+        }}
+        fundingSource="card"
+      />
+    ),
     HostedFields: <HostedFields {...HostedFieldsJson} />,
     HostedFieldsVault: (
       <HostedFields
