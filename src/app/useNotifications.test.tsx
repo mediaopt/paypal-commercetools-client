@@ -28,7 +28,7 @@ test("NotificationsProvider is shown text", () => {
   expect(linkElement.length).toEqual(1);
 });
 
-test("useNotifications is show", () => {
+test("useNotifications check notify", () => {
   const { result } = renderHook(useNotifications);
   expect(result.current.notify).toBeTruthy();
 });

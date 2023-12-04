@@ -187,7 +187,6 @@ export const PaymentProvider: FC<
         setResultSuccess(false);
       }
     };
-
     const handleCreateOrder = async (orderData?: CustomOrderData) => {
       if (!createOrderUrl) return "";
       const setRatepayMessage = orderData?.setRatepayMessage ?? undefined;
@@ -253,7 +252,6 @@ export const PaymentProvider: FC<
         }
       } else return "";
     };
-
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
       isLoading(true);
@@ -290,7 +288,6 @@ export const PaymentProvider: FC<
       }
       isLoading(false);
     };
-
     const handleCreatePayment = async () => {
       isLoading(true);
 
@@ -336,7 +333,6 @@ export const PaymentProvider: FC<
       }
       isLoading(false);
     };
-
     let vaultOnly: boolean = !!(
       createVaultSetupTokenUrl && approveVaultSetupTokenUrl
     );
