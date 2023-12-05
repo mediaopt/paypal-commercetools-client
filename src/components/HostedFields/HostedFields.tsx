@@ -18,6 +18,7 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
   onApproveUrl,
   purchaseCallback,
   enableVaulting,
+  authorizeOrderUrl,
 }) => {
   return (
     <RenderTemplate
@@ -33,6 +34,7 @@ export const HostedFields: React.FC<SmartComponentsProps> = ({
       purchaseCallback={purchaseCallback}
       enableVaulting={enableVaulting}
       getUserInfoUrl={getUserInfoUrl}
+      authorizeOrderUrl={authorizeOrderUrl}
     >
       <HostedFieldsButton options={options} enableVaulting={enableVaulting} />
     </RenderTemplate>
