@@ -1,5 +1,11 @@
 import { PayUponInvoiceMask } from "./PayUponInvoiceMask";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { usePayment } from "../../app/usePayment";
 
 jest.mock("react-i18next", () => ({
@@ -13,58 +19,61 @@ jest.mock("react-i18next", () => ({
     };
   },
 }));
+jest.mock("../../app/usePayment");
 
 const fraudNetSessionId = "123";
-const validPhone = "+49 123456789";
-const validBirthDate = "2020-05-12";
 
-test("Mask is shown if dependencies provided", () => {
+const validPhone = "+49 123456789";
+const wrongFormatPhone = "+49123456 789";
+const tooLongPhone = "+49 123456789999999999999";
+const tooShortPhone = "+49";
+
+const validBirthDate = "2020-05-12";
+const tooEarlyBirthDate = "0001-05-12";
+const tooLateBirthDate = "9999-05-12";
+
+const mockedHandler = jest.fn();
+beforeEach(() => {
   (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: () => {},
+    handleCreateOrder: () => {
+      mockedHandler();
+    },
   });
-  const form = render(
-    <PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />,
-  );
-  expect(form.getAllByRole("button").length).toEqual(1);
+  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
 });
 
-jest.mock("../../app/usePayment");
-const mockedHandler = jest.fn();
+afterEach(() => {
+  jest.resetAllMocks();
+  jest.restoreAllMocks();
+  cleanup();
+});
+
+test("Mask is shown if dependencies provided", () => {
+  expect(screen.getAllByRole("button").length).toEqual(1);
+});
 
 afterEach(() => {
   jest.resetAllMocks();
   jest.restoreAllMocks();
 });
 
-test("Correct input value for birthdate for invoice payments can be set", () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: () => {},
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+test(`${validBirthDate} input value for birthdate for invoice payments is valid`, () => {
   const birthDate = screen.getByLabelText("birthDate") as HTMLInputElement;
   fireEvent.change(birthDate, {
     target: { value: validBirthDate },
   });
-  expect(birthDate.value).toEqual(validBirthDate);
+  expect(birthDate).toBeValid();
 });
 
-test("Correct input value for phone for invoice payments can be set", () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: () => {},
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+test(`${validPhone} value for phone for invoice payment is valid`, () => {
   const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
   fireEvent.change(phone, {
     target: { value: validPhone },
   });
-  expect(phone.value).toEqual(validPhone);
+  expect(phone).toBeValid();
 });
 
-test("Correct input value for the phone is formatted to match the requested format", () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: () => {},
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+test(`${wrongFormatPhone} input value for the phone is formatted to ${validPhone}`, () => {
   const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
   fireEvent.change(phone, {
     target: { value: "+49123456 789" },
@@ -72,11 +81,7 @@ test("Correct input value for the phone is formatted to match the requested form
   expect(phone.value).toEqual(validPhone);
 });
 
-test("Too long phone number is invalid", () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: () => {},
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+test(`${tooLongPhone} is invalid`, () => {
   const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
   fireEvent.change(phone, {
     target: { value: "+49 123456789999999999999" },
@@ -84,11 +89,7 @@ test("Too long phone number is invalid", () => {
   expect(phone).toBeInvalid();
 });
 
-test("Too short phone is recognized as invalid", () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: () => {},
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+test(`${tooShortPhone} is invalid`, () => {
   const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
   fireEvent.change(phone, {
     target: { value: "+49" },
@@ -96,11 +97,7 @@ test("Too short phone is recognized as invalid", () => {
   expect(phone).toBeInvalid();
 });
 
-test("Invalid birth date in the past is recognized as invalid", async () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: jest.fn(() => {}),
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+test(`${tooEarlyBirthDate} birth date is invalid`, async () => {
   const birthDate = screen.getByLabelText("birthDate");
 
   fireEvent.change(birthDate, {
@@ -109,11 +106,7 @@ test("Invalid birth date in the past is recognized as invalid", async () => {
   expect(birthDate).toBeInvalid();
 });
 
-test("Invalid birth date in the distant future is recognized as invalid", async () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: jest.fn(() => {}),
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+test(`${tooLateBirthDate} birth date is invalid`, async () => {
   const birthDate = screen.getByLabelText("birthDate");
 
   fireEvent.change(birthDate, {
@@ -122,12 +115,6 @@ test("Invalid birth date in the distant future is recognized as invalid", async 
   expect(birthDate).toBeInvalid();
 });
 test("Form with correct input data can be submit", async () => {
-  (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: () => {
-      mockedHandler();
-    },
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
   const phone = screen.getByLabelText("phoneNumber");
   fireEvent.change(phone, {
     target: { value: validPhone },
