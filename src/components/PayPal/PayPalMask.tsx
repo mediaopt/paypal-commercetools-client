@@ -29,18 +29,21 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     if (restprops.style || !settings) {
       return restprops.style;
     }
-    if (
-      settings.paypalButtonConfig &&
-      settings.buttonTagline &&
-      settings.buttonShape
-    ) {
-      return {
-        color: settings.paypalButtonConfig.buttonColor,
-        label: settings.paypalButtonConfig.buttonLabel,
-        shape: settings.buttonShape,
-      };
+    let styles: Record<string, string | boolean> = {};
+    if (settings.paypalButtonConfig) {
+      styles.label = settings.paypalButtonConfig.buttonLabel;
+      if (
+        props.fundingSource &&
+        ["paypal", "paylater"].includes(props.fundingSource)
+      ) {
+        styles.color = settings.paypalButtonConfig.buttonColor;
+      }
     }
-    return restprops.style;
+    if (settings.buttonShape) {
+      styles.shape = settings.buttonShape;
+    }
+
+    return styles;
   }, [settings, restprops]);
 
   const errorFunc = (err: Record<string, unknown>) => {
