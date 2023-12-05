@@ -1,5 +1,5 @@
 import { PayUponInvoiceMask } from "./PayUponInvoiceMask";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { usePayment } from "../../app/usePayment";
 
 jest.mock("react-i18next", () => ({
@@ -29,6 +29,12 @@ test("Mask is shown if dependencies provided", () => {
 });
 
 jest.mock("../../app/usePayment");
+const mockedHandler = jest.fn();
+
+afterEach(() => {
+  jest.resetAllMocks();
+  jest.restoreAllMocks();
+});
 
 test("Correct input value for birthdate for invoice payments can be set", () => {
   (usePayment as jest.Mock).mockReturnValue({
@@ -54,7 +60,7 @@ test("Correct input value for phone for invoice payments can be set", () => {
   expect(phone.value).toEqual(validPhone);
 });
 
-test("Input value for the phone is formatted to match the requested format if needed", () => {
+test("Correct input value for the phone is formatted to match the requested format", () => {
   (usePayment as jest.Mock).mockReturnValue({
     handleCreateOrder: () => {},
   });
@@ -66,7 +72,7 @@ test("Input value for the phone is formatted to match the requested format if ne
   expect(phone.value).toEqual(validPhone);
 });
 
-test("Too long phone number can't be set", () => {
+test("Too long phone number is invalid", () => {
   (usePayment as jest.Mock).mockReturnValue({
     handleCreateOrder: () => {},
   });
@@ -75,7 +81,19 @@ test("Too long phone number can't be set", () => {
   fireEvent.change(phone, {
     target: { value: "+49 123456789999999999999" },
   });
-  expect(phone.value).not.toEqual("+49 123456789999999999999");
+  expect(phone).toBeInvalid();
+});
+
+test("Too short phone is recognized as invalid", () => {
+  (usePayment as jest.Mock).mockReturnValue({
+    handleCreateOrder: () => {},
+  });
+  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+  const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
+  fireEvent.change(phone, {
+    target: { value: "+49" },
+  });
+  expect(phone).toBeInvalid();
 });
 
 test("Invalid birth date in the past is recognized as invalid", async () => {
@@ -103,19 +121,21 @@ test("Invalid birth date in the distant future is recognized as invalid", async 
   });
   expect(birthDate).toBeInvalid();
 });
-
 test("Form with correct input data can be submit", async () => {
   (usePayment as jest.Mock).mockReturnValue({
-    handleCreateOrder: jest.fn(() => {}),
-  });
-  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
-  const handleOnSubmitMock = jest.fn();
-  screen.getByRole("form").onsubmit = handleOnSubmitMock;
-  fireEvent.submit(screen.getByText("Pay"), {
-    target: {
-      birthDate: { value: validBirthDate },
-      phone: { value: validPhone },
+    handleCreateOrder: () => {
+      mockedHandler();
     },
   });
-  expect(handleOnSubmitMock).toHaveBeenCalled();
+  render(<PayUponInvoiceMask fraudNetSessionId={fraudNetSessionId} />);
+  const phone = screen.getByLabelText("phoneNumber");
+  fireEvent.change(phone, {
+    target: { value: validPhone },
+  });
+  const birthDate = screen.getByLabelText("birthDate");
+  fireEvent.change(birthDate, {
+    target: { value: validBirthDate },
+  });
+  fireEvent.submit(screen.getByText("Pay"));
+  await waitFor(() => expect(mockedHandler).toHaveBeenCalled());
 });
