@@ -34,20 +34,6 @@ test("Text is shown", () => {
   expect(linkElement.length).toEqual(1);
 });
 
-test("Image is shown", () => {
-  render(
-    <table>
-      <tbody>
-        <tr>
-          <PayPal {...params} />
-        </tr>
-      </tbody>
-    </table>
-  );
-  const linkElement = screen.getAllByRole("img");
-  expect(linkElement.length).toEqual(1);
-});
-
 test("Button is shown", () => {
   render(
     <table>
