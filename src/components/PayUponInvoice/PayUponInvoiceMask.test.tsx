@@ -48,13 +48,15 @@ afterEach(() => {
   cleanup();
 });
 
-test("Mask is shown if dependencies provided", () => {
-  expect(screen.getAllByRole("button").length).toEqual(1);
-});
-
 afterEach(() => {
   jest.resetAllMocks();
   jest.restoreAllMocks();
+});
+
+test("Mask is shown if dependencies provided", () => {
+  expect(screen.getAllByRole("button").length).toEqual(1);
+  expect(screen.getAllByLabelText("phoneNumber").length).toEqual(1);
+  expect(screen.getAllByLabelText("birthDate").length).toEqual(1);
 });
 
 test(`${validBirthDate} input value for birthdate for invoice payments is valid`, () => {
@@ -99,7 +101,6 @@ test(`${tooShortPhone} is invalid`, () => {
 
 test(`${tooEarlyBirthDate} birth date is invalid`, async () => {
   const birthDate = screen.getByLabelText("birthDate");
-
   fireEvent.change(birthDate, {
     target: { value: "0001-01-01" },
   });
@@ -108,13 +109,13 @@ test(`${tooEarlyBirthDate} birth date is invalid`, async () => {
 
 test(`${tooLateBirthDate} birth date is invalid`, async () => {
   const birthDate = screen.getByLabelText("birthDate");
-
   fireEvent.change(birthDate, {
     target: { value: "19999999999999999999999-01-01" },
   });
   expect(birthDate).toBeInvalid();
 });
-test("Form with correct input data can be submit", async () => {
+
+test("Form with vailid input data is submitted", async () => {
   const phone = screen.getByLabelText("phoneNumber");
   fireEvent.change(phone, {
     target: { value: validPhone },
@@ -125,4 +126,13 @@ test("Form with correct input data can be submit", async () => {
   });
   fireEvent.submit(screen.getByText("Pay"));
   await waitFor(() => expect(mockedHandler).toHaveBeenCalled());
+});
+
+test("Form with invailid phone is not submitted", async () => {
+  const phone = screen.getByLabelText("phoneNumber");
+  fireEvent.change(phone, {
+    target: { value: tooShortPhone },
+  });
+  fireEvent.submit(screen.getByText("Pay"));
+  await waitFor(() => expect(mockedHandler).not.toHaveBeenCalled());
 });
