@@ -4,7 +4,12 @@ import { useSettings } from "../../app/useSettings";
 
 import { CardPaymentSource } from "../../types";
 
-export const Card: React.FC<CardPaymentSource & { id: string }> = ({
+export type CardProps = Pick<
+  CardPaymentSource,
+  "brand" | "last_digits" | "expiry"
+> & { id: string };
+
+export const Card: React.FC<CardProps> = ({
   id,
   brand,
   last_digits,

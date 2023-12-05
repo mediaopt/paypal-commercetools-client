@@ -1,18 +1,12 @@
 import React from "react";
-import { PayPalButtonsComponentProps } from "@paypal/react-paypal-js";
 
 import { Card } from "./Card";
 import { PayPal } from "./PayPal";
 
 import { useSettings } from "../../app/useSettings";
 
-export const PaymentTokensList: React.FC<PayPalButtonsComponentProps> = (
-  props
-) => {
+export const PaymentTokensList: React.FC = () => {
   const { paymentTokens } = useSettings();
-
-  if (paymentTokens && paymentTokens.payment_tokens) {
-  }
 
   return paymentTokens && paymentTokens.payment_tokens ? (
     <table cellPadding={5}>

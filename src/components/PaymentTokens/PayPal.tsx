@@ -4,10 +4,11 @@ import { useSettings } from "../../app/useSettings";
 
 import { PayPalPaymentSource } from "../../types";
 
-export const PayPal: React.FC<PayPalPaymentSource & { id: string }> = ({
-  id,
-  email_address,
-}) => {
+export type PayPalProps = Pick<PayPalPaymentSource, "email_address"> & {
+  id: string;
+};
+
+export const PayPal: React.FC<PayPalProps> = ({ id, email_address }) => {
   const { handleRemovePaymentToken } = useSettings();
   return (
     <>
