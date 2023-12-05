@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { usePayment } from "../../app/usePayment";
 import { CardFieldsMask } from "./CardFieldsMask";
@@ -9,9 +9,22 @@ export const CardFieldsButton: React.FC<CardFieldsProps> = ({
   enableVaulting,
 }) => {
   const { paymentInfo, vaultOnly } = usePayment();
+  const [showComponent, setShowComponent] = useState<boolean>(false);
   useHandleCreatePayment();
 
-  return (paymentInfo.id || vaultOnly) && window.paypal ? (
+  useEffect(() => {
+    let intervall = setInterval(() => {
+      if (!!window.paypal && (paymentInfo.id || vaultOnly)) {
+        clearInterval(intervall);
+        setShowComponent(true);
+      }
+    }, 250);
+    return () => {
+      clearInterval(intervall);
+    };
+  }, []);
+
+  return showComponent ? (
     <CardFieldsMask enableVaulting={enableVaulting} />
   ) : (
     <></>

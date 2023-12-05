@@ -68,21 +68,30 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
       });
     }
   };
+  const cardFieldMethods = vaultOnly
+    ? { createVaultSetupToken: () => handleCreateVaultSetupToken("card") }
+    : {
+        createOrder: () => {
+          if (vaultOnly) {
+            return handleCreateVaultSetupToken("card");
+          }
+          return handleCreateOrder({
+            paymentSource: "card",
+            storeInVault: saveCard,
+            verificationMethod: threeDSAuth || undefined,
+          });
+        },
+      };
 
   const cardField = useMemo(() => {
     // @ts-ignore
     return window.paypal!.CardFields({
-      createOrder: () => {
-        if (vaultOnly) {
-          return handleCreateVaultSetupToken("card");
-        }
-        return handleCreateOrder({
-          paymentSource: "card",
-          storeInVault: saveCard,
-          verificationMethod: threeDSAuth || undefined,
-        });
-      },
+      ...cardFieldMethods,
       onApprove: (data: CustomOnApproveData) => {
+        if (vaultOnly) {
+          approveTransaction(data);
+          return;
+        }
         const approveData: CustomOnApproveData = {
           orderID: data.orderID,
           saveCard: save.current?.checked,
@@ -205,7 +214,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
         <div ref={cvvField} id="card-cvv-field-container"></div>
 
-        {enableVaulting && (
+        {enableVaulting && !vaultOnly && (
           <label>
             <input
               type="checkbox"
