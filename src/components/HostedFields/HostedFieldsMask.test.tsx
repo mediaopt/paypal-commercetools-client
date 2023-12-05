@@ -8,7 +8,7 @@ jest.mock("../../app/useSettings", () => {
   return {
     useSettings: () => {
       return {
-        settings: { key: "value" },
+        settings: { key: "value", payPalIntent: "capture" },
       };
     },
   };
