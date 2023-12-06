@@ -153,6 +153,8 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
       const cardExpiryField = cardField.ExpiryField();
       cardExpiryField.render(expiryField.current);
+    } else if (!cardField.isEligible()) {
+      notify("Error", "Card payment currently not supported");
     }
   }, [cardField, settings]);
 
