@@ -22,7 +22,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   enableVaulting,
 }) => {
-  const { handleCreateOrder, oderDataLinks, handleOnApprove, orderId } =
+  const { handleCreateOrder, orderDataLinks, handleOnApprove, orderId } =
     usePayment();
   const { settings, paymentTokens } = useSettings();
   const { clientToken } = usePayment();
@@ -44,14 +44,14 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   }, [settings]);
 
   useEffect(() => {
-    let oderDataPayerAction = oderDataLinks?.filter(
-      (oderDataLink) => oderDataLink.rel === "payer-action"
+    let oderDataPayerAction = orderDataLinks?.filter(
+      (orderDataLink) => orderDataLink.rel === "payer-action"
     );
 
     if (oderDataPayerAction && oderDataPayerAction[0]) {
       window.location.href = oderDataPayerAction[0].href;
     }
-  }, [oderDataLinks, orderId]);
+  }, [orderDataLinks, orderId]);
 
   return !settings ? (
     <></>

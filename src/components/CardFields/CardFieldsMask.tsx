@@ -21,6 +21,8 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
     vaultOnly,
     handleApproveVaultSetupToken,
     handleCreateVaultSetupToken,
+    orderDataLinks,
+    orderId,
   } = usePayment();
   const { settings, paymentTokens } = useSettings();
   const { notify } = useNotifications();
@@ -68,6 +70,16 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
       });
     }
   };
+  useEffect(() => {
+    let oderDataPayerAction = orderDataLinks?.filter(
+      (orderDataLink) => orderDataLink.rel === "payer-action"
+    );
+
+    if (oderDataPayerAction && oderDataPayerAction[0]) {
+      window.location.href = oderDataPayerAction[0].href;
+    }
+  }, [orderDataLinks, orderId]);
+
   const cardFieldMethods = vaultOnly
     ? { createVaultSetupToken: () => handleCreateVaultSetupToken("card") }
     : {
