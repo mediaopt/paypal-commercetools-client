@@ -108,8 +108,10 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
-  onApproveUrl,
   authorizeOrderUrl,
+
+  onApproveUrl,
+  onApproveRedirectionUrl,
 
   createVaultSetupTokenUrl,
   approveVaultSetupTokenUrl,
@@ -187,7 +189,6 @@ export const PaymentProvider: FC<
         setResultSuccess(false);
       }
     };
-
     const handleCreateOrder = async (orderData?: CustomOrderData) => {
       if (!createOrderUrl) return "";
       const setRatepayMessage = orderData?.setRatepayMessage ?? undefined;
@@ -253,12 +254,17 @@ export const PaymentProvider: FC<
         }
       } else return "";
     };
-
     const handleOnApprove = async (data: CustomOnApproveData) => {
-      if (!onApproveUrl && !authorizeOrderUrl) return;
+      if (!onApproveUrl && !authorizeOrderUrl && !onApproveRedirectionUrl)
+        return;
       isLoading(true);
 
       const { orderID, saveCard } = data;
+
+      if (onApproveRedirectionUrl) {
+        window.location.href = `${onApproveRedirectionUrl}?order_id=${orderID}`;
+        return;
+      }
 
       const onAuthorizeOrderUrl =
         settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;
@@ -290,7 +296,6 @@ export const PaymentProvider: FC<
       }
       isLoading(false);
     };
-
     const handleCreatePayment = async () => {
       isLoading(true);
 
@@ -336,7 +341,6 @@ export const PaymentProvider: FC<
       }
       isLoading(false);
     };
-
     let vaultOnly: boolean = !!(
       createVaultSetupTokenUrl && approveVaultSetupTokenUrl
     );

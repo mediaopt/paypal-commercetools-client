@@ -1,5 +1,5 @@
 import { HostedFields } from "../../src/components/HostedFields";
-import { params, options, requestHeader } from "./constants";
+import { params, options, requestHeader, vaultParams } from "./constants";
 
 export default {
   title: "Components/HostedFields",
@@ -20,5 +20,19 @@ export const Main = {
       components: "hosted-fields,buttons",
       vault: false,
     },
+    enableVaulting: false,
+  },
+};
+
+export const Vault = {
+  args: {
+    ...params,
+    requestHeader,
+    options: {
+      ...options,
+      components: "hosted-fields,buttons",
+      vault: false,
+    },
+    ...vaultParams,
   },
 };
