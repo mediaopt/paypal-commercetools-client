@@ -221,53 +221,39 @@ export const PaymentProvider: FC<
         const { id, status, payment_source, details, links, message } =
           orderData;
         latestPaymentVersion = paymentVersion;
-        if (setRatepayMessage) {
-          if (paymentVersion)
-            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
-          if (id) {
-            setRatepayMessage && setRatepayMessage(undefined);
-            setShowResult(true);
-            setResultSuccess(true);
-            purchaseCallback(orderData);
-            return id;
-          } else {
-            const errorDetails = details?.length && details[0];
-            if (errorDetails) {
-              const ratepayError = relevantError(errorDetails);
-              if (ratepayError) {
-                setRatepayMessage && setRatepayMessage(ratepayError);
-                return "";
-              }
-            }
-            notify("Error", orderData?.message ?? t("thirdPartyIssue"));
-            return "";
-          }
+
+        if (!id) {
+          handleResponseError(
+            t,
+            details?.toString(),
+            message,
+            setRatepayMessage,
+          );
+          return "";
         } else {
-          if (status === "COMPLETED" && payment_source) {
-            setShowResult(true);
-            setResultSuccess(true);
-            purchaseCallback(orderData);
-            return "";
-          } else if (
-            status === "PAYER_ACTION_REQUIRED" &&
-            payment_source &&
-            links
-          ) {
-            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
-            setOderDataLinks(links);
-            setOrderId(id);
-            return "";
+          if (setRatepayMessage) {
+            setRatepayMessage && setRatepayMessage(undefined);
+            onSuccess(orderData);
           } else {
-            return id;
+            if (status === "COMPLETED" && payment_source) {
+              onSuccess(orderData);
+            } else if (
+              status === "PAYER_ACTION_REQUIRED" &&
+              payment_source &&
+              links
+            ) {
+              setOderDataLinks(links);
+              setOrderId(id);
+            }
           }
         }
+        return id;
       } else return "";
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl && !onApproveRedirectionUrl)
         return;
-
 
       const { orderID, saveCard } = data;
       if (!orderID) return;
