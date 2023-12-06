@@ -73,6 +73,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         style={style}
         {...actions}
         onError={(err) => errorFunc(err, isLoading, notify)}
+        forceReRender={[style, restprops.fundingSource]}
       />
       {(enableVaulting || storeInVaultOnSuccess) && (
         <label>

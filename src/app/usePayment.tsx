@@ -109,8 +109,10 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
-  onApproveUrl,
   authorizeOrderUrl,
+
+  onApproveUrl,
+  onApproveRedirectionUrl,
 
   createVaultSetupTokenUrl,
   approveVaultSetupTokenUrl,
@@ -219,49 +221,62 @@ export const PaymentProvider: FC<
         const { id, status, payment_source, details, links, message } =
           orderData;
         latestPaymentVersion = paymentVersion;
-
-        if (
-          paymentVersion &&
-          (status === "PAYER_ACTION_REQUIRED" || setRatepayMessage)
-        ) {
-          setPaymentInfo({ ...paymentInfo, version: paymentVersion });
-        }
-
-        if (!id) {
-          handleResponseError(
-            t,
-            details?.toString(),
-            message,
-            setRatepayMessage,
-          );
-          return "";
-        } else {
-          if (setRatepayMessage) {
+        if (setRatepayMessage) {
+          if (paymentVersion)
+            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
+          if (id) {
             setRatepayMessage && setRatepayMessage(undefined);
-            onSuccess(orderData);
+            setShowResult(true);
+            setResultSuccess(true);
+            purchaseCallback(orderData);
+            return id;
           } else {
-            if (status === "COMPLETED" && payment_source) {
-              onSuccess(orderData);
-            } else if (
-              status === "PAYER_ACTION_REQUIRED" &&
-              payment_source &&
-              links
-            ) {
-              setOderDataLinks(links);
-              setOrderId(id);
+            const errorDetails = details?.length && details[0];
+            if (errorDetails) {
+              const ratepayError = relevantError(errorDetails);
+              if (ratepayError) {
+                setRatepayMessage && setRatepayMessage(ratepayError);
+                return "";
+              }
             }
+            notify("Error", orderData?.message ?? t("thirdPartyIssue"));
+            return "";
+          }
+        } else {
+          if (status === "COMPLETED" && payment_source) {
+            setShowResult(true);
+            setResultSuccess(true);
+            purchaseCallback(orderData);
+            return "";
+          } else if (
+            status === "PAYER_ACTION_REQUIRED" &&
+            payment_source &&
+            links
+          ) {
+            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
+            setOderDataLinks(links);
+            setOrderId(id);
+            return "";
+          } else {
+            return id;
           }
         }
-        return id;
       } else return "";
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
-      if (!onApproveUrl && !authorizeOrderUrl) return;
+      if (!onApproveUrl && !authorizeOrderUrl && !onApproveRedirectionUrl)
+        return;
+
 
       const { orderID, saveCard } = data;
       if (!orderID) return;
       isLoading(true);
+
+      if (onApproveRedirectionUrl) {
+        window.location.href = `${onApproveRedirectionUrl}?order_id=${orderID}`;
+        return;
+      }
 
       const onAuthorizeOrderUrl =
         settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;

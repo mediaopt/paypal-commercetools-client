@@ -54,24 +54,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
     );
 
     if (oderDataPayerAction && oderDataPayerAction[0]) {
-      const newWindow = window.open(
-        oderDataPayerAction[0].href,
-        "3D Secure Check",
-        "width=300,height=500",
-      );
-      let fireOderDataGetInterval: NodeJS.Timer;
-      const fireOderDataGet = async () => {
-        if (newWindow?.closed) {
-          clearInterval(fireOderDataGetInterval);
-          if (orderId) {
-            await handleOnApprove({ orderID: orderId });
-          }
-        }
-      };
-
-      if (newWindow) {
-        fireOderDataGetInterval = setInterval(fireOderDataGet, 1000);
-      }
+      window.location.href = oderDataPayerAction[0].href;
     }
   }, [oderDataLinks, orderId]);
 
@@ -85,9 +68,13 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
         components: options.components,
         vault: options.vault,
         dataPartnerAttributionId: PARTNER_ATTRIBUTION_ID,
+        intent: settings.payPalIntent.toLowerCase(),
+        merchantId: settings.merchantId,
       }}
     >
-      {cardPaymentTokens && cardPaymentTokens?.length > 0 && !addNew ? (
+      {cardPaymentTokens &&
+      cardPaymentTokens?.length > 0 &&
+      addNew === false ? (
         <>
           {cardPaymentTokens.map((paymentToken) => {
             const { id, payment_source } = paymentToken;
@@ -111,10 +98,6 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
           })}
           {vaultId && (
             <div>
-              <p>
-                If the 3D secure popup appears, you need to do the verification
-                and then close the window.
-              </p>
               <div className="h-9">
                 <button
                   className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}

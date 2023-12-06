@@ -7,12 +7,12 @@ export default {
   argTypes: {
     fundingSource: {
       options: [
+        "",
         "paypal",
         "venmo",
         "applepay",
         "itau",
         "credit",
-        "paylater",
         "card",
         "ideal",
         "sepa",

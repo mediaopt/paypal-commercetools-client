@@ -1,5 +1,11 @@
 import { PayPal } from "../../src/components/PayPal";
-import { params, options, requestHeader } from "./constants";
+import {
+  params,
+  options,
+  requestHeader,
+  vaultParams,
+  vaultOnlyParams,
+} from "./constants";
 
 export default {
   title: "Components/PayPal",
@@ -25,6 +31,64 @@ export const Main = {
       color: "gold",
       height: 55,
       label: "pay",
+      layout: "vertical",
+      shape: "rect",
+      tagline: false,
+    },
+  },
+};
+
+export const Vault = {
+  args: {
+    ...params,
+    ...vaultParams,
+    requestHeader,
+    options,
+    fundingSource: "paypal",
+
+    style: {
+      color: "gold",
+      height: 55,
+      label: "pay",
+      layout: "vertical",
+      shape: "rect",
+      tagline: false,
+    },
+  },
+};
+
+export const VaultOnly = {
+  args: {
+    ...vaultOnlyParams,
+    requestHeader,
+    options,
+    fundingSource: "paypal",
+
+    style: {
+      color: "gold",
+      height: 55,
+      label: "pay",
+      layout: "vertical",
+      shape: "rect",
+      tagline: false,
+    },
+  },
+};
+
+export const BuyNow = {
+  args: {
+    ...params,
+    requestHeader,
+    options: { ...options, commit: false },
+    onShippingChange: (data, actions) => {
+      console.log(data, actions);
+    },
+    fundingSource: "paypal",
+
+    style: {
+      color: "gold",
+      height: 55,
+      label: "buynow",
       layout: "vertical",
       shape: "rect",
       tagline: false,
