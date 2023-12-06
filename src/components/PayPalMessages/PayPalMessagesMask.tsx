@@ -1,6 +1,8 @@
 import React from "react";
-import { PayPalMessages } from "@paypal/react-paypal-js";
-import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
+import {
+  PayPalMessages,
+  PayPalMessagesComponentProps,
+} from "@paypal/react-paypal-js";
 
 import { useSettings } from "../../app/useSettings";
 
@@ -51,9 +53,11 @@ export const PayPalMessagesMask: React.FC<PayPalMessagesComponentProps> = (
     return <></>;
   }
 
+  const messageLayout: Layout = placement ? messagingType[placement] : "text";
+
   const newProps: PayPalMessagesComponentProps = {
     style: {
-      layout: messagingType as Layout,
+      layout: messageLayout as Layout,
       ratio: flexRatio as FlexRatio,
       color: flexColor.toString(),
 
