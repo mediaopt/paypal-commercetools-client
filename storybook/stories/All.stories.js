@@ -13,7 +13,6 @@ export default {
         "applepay",
         "itau",
         "credit",
-        "paylater",
         "card",
         "ideal",
         "sepa",
