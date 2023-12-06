@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import {
   PayPalButtonsComponentProps,
   ReactPayPalScriptOptions,
@@ -22,7 +23,7 @@ export type ApproveVaultSetupTokenData = { vaultSetupToken: string };
 export type CreateOrderRequest = {
   paymentId: string;
   paymentVersion: number;
-  orderData?: CreateOrderData;
+  orderData?: CreatePayPalOrderData;
 };
 
 export type CreateOrderData = {
@@ -32,10 +33,22 @@ export type CreateOrderData = {
   verificationMethod?: ThreeDSVerification;
 };
 
+export type CreateInvoiceData = {
+  fraudNetSessionId?: string;
+  birthDate?: string;
+  nationalNumber?: string;
+  countryCode?: string;
+};
+
+export type CreatePayPalOrderData = CreateOrderData & CreateInvoiceData;
+
 export type CreateOrderResponse = {
   orderData: {
     id: string;
     status: string;
+    success?: boolean;
+    message?: string;
+    details?: string;
     payment_source?: {
       card: {
         name: string;
@@ -46,6 +59,7 @@ export type CreateOrderResponse = {
         type: string;
       };
     };
+    links?: OrderDataLinks;
   };
   paymentVersion: number;
 };
@@ -109,6 +123,35 @@ export type CardFieldsProps = {
 export type HostedFieldsSmartComponentProps = SmartComponentsProps &
   HostedFieldsThreeDSAuth;
 
+export type FraudnetPage =
+  | "home-page"
+  | "search-result-page"
+  | "category-page"
+  | "product-detail-page"
+  | "cart-page"
+  | "inline-cart-page"
+  | "checkout-page";
+
+type ratepayPaymentRestrictions = {
+  minPayableAmount: number;
+  maxPayableAmount: number;
+};
+
+export type PayUponInvoiceProps = ratepayPaymentRestrictions & {
+  merchantId: string;
+  pageId: FraudnetPage;
+  invoiceBenefitsMessage?: string;
+  customLocale?: string;
+};
+
+export type PayUponInvoiceMaskProps = {
+  fraudNetSessionId: string;
+  invoiceBenefitsMessage?: string;
+};
+
+export type PayUponInvoiceButtonProps = ratepayPaymentRestrictions &
+  PayUponInvoiceMaskProps;
+
 export type CustomPayPalButtonsComponentProps = Omit<
   PayPalButtonsComponentProps,
   | "createOrder"
@@ -121,6 +164,7 @@ export type CustomPayPalButtonsComponentProps = Omit<
   | "onInit"
 > & {
   paypalMessages?: PayPalMessagesComponentProps;
+  enableVaulting?: boolean;
 };
 
 export type SmartComponentsProps = CustomPayPalButtonsComponentProps &
@@ -286,6 +330,7 @@ type CustomDataStringObject = { [key: string]: string };
 type PayPalButtonColors = "gold" | "blue" | "white" | "silver" | "black";
 
 export type GetSettingsResponse = {
+  merchantId: string;
   email: string;
   acceptPayPal: boolean;
   acceptPayLater: boolean;
@@ -320,7 +365,6 @@ export type GetSettingsResponse = {
   payLaterMessageFlexRatio: "1x1" | "1x4" | "8x1" | "20x1";
   threeDSOption: "" | "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
   payPalIntent: "Authorize" | "Capture";
-  partnerAttributionId: string;
   ratePayBrandName: CustomDataStringObject;
   ratePayLogoUrl: CustomDataStringObject;
   ratePayCustomerServiceInstructions: CustomDataStringObject;
@@ -347,6 +391,10 @@ export type CustomOnApproveData = {
   liabilityShift?: string;
 };
 
+export type CustomOrderData = CreatePayPalOrderData & {
+  setRatepayMessage?: Dispatch<SetStateAction<string | undefined>>;
+};
+
 export type SettingsProviderProps = {
   getSettingsUrl: string;
   getUserInfoUrl?: string;
@@ -356,3 +404,11 @@ export type SettingsProviderProps = {
 };
 
 export type RemovePaymentTokenRequest = { paymentTokenId: string };
+
+type OrderDataLink = {
+  href: string;
+  rel: string;
+  method: string;
+};
+
+export type OrderDataLinks = OrderDataLink[];

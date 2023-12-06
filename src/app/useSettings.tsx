@@ -15,6 +15,9 @@ import {
   PaymentTokens,
 } from "../types";
 import { getSettings, getUserInfo, removePaymentToken } from "../services";
+import { useLoader } from "./useLoader";
+import { PARTNER_ATTRIBUTION_ID } from "../constants";
+import { useNotifications } from "./useNotifications";
 
 type SettingsContextT = {
   handleGetSettings: () => void;
@@ -43,9 +46,13 @@ export const SettingsProvider: FC<
   const [settings, setSettings] = useState<GetSettingsResponse>();
   const [userIdToken, setUserIdToken] = useState<string>();
   const [paymentTokens, setPaymentTokens] = useState<PaymentTokens>();
+  const { isLoading } = useLoader();
+  const { notify } = useNotifications();
 
   const value = useMemo(() => {
     const handleGetSettings = async () => {
+      isLoading(true);
+
       if (getUserInfoUrl && !userIdToken) {
         const { userIdToken, paymentTokens } = (await getUserInfo(
           requestHeader,
@@ -60,12 +67,22 @@ export const SettingsProvider: FC<
         const getSettingsResult = (await getSettings(
           requestHeader,
           getSettingsUrl
-        )) as GetSettingsResponse;
+        )) as Record<any, any>;
 
-        setSettings(getSettingsResult);
+        if (
+          !getSettingsResult ||
+          (getSettingsResult.hasOwnProperty("ok") && !getSettingsResult.ok)
+        ) {
+          notify("Error", "Could not fetch settings");
+          isLoading(false);
+        } else {
+          setSettings(getSettingsResult as GetSettingsResponse);
+        }
       }
+      isLoading(false);
     };
     const handleRemovePaymentToken = async (paymentTokenId: string) => {
+      isLoading(true);
       if (removePaymentTokenUrl) {
         await removePaymentToken(
           requestHeader,
@@ -81,6 +98,7 @@ export const SettingsProvider: FC<
           setPaymentTokens({ ...paymentTokens });
         }
       }
+      isLoading(false);
     };
 
     return {
@@ -105,9 +123,8 @@ export const SettingsProvider: FC<
             ...options,
             intent: settings.payPalIntent.toString().toLowerCase(),
             dataUserIdToken: userIdToken,
-            dataPartnerAttributionId: settings.partnerAttributionId
-              ? (settings.partnerAttributionId as string)
-              : undefined,
+            dataPartnerAttributionId: PARTNER_ATTRIBUTION_ID,
+            merchantId: settings.merchantId,
           }}
         >
           {children}

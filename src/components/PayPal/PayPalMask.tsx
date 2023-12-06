@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { PayPalButtons, PayPalMessages } from "@paypal/react-paypal-js";
 import { CustomPayPalButtonsComponentProps } from "../../types";
 
@@ -20,24 +20,30 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const { settings } = useSettings();
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
-  const { paypalMessages, ...restprops } = props;
+  const { enableVaulting, paypalMessages, ...restprops } = props;
+  const save = useRef<HTMLInputElement>(null);
+
+  const storeInVaultOnSuccess = settings?.storeInVaultOnSuccess;
 
   const style = useMemo(() => {
     if (restprops.style || !settings) {
       return restprops.style;
     }
-    if (
-      settings.paypalButtonConfig &&
-      settings.buttonTagline &&
-      settings.buttonShape
-    ) {
-      return {
-        color: settings.paypalButtonConfig.buttonColor,
-        label: settings.paypalButtonConfig.buttonLabel,
-        shape: settings.buttonShape,
-      };
+    let styles: Record<string, string | boolean> = {};
+    if (settings.paypalButtonConfig) {
+      styles.label = settings.paypalButtonConfig.buttonLabel;
+      if (
+        props.fundingSource &&
+        ["paypal", "paylater"].includes(props.fundingSource)
+      ) {
+        styles.color = settings.paypalButtonConfig.buttonColor;
+      }
     }
-    return restprops.style;
+    if (settings.buttonShape) {
+      styles.shape = settings.buttonShape;
+    }
+
+    return styles;
   }, [settings, restprops]);
 
   const errorFunc = (err: Record<string, unknown>) => {
@@ -55,7 +61,12 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     };
   } else {
     actions = {
-      createOrder: handleCreateOrder,
+      createOrder: () => {
+        return handleCreateOrder({
+          storeInVault: save.current?.checked,
+          paymentSource: "paypal",
+        });
+      },
       onApprove: handleOnApprove,
     };
   }
@@ -68,6 +79,19 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...actions}
         onError={errorFunc}
       />
+      {(enableVaulting || storeInVaultOnSuccess) && (
+        <label>
+          <input
+            type="checkbox"
+            id="save"
+            name="save"
+            ref={save}
+            className="mr-1"
+          />
+          Save for future purchases
+        </label>
+      )}
+
       {paypalMessages && <PayPalMessages {...paypalMessages} />}
     </>
   );

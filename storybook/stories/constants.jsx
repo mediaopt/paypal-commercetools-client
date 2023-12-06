@@ -30,8 +30,8 @@ export const options = {
 
 export const requestHeader = {
   "Frontastic-Session":
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIyOGVhMjMxYS00Mzg3LTQwMTctYWQ3Yi03YTMxMWFiMTdhNzkifQ.oq6K9l8oZZbGy2JAyCFb4TPtfiy14k4K9Q8Kz7JSgxM",
-  "Commercetools-Frontend-Extension-Version": "devjonathanyeboah",
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiYmU5MGJjYWItZGZiYi00MzJkLTkwOGUtN2JlMzI4YTk5NGE0In0.6ReqB2MAPhY1IyJmCZ5DNw_ujbT5pDz0b8TEodBp7yI",
+  "Commercetools-Frontend-Extension-Version": "devliudmylamasliuk",
 };
 
 const baseUrl = "https://poc-mediaopt2.frontastic.rocks/frontastic/action/";
@@ -57,4 +57,11 @@ export const payPalMessagesParams = {
     layout: "text",
   },
   placement: "product",
+};
+
+export const paypalInvoiceParams = {
+  merchantId: "W3KJAHBNV5BS6",
+  pageId: "checkout-page",
+  invoiceBenefitsMessage:
+    "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
+import { FUNDING_SOURCE } from "@paypal/paypal-js";
 
 import "./App.css";
 
@@ -9,6 +10,8 @@ import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
 import { CardFields } from "./components/CardFields";
+import { PayUponInvoice } from "./components/PayUponInvoice";
+import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
@@ -19,7 +22,7 @@ function App() {
 
   const cartInformation = {
     account: {
-      email: "test@test.com",
+      email: "payment_source_info_cannot_be_verified@example.com",
     },
     billing: {
       firstName: "John",
@@ -49,19 +52,23 @@ function App() {
   const ENDPOINT_URL: string =
     "https://poc-mediaopt2.frontastic.rocks/frontastic/action";
 
-  const params = {
-    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
-    authenticateThreeDSOrderUrl: `${ENDPOINT_URL}/payment/authenticateThreeDSOrder`,
+  const commonParams = {
     getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
-    /*getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,*/
+    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
+    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
+    purchaseCallback: (result: any, options: any) => {
+      console.log("Do something", result, options);
+    },
+  };
+
+  const params = {
+    ...commonParams,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
-    purchaseCallback: (result: any, options: any) => {
-      console.log("Do something", result, options);
-    },
+    authenticateThreeDSOrderUrl: `${ENDPOINT_URL}/payment/authenticateThreeDSOrder`,
   };
 
   const vaultParams = {
@@ -70,18 +77,11 @@ function App() {
   };
 
   const vaultOnlyParams = {
+    ...commonParams,
     getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
     enableVaulting: true,
-    createPaymentUrl: `${ENDPOINT_URL}/payment/createPayment`,
-    getSettingsUrl: `${ENDPOINT_URL}/settings/getPayPalSettings`,
-    getClientTokenUrl: `${ENDPOINT_URL}/payment/getClientToken`,
-
     createVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/createVaultSetupToken`,
     approveVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/approveVaultSetupToken`,
-
-    purchaseCallback: (result: any, options: any) => {
-      console.log("Do something", result, options);
-    },
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
   };
 
@@ -100,34 +100,70 @@ function App() {
     placement: "product",
   };
 
+  const paypalInvoiceParams: PayUponInvoiceProps = {
+    merchantId: "W3KJAHBNV5BS6",
+    pageId: "checkout-page",
+    minPayableAmount: 5, //euro
+    maxPayableAmount: 2500, //euro
+    customLocale: "de",
+  };
+
+  const AllSmartButtonsJson = {
+    ...params,
+    requestHeader,
+    options: { ...options, enableFunding: "paylater" },
+  };
+  const PayPalJson = {
+    ...params,
+    requestHeader,
+    options,
+    fundingSource: "paypal" as FUNDING_SOURCE,
+  };
+  const PayPalVaultJson = {
+    ...params,
+    ...vaultParams,
+    requestHeader,
+    options,
+    fundingSource: "paypal" as FUNDING_SOURCE,
+  };
+  const PayPalMessagesJson = {
+    requestHeader,
+    ...payPalMessagesParams,
+    ...params,
+    options: { ...options, components: "messages" },
+  };
+
+  const HostedFieldsJson = {
+    requestHeader,
+    ...params,
+    options: {
+      ...options,
+      components: "hosted-fields,buttons",
+      vault: false,
+    },
+  };
+
+  const PaymentTokensJson = {
+    ...params,
+    ...vaultParams,
+    removePaymentTokenUrl: `${ENDPOINT_URL}/payment/removePaymentToken`,
+    requestHeader,
+    options,
+  };
+  const PayUponInvoiceJson = {
+    options,
+    requestHeader,
+    ...params,
+    ...paypalInvoiceParams,
+  };
+
   const paymentMethods: { [index: string]: React.JSX.Element } = {
     TestButton: (
       <TestButton {...params} requestHeader={requestHeader} options={options} />
     ),
-    AllSmartButtons: (
-      <PayPal
-        {...params}
-        requestHeader={requestHeader}
-        options={{ ...options, enableFunding: "paylater" }}
-      />
-    ),
-    PayPal: (
-      <PayPal
-        {...params}
-        requestHeader={requestHeader}
-        options={options}
-        fundingSource="paypal"
-      />
-    ),
-    PayPalVault: (
-      <PayPal
-        {...params}
-        {...vaultParams}
-        requestHeader={requestHeader}
-        options={options}
-        fundingSource="paypal"
-      />
-    ),
+    AllSmartButtons: <PayPal {...AllSmartButtonsJson} />,
+    PayPal: <PayPal {...PayPalJson} />,
+    PayPalVault: <PayPal {...PayPalVaultJson} />,
     PayPalVaultOnly: (
       <PayPal
         {...vaultOnlyParams}
@@ -192,12 +228,17 @@ function App() {
         paypalMessages={payPalMessagesParams}
       />
     ),
-    PayPalMessages: (
-      <PayPalMessages
-        requestHeader={requestHeader}
-        {...payPalMessagesParams}
+    PayPalMessages: <PayPalMessages {...PayPalMessagesJson} />,
+    Card: (
+      <PayPal
         {...params}
-        options={{ ...options, components: "messages" }}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "messages,buttons",
+          enableFunding: "card",
+        }}
+        fundingSource="card"
       />
     ),
     CardFields: (
@@ -224,17 +265,7 @@ function App() {
         {...vaultOnlyParams}
       />
     ),
-    HostedFields: (
-      <HostedFields
-        requestHeader={requestHeader}
-        {...params}
-        options={{
-          ...options,
-          components: "hosted-fields,buttons",
-          vault: false,
-        }}
-      />
-    ),
+    HostedFields: <HostedFields {...HostedFieldsJson} />,
     HostedFieldsVault: (
       <HostedFields
         requestHeader={requestHeader}
@@ -247,15 +278,8 @@ function App() {
         }}
       />
     ),
-    PaymentTokens: (
-      <PaymentTokens
-        {...params}
-        {...vaultParams}
-        removePaymentTokenUrl={`${ENDPOINT_URL}/payment/removePaymentToken`}
-        requestHeader={requestHeader}
-        options={options}
-      />
-    ),
+    PaymentTokens: <PaymentTokens {...PaymentTokensJson} />,
+    PayUponInvoice: <PayUponInvoice {...PayUponInvoiceJson} />,
   };
 
   const changePaymentMethod = (e: React.ChangeEvent<HTMLInputElement>) => {

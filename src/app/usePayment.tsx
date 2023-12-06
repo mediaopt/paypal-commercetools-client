@@ -18,8 +18,10 @@ import {
   ClientTokenResponse,
   CustomOnApproveData,
   OnApproveResponse,
-  CreateOrderData,
+  CustomOrderData,
   ApproveVaultSetupTokenData,
+  CreateInvoiceData,
+  OrderDataLinks,
 } from "../types";
 import {
   createPayment,
@@ -35,6 +37,8 @@ import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
 import { getActionIndex } from "../components/CardFields/constants";
+import { useTranslation } from "react-i18next";
+import { relevantError } from "../components/PayUponInvoice/RatepayErrorNote";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -54,10 +58,10 @@ type PaymentContextT = {
   requestHeader: RequestHeader;
   handleCreatePayment: () => Promise<void>;
   clientToken: string;
-  handleCreateOrder: (orderData?: CreateOrderData) => Promise<string>;
+  handleCreateOrder: (orderData?: CustomOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
   vaultOnly: boolean;
-
+  oderDataLinks?: OrderDataLinks;
   handleCreateVaultSetupToken: (
     paymentSource: FUNDING_SOURCE
   ) => Promise<string>;
@@ -65,6 +69,21 @@ type PaymentContextT = {
     data: ApproveVaultSetupTokenData
   ) => Promise<void>;
   handleAuthenticateThreeDSOrder: (orderID: string) => Promise<number>;
+  orderId?: string;
+};
+
+const setRelevantData = (
+  orderData?: CustomOrderData,
+  isInvoice?: boolean,
+  enableVaulting?: boolean
+) => {
+  if (isInvoice) {
+    return orderData as CreateInvoiceData;
+  } else
+    return {
+      storeInVault: enableVaulting,
+      ...orderData,
+    };
 };
 
 const PaymentContext = createContext<PaymentContextT>({
@@ -73,7 +92,7 @@ const PaymentContext = createContext<PaymentContextT>({
   requestHeader: {},
   handleCreatePayment: () => Promise.resolve(),
   clientToken: "",
-  handleCreateOrder: (orderData?: CreateOrderData) => Promise.resolve(""),
+  handleCreateOrder: (orderData?: CustomOrderData) => Promise.resolve(""),
   handleOnApprove: () => Promise.resolve(),
   vaultOnly: false,
   handleCreateVaultSetupToken: (paymentSource: FUNDING_SOURCE) =>
@@ -81,6 +100,8 @@ const PaymentContext = createContext<PaymentContextT>({
   handleApproveVaultSetupToken: (data?: ApproveVaultSetupTokenData) =>
     Promise.resolve(),
   handleAuthenticateThreeDSOrder: (orderID: string) => Promise.resolve(0),
+  oderDataLinks: undefined,
+  orderId: undefined,
 });
 
 export const PaymentProvider: FC<
@@ -109,8 +130,11 @@ export const PaymentProvider: FC<
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
+  const [oderDataLinks, setOderDataLinks] = useState<OrderDataLinks>();
+  const [orderId, setOrderId] = useState<string>();
 
   const { settings } = useSettings();
+  const { t } = useTranslation();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
@@ -169,37 +193,75 @@ export const PaymentProvider: FC<
       }
     };
 
-    const handleCreateOrder = async (orderData?: CreateOrderData) => {
+    const handleCreateOrder = async (orderData?: CustomOrderData) => {
       if (!createOrderUrl) return "";
+      const setRatepayMessage = orderData?.setRatepayMessage ?? undefined;
+      const relevantOrderData = setRelevantData(
+        orderData,
+        !!setRatepayMessage,
+        enableVaulting
+      );
 
       const createOrderResult = await createOrder(
         requestHeader,
         createOrderUrl,
         paymentInfo.id,
-        paymentInfo.version,
+        latestPaymentVersion,
         {
-          storeInVault: enableVaulting,
-          ...orderData,
+          ...relevantOrderData,
         }
       );
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        const { id, status, payment_source } = orderData;
+        const { id, status, payment_source, details, links } = orderData;
         latestPaymentVersion = paymentVersion;
-        if (status === "COMPLETED" && payment_source) {
-          setShowResult(true);
-          setResultSuccess(true);
-          purchaseCallback(orderData);
-          return "";
+        if (setRatepayMessage) {
+          if (paymentVersion)
+            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
+          if (id) {
+            setRatepayMessage && setRatepayMessage(undefined);
+            setShowResult(true);
+            setResultSuccess(true);
+            purchaseCallback(orderData);
+            return id;
+          } else {
+            const errorDetails = details?.length && details[0];
+            if (errorDetails) {
+              const ratepayError = relevantError(errorDetails);
+              if (ratepayError) {
+                setRatepayMessage && setRatepayMessage(ratepayError);
+                return "";
+              }
+            }
+            notify("Error", orderData?.message ?? t("thirdPartyIssue"));
+            return "";
+          }
         } else {
-          return id;
+          if (status === "COMPLETED" && payment_source) {
+            setShowResult(true);
+            setResultSuccess(true);
+            purchaseCallback(orderData);
+            return "";
+          } else if (
+            status === "PAYER_ACTION_REQUIRED" &&
+            payment_source &&
+            links
+          ) {
+            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
+            setOderDataLinks(links);
+            setOrderId(id);
+            return "";
+          } else {
+            return id;
+          }
         }
       } else return "";
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl) return;
+      isLoading(true);
 
       const { orderID, saveCard } = data;
 
@@ -231,6 +293,7 @@ export const PaymentProvider: FC<
           setResultMessage(orderData.message);
         }
       }
+      isLoading(false);
     };
 
     const handleCreatePayment = async () => {
@@ -279,8 +342,9 @@ export const PaymentProvider: FC<
       isLoading(false);
     };
 
-    let vaultOnly: boolean =
-      createVaultSetupTokenUrl && approveVaultSetupTokenUrl ? true : false;
+    let vaultOnly: boolean = !!(
+      createVaultSetupTokenUrl && approveVaultSetupTokenUrl
+    );
 
     const handleAuthenticateThreeDSOrder = async (
       orderID: string
@@ -322,6 +386,8 @@ export const PaymentProvider: FC<
       handleCreateVaultSetupToken,
       handleApproveVaultSetupToken,
       handleAuthenticateThreeDSOrder,
+      oderDataLinks,
+      orderId,
     };
   }, [
     paymentInfo,
@@ -336,6 +402,8 @@ export const PaymentProvider: FC<
     settings,
     createVaultSetupTokenUrl,
     approveVaultSetupTokenUrl,
+    oderDataLinks,
+    orderId,
   ]);
 
   return (
