@@ -90,6 +90,7 @@ export type GeneralComponentsProps = {
   getSettingsUrl: string;
   createOrderUrl?: string;
   onApproveUrl?: string;
+  onApproveRedirectionUrl?: string;
   authorizeOrderUrl?: string;
   getUserInfoUrl?: string;
   removePaymentTokenUrl?: string;
