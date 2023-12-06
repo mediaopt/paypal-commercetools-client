@@ -30,24 +30,42 @@ export const options = {
 
 export const requestHeader = {
   "Frontastic-Session":
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiY2I1MDQ4NmEtNzM4NC00NzU5LTkwODktMWZiODE3NGQwZTIzIiwiY2FydElkIjoiYmU5MGJjYWItZGZiYi00MzJkLTkwOGUtN2JlMzI4YTk5NGE0In0.6ReqB2MAPhY1IyJmCZ5DNw_ujbT5pDz0b8TEodBp7yI",
-  "Commercetools-Frontend-Extension-Version": "devliudmylamasliuk",
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNjRhYjAyYjAtYzJjZi00OTNiLWIwMTQtNzU4Njg0N2M0NWI1IiwiYWNjb3VudCI6eyJhY2NvdW50SWQiOiJmMjJhNGZlMy1jMmI4LTQ4MDEtODIwOC00MTRkMjA2MjBlMGIiLCJlbWFpbCI6Im1hamlkLmFiYmFzaUBtZWRpYW9wdC5kZSIsInNhbHV0YXRpb24iOiIiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwiYmlydGhkYXkiOiIxOTg5LTAzLTA1VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W3siYWRkcmVzc0lkIjoiamJUSlhtM00iLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInN0cmVldE51bWJlciI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInBvc3RhbENvZGUiOiIxMzM1NyIsImNpdHkiOiJERSIsImNvdW50cnkiOiJERSIsInBob25lIjoiNTk5MzU3NTYyIiwiaXNEZWZhdWx0QmlsbGluZ0FkZHJlc3MiOmZhbHNlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOmZhbHNlfSx7ImFkZHJlc3NJZCI6ImtyelI3bTBRIiwiZmlyc3ROYW1lIjoiTWFqaWQiLCJsYXN0TmFtZSI6IkFiYmFzaSIsInN0cmVldE5hbWUiOiJDb3VudHkgU3QuIE1pYW1pIiwic3RyZWV0TnVtYmVyIjoiNDMyIiwicG9zdGFsQ29kZSI6IjMzMDE4IiwiY2l0eSI6IlVTIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6dHJ1ZSwiaXNEZWZhdWx0U2hpcHBpbmdBZGRyZXNzIjp0cnVlfV19LCJjYXJ0SWQiOiI0YjExZDY4Zi02MmE3LTRmM2EtODk3Yi1kZGRiYjY5NTcyZGYifQ.-vsEmQwbjUM-XT2LDo07wNQJ2YI0qNIgQxWRIKskhro",
+  "Commercetools-Frontend-Extension-Version": "devmajidabbasi",
 };
 
 const baseUrl = "https://poc-mediaopt2.frontastic.rocks/frontastic/action/";
 
-export const params = {
-  createPaymentUrl: `${baseUrl}payment/createPayment`,
+const commonParams = {
   getSettingsUrl: `${baseUrl}settings/getPayPalSettings`,
-  createOrderUrl: `${baseUrl}payment/createPayPalOrder`,
   getClientTokenUrl: `${baseUrl}payment/getClientToken`,
+  createPaymentUrl: `${baseUrl}payment/createPayment`,
+  purchaseCallback: (result, options) => {
+    console.log("Do something", result, options);
+  },
+};
+
+export const params = {
+  ...commonParams,
+  createOrderUrl: `${baseUrl}payment/createPayPalOrder`,
   onApproveUrl: `${baseUrl}payment/capturePayPalOrder`,
   authorizeOrderUrl: `${baseUrl}payment/authorizePayPalOrder`,
   shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
   cartInformation: cartInformation,
-  purchaseCallback: (result, options) => {
-    console.log("Do something", result, options);
-  },
+};
+
+export const vaultParams = {
+  getUserInfoUrl: `${baseUrl}payment/getUserInfo`,
+  enableVaulting: true,
+};
+
+export const vaultOnlyParams = {
+  ...commonParams,
+  getUserInfoUrl: `${baseUrl}payment/getUserInfo`,
+  enableVaulting: true,
+  createVaultSetupTokenUrl: `${baseUrl}payment/createVaultSetupToken`,
+  approveVaultSetupTokenUrl: `${baseUrl}payment/approveVaultSetupToken`,
+  shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
 };
 
 export const payPalMessagesParams = {
@@ -57,6 +75,14 @@ export const payPalMessagesParams = {
     layout: "text",
   },
   placement: "product",
+};
+
+export const paymentTokensJson = {
+  ...params,
+  ...vaultParams,
+  removePaymentTokenUrl: `${baseUrl}payment/removePaymentToken`,
+  requestHeader,
+  options,
 };
 
 export const paypalInvoiceParams = {
