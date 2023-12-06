@@ -256,7 +256,6 @@ export const PaymentProvider: FC<
         return;
 
       const { orderID, saveCard } = data;
-      if (!orderID) return;
       isLoading(true);
 
       if (onApproveRedirectionUrl) {

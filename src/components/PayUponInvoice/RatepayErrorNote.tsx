@@ -17,7 +17,7 @@ export const RatepayErrorNote = (errorKind: string) => {
   return (
     <div className={ERROR_TEXT_STYLE}>
       <Trans
-        i18nKey={`${errorKind}`}
+        i18nKey={errorKind}
         components={[
           <a className={STYLED_LINK} href={references[0]} />,
           <a className={STYLED_LINK} href={references[1]} />,

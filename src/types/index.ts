@@ -374,7 +374,7 @@ export type GetSettingsResponse = {
 };
 
 export type CustomOnApproveData = {
-  orderID?: string;
+  orderID: string;
   billingToken?: string | null;
   facilitatorAccessToken?: string;
   payerID?: string | null;
