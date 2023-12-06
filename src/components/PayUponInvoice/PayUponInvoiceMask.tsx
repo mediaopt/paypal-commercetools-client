@@ -30,7 +30,9 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
 
   const [phone, setPhone] = useState("+49 ");
   const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
-  const maxDate = new Date().toJSON().slice(0, 10);
+  let date = new Date();
+  date.setFullYear(date.getFullYear() - 18);
+  const maxDate = date.toJSON().slice(0, 10);
   const [ratepayMessage, setRatepayMessage] = useState<string>();
 
   const submitForm = async (formData: HTMLFormElement) => {
