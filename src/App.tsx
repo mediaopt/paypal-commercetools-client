@@ -212,6 +212,7 @@ function App() {
         style={{
           label: "buynow",
         }}
+        onApproveRedirectionUrl="https://poc-mediaopt2.frontend.site/cart"
       />
     ),
     PayPalLater: (
