@@ -80,6 +80,8 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
         components: options.components,
         vault: options.vault,
         dataPartnerAttributionId: PARTNER_ATTRIBUTION_ID,
+        intent: settings.payPalIntent.toLowerCase(),
+        merchantId: settings.merchantId,
       }}
     >
       {cardPaymentTokens &&

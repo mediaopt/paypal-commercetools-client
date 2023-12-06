@@ -90,6 +90,7 @@ export type GeneralComponentsProps = {
   getSettingsUrl: string;
   createOrderUrl?: string;
   onApproveUrl?: string;
+  onApproveRedirectionUrl?: string;
   authorizeOrderUrl?: string;
   getUserInfoUrl?: string;
   removePaymentTokenUrl?: string;
@@ -335,7 +336,7 @@ export type GetSettingsResponse = {
   buttonShippingPage: boolean;
   buttonShape: "rect" | "pill";
   buttonTagline: boolean;
-  payLaterMessagingType: "flex" | "text";
+  payLaterMessagingType: Record<string, "flex" | "text">;
   payLaterMessageHomePage: boolean;
   payLaterMessageCategoryPage: boolean;
   payLaterMessageDetailsPage: boolean;
