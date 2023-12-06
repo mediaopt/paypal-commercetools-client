@@ -21,6 +21,7 @@ export const CardFields: React.FC<SmartComponentsProps> = ({
   authenticateThreeDSOrderUrl,
   createVaultSetupTokenUrl,
   approveVaultSetupTokenUrl,
+  authorizeOrderUrl,
 }) => {
   return (
     <RenderTemplate
@@ -39,6 +40,7 @@ export const CardFields: React.FC<SmartComponentsProps> = ({
       authenticateThreeDSOrderUrl={authenticateThreeDSOrderUrl}
       createVaultSetupTokenUrl={createVaultSetupTokenUrl}
       approveVaultSetupTokenUrl={approveVaultSetupTokenUrl}
+      authorizeOrderUrl={authorizeOrderUrl}
     >
       <CardFieldsButton enableVaulting={enableVaulting} />
     </RenderTemplate>
