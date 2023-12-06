@@ -34,7 +34,7 @@ i18n.use(initReactI18next).init({
             "A Pay Upon Invoice (Rechnungskauf) order with the same payload has already been successfully processed in the last few seconds. To process a new order, please try again in a few seconds.",
         },
         payPal: {
-          invalidAddress:
+          paymentSourceNotVerified:
             "Your address could not be validated. Please correct your data and try again.",
           unknownIssue:
             "Something went wrong. Please check your data and try again.",
@@ -70,7 +70,7 @@ i18n.use(initReactI18next).init({
             "Ein Rechnungskauf-Auftrag mit der gleichen Nutzlast wurde in den letzten Sekunden bereits erfolgreich bearbeitet. Um eine neue Bestellung zu verarbeiten, versuchen Sie es bitte in einigen Sekunden erneut.",
         },
         payPal: {
-          invalidAddress:
+          paymentSourceNotVerified:
             "Ihre Adresse konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut.",
           unknownIssue:
             "Etwas ist schief gelaufen. Bitte überprüfen Sie Ihre Daten und versuchen Sie es erneut.",
