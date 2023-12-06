@@ -108,8 +108,10 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
-  onApproveUrl,
   authorizeOrderUrl,
+
+  onApproveUrl,
+  onApproveRedirectionUrl,
 
   createVaultSetupTokenUrl,
   approveVaultSetupTokenUrl,
@@ -255,10 +257,16 @@ export const PaymentProvider: FC<
     };
 
     const handleOnApprove = async (data: CustomOnApproveData) => {
-      if (!onApproveUrl && !authorizeOrderUrl) return;
+      if (!onApproveUrl && !authorizeOrderUrl && !onApproveRedirectionUrl)
+        return;
       isLoading(true);
 
       const { orderID, saveCard } = data;
+
+      if (onApproveRedirectionUrl) {
+        window.location.href = `${onApproveRedirectionUrl}?order_id=${orderID}`;
+        return;
+      }
 
       const onAuthorizeOrderUrl =
         settings?.payPalIntent === "Authorize" ? authorizeOrderUrl : null;

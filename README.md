@@ -26,6 +26,8 @@ Each payment component takes a set of props that will be the same for everything
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to capture a PayPal order in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
+- **onApproveRedirectionUrl**: `string`
+  If you want to redirect to a page in onApprove step then set it to this property. It is useful for the `buy now` process and its review page.
 - **authorizeOrderUrl**: `string`  
   _POST_-Request - we get a [_OnApproveResponse_](src/types/index.ts)  
   It is **your** responsibility to develop this API  
