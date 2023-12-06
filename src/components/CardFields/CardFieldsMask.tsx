@@ -72,9 +72,6 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
     ? { createVaultSetupToken: () => handleCreateVaultSetupToken("card") }
     : {
         createOrder: () => {
-          if (vaultOnly) {
-            return handleCreateVaultSetupToken("card");
-          }
           return handleCreateOrder({
             paymentSource: "card",
             storeInVault: saveCard,

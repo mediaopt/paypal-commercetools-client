@@ -22,7 +22,7 @@ export const CardFieldsButton: React.FC<CardFieldsProps> = ({
     return () => {
       clearInterval(intervall);
     };
-  }, []);
+  }, [paymentInfo]);
 
   return showComponent ? (
     <CardFieldsMask enableVaulting={enableVaulting} />
