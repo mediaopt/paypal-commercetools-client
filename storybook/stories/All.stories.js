@@ -7,6 +7,7 @@ export default {
   argTypes: {
     fundingSource: {
       options: [
+        "",
         "paypal",
         "venmo",
         "applepay",
