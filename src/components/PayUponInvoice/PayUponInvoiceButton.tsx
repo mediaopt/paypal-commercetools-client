@@ -21,13 +21,13 @@ export const PayUponInvoiceButton: FC<PayUponInvoiceButtonProps> = ({
   const { settings } = useSettings();
 
   const invoiceError = !(settings?.payPalIntent === "Capture")
-    ? ["pui.merchantIssue"]
+    ? ["invoice.merchantIssue"]
     : paymentInfo.id && paymentInfo.amount < minPayableAmount
-    ? ["pui.tooSmall", { min: minPayableAmount }]
+    ? ["invoice.tooSmall", { min: minPayableAmount }]
     : paymentInfo.amount > maxPayableAmount
-    ? ["pui.tooBig", { max: maxPayableAmount }]
+    ? ["invoice.tooBig", { max: maxPayableAmount }]
     : paymentInfo.id && !clientToken
-    ? ["pui.thirdPartyIssue"]
+    ? ["invoice.thirdPartyIssue"]
     : null;
 
   return invoiceError ? (

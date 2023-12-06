@@ -49,7 +49,7 @@ i18n.use(initReactI18next).init({
           generalError:
             "Etwas ist schief gelaufen. Bitte versuchen Sie es später noch einmal.",
         },
-        pui: {
+        invoice: {
           wrongPhone:
             "Die Landesvorwahl oder die nationale Telefonnummer konnte nicht identifiziert werden, bitte überprüfen Sie die Daten",
           thirdPartyIssue:
