@@ -70,7 +70,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
       onApprove: handleOnApprove,
     };
   }
-
+  console.log(restprops);
   return (
     <>
       <PayPalButtons
@@ -78,6 +78,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         style={style}
         {...actions}
         onError={errorFunc}
+        forceReRender={[style]}
       />
       {(enableVaulting || storeInVaultOnSuccess) && (
         <label>
