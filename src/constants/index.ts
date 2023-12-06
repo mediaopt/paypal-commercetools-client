@@ -1,5 +1,5 @@
 import { PayPalMessagesComponentProps } from "@paypal/react-paypal-js";
-// import { PayUponInvoiceProps } from "../types";
+import { PayUponInvoiceProps } from "../types";
 
 export const PARTNER_ATTRIBUTION_ID: string = "commercetoolsGmbH_SP_PPCP";
 
@@ -81,7 +81,6 @@ export const testPayPalMessagesParams: PayPalMessagesComponentProps = {
   placement: "product",
 };
 
-/*
 export const testPaypalInvoiceParams: PayUponInvoiceProps = {
   merchantId: "W3KJAHBNV5BS6",
   pageId: "checkout-page",
@@ -89,4 +88,3 @@ export const testPaypalInvoiceParams: PayUponInvoiceProps = {
   maxPayableAmount: 2500, //euro
   customLocale: "de",
 };
-*/
