@@ -7,6 +7,7 @@ import { useSettings } from "../../app/useSettings";
 import { useLoader } from "../../app/useLoader";
 import { useNotifications } from "../../app/useNotifications";
 import { errorFunc } from "../errorNotification";
+import { useTranslation } from "react-i18next";
 
 export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   props,
@@ -21,6 +22,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const { settings } = useSettings();
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
+  const { t } = useTranslation();
   const { enableVaulting, paypalMessages, ...restprops } = props;
   const save = useRef<HTMLInputElement>(null);
 
@@ -72,7 +74,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...restprops}
         style={style}
         {...actions}
-        onError={(err) => errorFunc(err, isLoading, notify)}
+        onError={(err) => errorFunc(err, isLoading, notify, t)}
       />
       {(enableVaulting || storeInVaultOnSuccess) && (
         <label>

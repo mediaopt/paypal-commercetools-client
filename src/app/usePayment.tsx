@@ -225,10 +225,12 @@ export const PaymentProvider: FC<
         if (!id) {
           handleResponseError(
             t,
+            notify,
             details?.toString(),
             message,
             setRatepayMessage,
           );
+          isLoading(false);
           return "";
         } else {
           if (setRatepayMessage) {
