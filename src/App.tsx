@@ -14,13 +14,13 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYTg3ZGE2MjEtYWM0MS00MGU2LWI4YjYtYWMyOGM0M2E5MjZlIiwiY2FydElkIjoiOWMxODFmNTEtMmY3Zi00ZTMzLTkyZjItYTVkYWExYWU1N2IyIn0.cOWuitZCAwcbJi6TS6qV8I7dj1ElAWQjI1pe2Hqosks";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYTg3ZGE2MjEtYWM0MS00MGU2LWI4YjYtYWMyOGM0M2E5MjZlIiwiY2FydElkIjoiOGU1ZWY5OTUtMmM3Yy00NGI5LWI5ODYtNmNlNzNhYzcwYjkyIn0.hlQELUjdM-_1_LLe1MOvP_QSkyRqKWQxhzpvMTCb3uY";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
   const cartInformation = {
     account: {
-      email: "payment_source_info_cannot_be_verified@example.com",
+      email: "payment_source_cannot_be_used@example.com",
     },
     billing: {
       firstName: "John",

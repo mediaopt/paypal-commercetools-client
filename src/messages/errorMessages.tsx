@@ -8,21 +8,23 @@ export const handleResponseError = (
   errorMessage?: string,
   showError?: SetStringState,
 ) => {
-  if (!errorDetails)
-    throw new Error(errorMessage ?? "", { cause: t("interface.generalError") });
+  const errorDomain = showError ? "invoice" : "payPal";
+  const parcedError = i18n.exists(`${errorDomain}.${errorDetails}`)
+    ? `${errorDomain}.${errorDetails}`
+    : i18n.exists(`${errorDomain}.${errorMessage}`)
+    ? `${errorDomain}.${errorMessage}`
+    : undefined;
+  if (!parcedError)
+    throw new Error(errorMessage ?? errorDetails, {
+      cause: t(
+        showError ? "invoice.thirdPartyIssue" : "interface.generalError",
+      ),
+    });
   else if (showError) {
-    const ratepayError = `invoice.${errorDetails}`;
-    if (i18n.exists(ratepayError)) showError(t(ratepayError));
-    else
-      throw new Error(errorMessage ?? "", {
-        cause: t("invoice.thirdPartyIssue"),
-      });
+    showError(t(parcedError));
   } else {
-    const paypalError = `payPal.${errorDetails}`;
     throw new Error(errorMessage ?? "", {
-      cause: i18n.exists(paypalError)
-        ? t(paypalError)
-        : t("payPal.unknownIssue"),
+      cause: t(parcedError),
     });
   }
 };
