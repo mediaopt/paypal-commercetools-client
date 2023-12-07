@@ -54,7 +54,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
           setRatepayMessage,
         });
       } catch (err: any) {
-        errorFunc(err.message, isLoading, notify);
+        errorFunc(err, isLoading, notify);
       }
     } else notifyWrongPhone();
     isLoading(false);
