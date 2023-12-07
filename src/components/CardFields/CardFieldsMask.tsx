@@ -30,7 +30,9 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
   const [vaultId, setVaultId] = useState<string>();
   const [paying, setPaying] = useState(false);
+  const [addNew, setAddNew] = useState(false);
 
+  const cardFieldDiv = useRef<HTMLDivElement>(null);
   const nameField = useRef<HTMLDivElement>(null);
   const numberField = useRef<HTMLDivElement>(null);
   const cvvField = useRef<HTMLDivElement>(null);
@@ -149,7 +151,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   };
 
   useEffect(() => {
-    if (!settings) return;
+    if (!settings || !cardFieldDiv.current) return;
     if (cardField && cardField.isEligible()) {
       const cardNameField = cardField.NameField();
       cardNameField.render(nameField.current);
@@ -165,90 +167,90 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
     } else if (!cardField.isEligible()) {
       notify("Error", "Card payment currently not supported");
     }
-  }, [cardField, settings]);
+  }, [cardField, settings, cardFieldDiv, addNew]);
 
   if (!settings) return <></>;
 
-  let cardPaymentTokensElement =
-    !vaultOnly && cardPaymentTokens && cardPaymentTokens?.length > 0 ? (
-      <>
-        {cardPaymentTokens.map((paymentToken) => {
-          const { id, payment_source } = paymentToken;
-          const { brand, last_digits } = payment_source.card;
-
-          return (
-            <div key={id}>
-              <span>
-                <input
-                  type="radio"
-                  name="pay-with-vaulted-card"
-                  value={id}
-                  onChange={(e) => {
-                    setVaultId(e.target.value);
-                  }}
-                />
-                {brand} ending in {last_digits}
-              </span>
-            </div>
-          );
-        })}
-        {vaultId && (
-          <div className="h-9">
-            <button
-              className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
-              onClick={() =>
-                handleCreateOrder({
-                  paymentSource: "card",
-                  storeInVault: saveCard,
-                  vaultId: vaultId,
-                })
-              }
-            >
-              Pay
-            </button>
-          </div>
-        )}
-      </>
-    ) : (
-      <></>
-    );
-
   return (
     <>
-      {cardPaymentTokensElement}
-      <div id="checkout-form">
-        <div ref={nameField} id="card-name-field-container"></div>
+      {!vaultOnly &&
+      cardPaymentTokens &&
+      cardPaymentTokens?.length > 0 &&
+      !addNew ? (
+        <>
+          {cardPaymentTokens.map((paymentToken) => {
+            const { id, payment_source } = paymentToken;
+            const { brand, last_digits } = payment_source.card;
 
-        <div ref={numberField} id="card-number-field-container"></div>
+            return (
+              <div key={id}>
+                <span>
+                  <input
+                    type="radio"
+                    name="pay-with-vaulted-card"
+                    value={id}
+                    onChange={(e) => {
+                      setVaultId(e.target.value);
+                    }}
+                  />
+                  {brand} ending in {last_digits}
+                </span>
+              </div>
+            );
+          })}
+          {vaultId && (
+            <div className="h-9">
+              <button
+                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
+                onClick={() =>
+                  handleCreateOrder({
+                    paymentSource: "card",
+                    storeInVault: saveCard,
+                    vaultId: vaultId,
+                  })
+                }
+              >
+                Pay
+              </button>
+            </div>
+          )}
+          <button onClick={() => setAddNew(true)}>Add A New Card</button>
+        </>
+      ) : (
+        <div ref={cardFieldDiv} id="checkout-form">
+          <div ref={nameField} id="card-name-field-container"></div>
 
-        <div ref={expiryField} id="card-expiry-field-container"></div>
+          <div ref={numberField} id="card-number-field-container"></div>
 
-        <div ref={cvvField} id="card-cvv-field-container"></div>
+          <div ref={expiryField} id="card-expiry-field-container"></div>
 
-        {enableVaulting && !vaultOnly && (
-          <label>
-            <input
-              type="checkbox"
-              id="save"
-              name="save"
-              ref={save}
-              className="mr-1"
-              onChange={({ target }) => {
-                saveCard = target.checked;
-              }}
-            />
-            Save this card for future purchases
-          </label>
-        )}
+          <div ref={cvvField} id="card-cvv-field-container"></div>
 
-        <button
-          className={hostedFieldClasses.hostedFieldsPayButtonClasses}
-          onClick={handleClick}
-          disabled={paying}
-        >
-          Pay
-        </button>
-      </div>
+          {enableVaulting && !vaultOnly && (
+            <label>
+              <input
+                type="checkbox"
+                id="save"
+                name="save"
+                ref={save}
+                className="mr-1"
+                onChange={({ target }) => {
+                  saveCard = target.checked;
+                }}
+              />
+              Save this card for future purchases
+            </label>
+          )}
+
+          <button
+            className={hostedFieldClasses.hostedFieldsPayButtonClasses}
+            onClick={handleClick}
+            disabled={paying}
+          >
+            Pay
+          </button>
+        </div>
+      )}
     </>
   );
 };
