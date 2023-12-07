@@ -9,12 +9,13 @@ import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
+import { CardFields } from "./components/CardFields";
 import { PayUponInvoice } from "./components/PayUponInvoice";
 import { PayUponInvoiceProps } from "./types";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNjRhYjAyYjAtYzJjZi00OTNiLWIwMTQtNzU4Njg0N2M0NWI1IiwiY2FydElkIjoiODRkZTBkNDctZjA0Yy00YjZlLTgwNWYtZTYwNGYzMzQxNDc2IiwiYWNjb3VudCI6eyJhY2NvdW50SWQiOiJmMjJhNGZlMy1jMmI4LTQ4MDEtODIwOC00MTRkMjA2MjBlMGIiLCJlbWFpbCI6Im1hamlkLmFiYmFzaUBtZWRpYW9wdC5kZSIsInNhbHV0YXRpb24iOiIiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwiYmlydGhkYXkiOiIxOTg5LTAzLTA1VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W3siYWRkcmVzc0lkIjoiamJUSlhtM00iLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInN0cmVldE51bWJlciI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInBvc3RhbENvZGUiOiIxMzM1NyIsImNpdHkiOiJERSIsImNvdW50cnkiOiJERSIsInBob25lIjoiNTk5MzU3NTYyIiwiaXNEZWZhdWx0QmlsbGluZ0FkZHJlc3MiOmZhbHNlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOmZhbHNlfSx7ImFkZHJlc3NJZCI6ImtyelI3bTBRIiwiZmlyc3ROYW1lIjoiTWFqaWQiLCJsYXN0TmFtZSI6IkFiYmFzaSIsInN0cmVldE5hbWUiOiJDb3VudHkgU3QuIE1pYW1pIiwic3RyZWV0TnVtYmVyIjoiNDMyIiwicG9zdGFsQ29kZSI6IjMzMDE4IiwiY2l0eSI6IlVTIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6dHJ1ZSwiaXNEZWZhdWx0U2hpcHBpbmdBZGRyZXNzIjp0cnVlfV19fQ.oWmFPwGAt0rnpUr4dEIIP3HdRkrV-xPwfoDA2CEopqE";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5ZjAyZjk1Yi1kNzJkLTRlMDYtOTAyYy03Yzg3MDA5MmIwNmMifQ.hmg1giJkzKlLhMCAhav_N32uDqrfFVlBmyGGwslBTMc";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
@@ -67,6 +68,7 @@ function App() {
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
+    authenticateThreeDSOrderUrl: `${ENDPOINT_URL}/payment/authenticateThreeDSOrder`,
   };
 
   const vaultParams = {
@@ -239,6 +241,30 @@ function App() {
           enableFunding: "card",
         }}
         fundingSource="card"
+      />
+    ),
+    CardFields: (
+      <CardFields
+        requestHeader={requestHeader}
+        {...params}
+        options={{
+          ...options,
+          components: "card-fields,buttons",
+          vault: true,
+        }}
+        {...vaultParams}
+      />
+    ),
+    CardFieldsVaultOnly: (
+      <CardFields
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "card-fields,buttons",
+          vault: true,
+        }}
+        {...vaultParams}
+        {...vaultOnlyParams}
       />
     ),
     HostedFields: <HostedFields {...HostedFieldsJson} />,
