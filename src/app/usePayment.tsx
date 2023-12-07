@@ -370,6 +370,10 @@ export const PaymentProvider: FC<
 
       latestPaymentVersion = result.version;
 
+      if (!result.hasOwnProperty("approve")) {
+        return 2;
+      }
+
       const action = getActionIndex(
         result.approve.three_d_secure.enrollment_status,
         result.approve.three_d_secure.authentication_status,

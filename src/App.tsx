@@ -15,7 +15,7 @@ import { PayUponInvoiceProps } from "./types";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIzZDAzNTZiZS1mYzc4LTRhZTgtODE3My01YzhhZGQ0ZWM0ODciLCJ3aXNobGlzdElkIjoiMTc1ZTI2MDMtOTNjYS00ODljLThjMTUtM2ViMWQ1NjU1Mjg5In0.cA3Ca57ZCcyg7mvFqr_nS1MzUEJnczFIN5vMogyBJI0";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5ZjAyZjk1Yi1kNzJkLTRlMDYtOTAyYy03Yzg3MDA5MmIwNmMifQ.hmg1giJkzKlLhMCAhav_N32uDqrfFVlBmyGGwslBTMc";
 
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
