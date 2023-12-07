@@ -6,8 +6,10 @@ import { InvoiceLegalNote } from "./InvoiceLegalNote";
 import { PayUponInvoiceMaskProps } from "../../types";
 import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
 import { useTranslation } from "react-i18next";
-import { RatepayErrorNote } from "./RatepayErrorNote";
+
 import { useLoader } from "../../app/useLoader";
+import { RatepayErrorNote } from "./RatepayErrorNote";
+import { errorFunc } from "../errorNotification";
 
 const parsePhone = (phone: string) => {
   const formattedPhone = `+${phone.replace(/\D/g, "")}`;
@@ -30,7 +32,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
 
   const [phone, setPhone] = useState("+49 ");
   const [birthDate, setBirthDate] = useState<string>();
-  const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
+  const notifyWrongPhone = () => notify("Warning", t("invoice.wrongPhone"));
   let date = new Date();
   date.setFullYear(date.getFullYear() - 18);
   const maxDate = date.toJSON().slice(0, 10);
@@ -43,13 +45,17 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
       ...parsePhoneNumber(phone),
     };
     if (countryCallingCode && nationalNumber) {
-      await handleCreateOrder({
-        fraudNetSessionId,
-        nationalNumber,
-        countryCode: countryCallingCode,
-        birthDate,
-        setRatepayMessage,
-      });
+      try {
+        await handleCreateOrder({
+          fraudNetSessionId,
+          nationalNumber,
+          countryCode: countryCallingCode,
+          birthDate,
+          setRatepayMessage,
+        });
+      } catch (err: any) {
+        errorFunc(err.message, isLoading, notify);
+      }
     } else notifyWrongPhone();
     isLoading(false);
   };
@@ -60,15 +66,14 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
       className="my-4"
       onSubmit={async (event) => {
         event.preventDefault();
-
         await submitForm();
       }}
     >
       <div className="my-2">
-        {invoiceBenefitsMessage ?? t("invoiceBenefitsMessage")}
+        {invoiceBenefitsMessage ?? t("invoice.invoiceBenefitsMessage")}
       </div>
 
-      <label htmlFor="birthDate">{t("birthDate")}</label>
+      <label htmlFor="birthDate">{t("interface.birthDate")}</label>
       <input
         id="birthDate"
         name="birthDate"
@@ -80,7 +85,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         max={maxDate}
         onChange={({ target }) => setBirthDate(target.value)}
       />
-      <label htmlFor="phone">{t("phoneNumber")}</label>
+      <label htmlFor="phone">{t("interface.phoneNumber")}</label>
       <input
         type="tel"
         name="phone"

@@ -6,9 +6,10 @@ import { usePayment } from "../../app/usePayment";
 import { useSettings } from "../../app/useSettings";
 import { useLoader } from "../../app/useLoader";
 import { useNotifications } from "../../app/useNotifications";
+import { errorFunc } from "../errorNotification";
 
 export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
-  props
+  props,
 ) => {
   const {
     handleCreateOrder,
@@ -46,12 +47,6 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     return styles;
   }, [settings, restprops]);
 
-  const errorFunc = (err: Record<string, unknown>) => {
-    isLoading(false);
-    notify("Error", "an error occurred");
-    console.error(err);
-  };
-
   let actions: any;
 
   if (vaultOnly) {
@@ -77,7 +72,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...restprops}
         style={style}
         {...actions}
-        onError={errorFunc}
+        onError={(err) => errorFunc(err, isLoading, notify)}
         forceReRender={[style, restprops.fundingSource]}
       />
       {(enableVaulting || storeInVaultOnSuccess) && (
