@@ -8,6 +8,7 @@ import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import { HOSTED_FIELDS_CARD_FIELDS, HOSTED_FIELDS_BUTTON } from "./constants";
 import { errorFunc } from "../errorNotification";
+import { useTranslation } from "react-i18next";
 
 type SubmitPaymentProps = {
   enableVaulting?: boolean;
@@ -26,6 +27,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
   const { settings } = useSettings();
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
+  const { t } = useTranslation();
   const [paying, setPaying] = useState(false);
   const cardHolderName = useRef<HTMLInputElement>(null);
 
@@ -44,7 +46,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
   const approveTransaction = (approveData: CustomOnApproveData) => {
     handleOnApprove(approveData).catch((err) => {
       setPaying(false);
-      errorFunc(err, isLoading, notify);
+      errorFunc(err, isLoading, notify, t);
     });
   };
 
@@ -99,7 +101,7 @@ export const SubmitPayment: React.FC<SubmitPaymentProps> = ({
       })
       .catch((err) => {
         setPaying(false);
-        errorFunc(err, isLoading, notify);
+        errorFunc(err, isLoading, notify, t);
       });
   };
 
