@@ -91,3 +91,7 @@ export const paypalInvoiceParams = {
   invoiceBenefitsMessage:
     "Once you place an order, pay within 30 days. Our partner Ratepay will send you the instructions.",
 };
+
+export const cardFieldsParams = {
+  authenticateThreeDSOrderUrl: `${baseUrl}/payment/authenticateThreeDSOrder`,
+};

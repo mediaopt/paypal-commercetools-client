@@ -30,6 +30,7 @@ export type CreateOrderData = {
   paymentSource?: FUNDING_SOURCE;
   storeInVault?: boolean;
   vaultId?: string;
+  verificationMethod?: ThreeDSVerification;
 };
 
 export type CreateInvoiceData = {
@@ -96,6 +97,7 @@ export type GeneralComponentsProps = {
   authorizeOrderUrl?: string;
   getUserInfoUrl?: string;
   removePaymentTokenUrl?: string;
+  authenticateThreeDSOrderUrl?: string;
 
   createVaultSetupTokenUrl?: string;
   approveVaultSetupTokenUrl?: string;
@@ -106,12 +108,18 @@ export type GeneralComponentsProps = {
   enableVaulting?: boolean;
 } & CartInformationProps;
 
+type ThreeDSVerification = "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
+
 export type HostedFieldsThreeDSAuth = {
-  threeDSAuth?: "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
+  threeDSAuth?: ThreeDSVerification;
 };
 
 export type HostedFieldsProps = {
   options: ReactPayPalScriptOptions;
+  enableVaulting?: boolean;
+};
+
+export type CardFieldsProps = {
   enableVaulting?: boolean;
 };
 
@@ -371,6 +379,7 @@ export type GetSettingsResponse = {
   };
   hostedFieldsPayButtonClasses: string;
   hostedFieldsInputFieldClasses: string;
+  threeDSAction: Record<string, any>;
 };
 
 export type CustomOnApproveData = {
@@ -382,6 +391,7 @@ export type CustomOnApproveData = {
   subscriptionID?: string | null;
   authCode?: string | null;
   saveCard?: boolean;
+  liabilityShift?: string;
 };
 
 export type SetStringState = Dispatch<SetStateAction<string | undefined>>;

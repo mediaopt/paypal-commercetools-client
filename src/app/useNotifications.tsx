@@ -68,7 +68,7 @@ export const NotificationsProvider: FC<React.PropsWithChildren> = ({
 
   return (
     <NotificationContext.Provider value={value}>
-      <div className="fixed bottom-0 left-0 right-0 z-150 w-full">
+      <div className="fixed bottom-0 left-0 right-0 z-[150] w-full">
         {notifications.map((n) => (
           <NotificationTypeBanner
             key={n.id}
