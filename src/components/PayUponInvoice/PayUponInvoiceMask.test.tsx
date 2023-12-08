@@ -23,14 +23,22 @@ jest.mock("../../app/usePayment");
 
 const fraudNetSessionId = "123";
 
+const phoneLabel = "interface.phoneNumber";
+const birthDateLabel = "interface.birthDate";
+
 const validPhone = "+49 123456789";
 const wrongFormatPhone = "+49123456 789";
 const tooLongPhone = "+49 123456789999999999999";
 const tooShortPhone = "+49";
 
-const validBirthDate = "2020-05-12";
+const validBirthDate = "1990-05-12";
 const tooEarlyBirthDate = "0001-05-12";
-const tooLateBirthDate = "9999-05-12";
+let currentDate = new Date();
+const tooLateBirthDate = currentDate.toJSON().slice(0, 10);
+currentDate.setFullYear(currentDate.getFullYear() - 18);
+const eighteenToday = currentDate.toJSON().slice(0, 10);
+currentDate.setFullYear(currentDate.getFullYear() + 1);
+const belowEighteen = currentDate.toJSON().slice(0, 10);
 
 const mockedHandler = jest.fn();
 beforeEach(() => {
@@ -55,12 +63,12 @@ afterEach(() => {
 
 test("Mask is shown if dependencies provided", () => {
   expect(screen.getAllByRole("button").length).toEqual(1);
-  expect(screen.getAllByLabelText("phoneNumber").length).toEqual(1);
-  expect(screen.getAllByLabelText("birthDate").length).toEqual(1);
+  expect(screen.getAllByLabelText(phoneLabel).length).toEqual(1);
+  expect(screen.getAllByLabelText(birthDateLabel).length).toEqual(1);
 });
 
 test(`${validBirthDate} input value for birthdate for invoice payments is valid`, () => {
-  const birthDate = screen.getByLabelText("birthDate") as HTMLInputElement;
+  const birthDate = screen.getByLabelText(birthDateLabel) as HTMLInputElement;
   fireEvent.change(birthDate, {
     target: { value: validBirthDate },
   });
@@ -68,7 +76,7 @@ test(`${validBirthDate} input value for birthdate for invoice payments is valid`
 });
 
 test(`${validPhone} value for phone for invoice payment is valid`, () => {
-  const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
+  const phone = screen.getByLabelText(phoneLabel) as HTMLInputElement;
   fireEvent.change(phone, {
     target: { value: validPhone },
   });
@@ -76,51 +84,67 @@ test(`${validPhone} value for phone for invoice payment is valid`, () => {
 });
 
 test(`${wrongFormatPhone} input value for the phone is formatted to ${validPhone}`, () => {
-  const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
+  const phone = screen.getByLabelText(phoneLabel) as HTMLInputElement;
   fireEvent.change(phone, {
-    target: { value: "+49123456 789" },
+    target: { value: wrongFormatPhone },
   });
   expect(phone.value).toEqual(validPhone);
 });
 
 test(`${tooLongPhone} is invalid`, () => {
-  const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
+  const phone = screen.getByLabelText(phoneLabel) as HTMLInputElement;
   fireEvent.change(phone, {
-    target: { value: "+49 123456789999999999999" },
+    target: { value: tooLongPhone },
   });
   expect(phone).toBeInvalid();
 });
 
 test(`${tooShortPhone} is invalid`, () => {
-  const phone = screen.getByLabelText("phoneNumber") as HTMLInputElement;
+  const phone = screen.getByLabelText(phoneLabel) as HTMLInputElement;
   fireEvent.change(phone, {
-    target: { value: "+49" },
+    target: { value: tooShortPhone },
   });
   expect(phone).toBeInvalid();
 });
 
 test(`${tooEarlyBirthDate} birth date is invalid`, async () => {
-  const birthDate = screen.getByLabelText("birthDate");
+  const birthDate = screen.getByLabelText(birthDateLabel);
   fireEvent.change(birthDate, {
-    target: { value: "0001-01-01" },
+    target: { value: tooEarlyBirthDate },
   });
   expect(birthDate).toBeInvalid();
 });
 
 test(`${tooLateBirthDate} birth date is invalid`, async () => {
-  const birthDate = screen.getByLabelText("birthDate");
+  const birthDate = screen.getByLabelText(birthDateLabel);
   fireEvent.change(birthDate, {
-    target: { value: "19999999999999999999999-01-01" },
+    target: { value: tooLateBirthDate },
+  });
+  expect(birthDate).toBeInvalid();
+});
+
+test(`${eighteenToday} birth date is valid`, async () => {
+  const birthDate = screen.getByLabelText(birthDateLabel);
+  fireEvent.change(birthDate, {
+    target: { value: eighteenToday },
+  });
+  expect(birthDate).toBeValid();
+});
+
+test(`${belowEighteen} birth date is invalid`, async () => {
+  const birthDate = screen.getByLabelText(birthDateLabel);
+  fireEvent.change(birthDate, {
+    target: { value: belowEighteen },
   });
   expect(birthDate).toBeInvalid();
 });
 
 test("Form with vailid input data is submitted", async () => {
-  const phone = screen.getByLabelText("phoneNumber");
+  const phone = screen.getByLabelText(phoneLabel);
   fireEvent.change(phone, {
     target: { value: validPhone },
   });
-  const birthDate = screen.getByLabelText("birthDate");
+  const birthDate = screen.getByLabelText(birthDateLabel);
   fireEvent.change(birthDate, {
     target: { value: validBirthDate },
   });
@@ -129,7 +153,7 @@ test("Form with vailid input data is submitted", async () => {
 });
 
 test("Form with invailid phone is not submitted", async () => {
-  const phone = screen.getByLabelText("phoneNumber");
+  const phone = screen.getByLabelText(phoneLabel);
   fireEvent.change(phone, {
     target: { value: tooShortPhone },
   });
