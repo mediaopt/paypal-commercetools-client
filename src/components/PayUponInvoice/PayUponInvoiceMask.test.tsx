@@ -56,11 +56,6 @@ afterEach(() => {
   cleanup();
 });
 
-afterEach(() => {
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
-});
-
 test("Mask is shown if dependencies provided", () => {
   expect(screen.getAllByRole("button").length).toEqual(1);
   expect(screen.getAllByLabelText(phoneLabel).length).toEqual(1);
