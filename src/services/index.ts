@@ -6,3 +6,4 @@ export { getUserInfo } from "./getUserInfo";
 export { removePaymentToken } from "./removePaymentToken";
 export { createVaultSetupToken } from "./createVaultSetupToken";
 export { approveVaultSetupToken } from "./approveVaultSetupToken";
+export { authenticateThreeDSOrder } from "./authenticateThreeDSOrder";

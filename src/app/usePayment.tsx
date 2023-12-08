@@ -30,12 +30,14 @@ import {
   onApprove,
   createVaultSetupToken,
   approveVaultSetupToken,
+  authenticateThreeDSOrder,
 } from "../services";
 
 import { useLoader } from "./useLoader";
 import { useNotifications } from "./useNotifications";
 import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
+import { getActionIndex } from "../components/CardFields/constants";
 import { useTranslation } from "react-i18next";
 import { handleResponseError } from "../messages/errorMessages";
 
@@ -60,13 +62,14 @@ type PaymentContextT = {
   handleCreateOrder: (orderData?: CustomOrderData) => Promise<string>;
   handleOnApprove: (data: CustomOnApproveData) => Promise<void>;
   vaultOnly: boolean;
-  oderDataLinks?: OrderDataLinks;
+  orderDataLinks?: OrderDataLinks;
   handleCreateVaultSetupToken: (
     paymentSource: FUNDING_SOURCE,
   ) => Promise<string>;
   handleApproveVaultSetupToken: (
     data: ApproveVaultSetupTokenData,
   ) => Promise<void>;
+  handleAuthenticateThreeDSOrder: (orderID: string) => Promise<number>;
   orderId?: string;
 };
 
@@ -97,7 +100,8 @@ const PaymentContext = createContext<PaymentContextT>({
     Promise.resolve(""),
   handleApproveVaultSetupToken: (data?: ApproveVaultSetupTokenData) =>
     Promise.resolve(),
-  oderDataLinks: undefined,
+  handleAuthenticateThreeDSOrder: (orderID: string) => Promise.resolve(0),
+  orderDataLinks: undefined,
   orderId: undefined,
 });
 
@@ -110,6 +114,7 @@ export const PaymentProvider: FC<
   createPaymentUrl,
   createOrderUrl,
   authorizeOrderUrl,
+  authenticateThreeDSOrderUrl,
 
   onApproveUrl,
   onApproveRedirectionUrl,
@@ -128,7 +133,7 @@ export const PaymentProvider: FC<
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState<boolean>();
   const [resultMessage, setResultMessage] = useState<string>();
-  const [oderDataLinks, setOderDataLinks] = useState<OrderDataLinks>();
+  const [orderDataLinks, setOrderDataLinks] = useState<OrderDataLinks>();
   const [orderId, setOrderId] = useState<string>();
 
   const { settings } = useSettings();
@@ -346,6 +351,38 @@ export const PaymentProvider: FC<
       createVaultSetupTokenUrl && approveVaultSetupTokenUrl
     );
 
+    const handleAuthenticateThreeDSOrder = async (
+      orderID: string
+    ): Promise<number> => {
+      if (!authenticateThreeDSOrderUrl) {
+        return 0;
+      }
+      const result = await authenticateThreeDSOrder(
+        requestHeader,
+        authenticateThreeDSOrderUrl,
+        orderID,
+        latestPaymentVersion,
+        paymentInfo.id
+      );
+
+      if (!result) {
+        return 0;
+      }
+
+      latestPaymentVersion = result.version;
+
+      if (!result.hasOwnProperty("approve")) {
+        return 2;
+      }
+
+      const action = getActionIndex(
+        result.approve.three_d_secure.enrollment_status,
+        result.approve.three_d_secure.authentication_status,
+        result.approve.liability_shift
+      );
+      return settings?.threeDSAction[action];
+    };
+
     return {
       setSuccess,
       requestHeader,
@@ -357,7 +394,8 @@ export const PaymentProvider: FC<
       vaultOnly,
       handleCreateVaultSetupToken,
       handleApproveVaultSetupToken,
-      oderDataLinks,
+      handleAuthenticateThreeDSOrder,
+      orderDataLinks,
       orderId,
     };
   }, [
@@ -373,7 +411,7 @@ export const PaymentProvider: FC<
     settings,
     createVaultSetupTokenUrl,
     approveVaultSetupTokenUrl,
-    oderDataLinks,
+    orderDataLinks,
     orderId,
   ]);
 

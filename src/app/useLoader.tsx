@@ -28,7 +28,7 @@ export const LoaderProvider: FC<
   return (
     <LoaderContext.Provider value={value}>
       {showLoader && (
-        <div className="fixed top-0 right-0 bottom-0 left-0 z-145 w-full h-full">
+        <div className="fixed top-0 right-0 bottom-0 left-0 z-[145] w-full h-full">
           <LoadingOverlay loadingText={loadingText} textStyles={textStyles} />
         </div>
       )}

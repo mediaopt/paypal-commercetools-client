@@ -9,18 +9,20 @@ import { PayPal } from "./components/PayPal";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
+import { CardFields } from "./components/CardFields";
 import { PayUponInvoice } from "./components/PayUponInvoice";
 import { PayUponInvoiceProps } from "./types";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiYTg3ZGE2MjEtYWM0MS00MGU2LWI4YjYtYWMyOGM0M2E5MjZlIiwiY2FydElkIjoiOGU1ZWY5OTUtMmM3Yy00NGI5LWI5ODYtNmNlNzNhYzcwYjkyIn0.hlQELUjdM-_1_LLe1MOvP_QSkyRqKWQxhzpvMTCb3uY";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI5ZjAyZjk1Yi1kNzJkLTRlMDYtOTAyYy03Yzg3MDA5MmIwNmMifQ.hmg1giJkzKlLhMCAhav_N32uDqrfFVlBmyGGwslBTMc";
+
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
   const cartInformation = {
     account: {
-      email: "payment_source_cannot_be_used@example.com",
+      email: "payment_source_info_cannot_be_verified@example.com",
     },
     billing: {
       firstName: "John",
@@ -66,6 +68,7 @@ function App() {
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
     cartInformation: cartInformation,
+    authenticateThreeDSOrderUrl: `${ENDPOINT_URL}/payment/authenticateThreeDSOrder`,
   };
 
   const vaultParams = {
@@ -238,6 +241,30 @@ function App() {
           enableFunding: "card",
         }}
         fundingSource="card"
+      />
+    ),
+    CardFields: (
+      <CardFields
+        requestHeader={requestHeader}
+        {...params}
+        options={{
+          ...options,
+          components: "card-fields,buttons",
+          vault: true,
+        }}
+        {...vaultParams}
+      />
+    ),
+    CardFieldsVaultOnly: (
+      <CardFields
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "card-fields,buttons",
+          vault: true,
+        }}
+        {...vaultParams}
+        {...vaultOnlyParams}
       />
     ),
     HostedFields: <HostedFields {...HostedFieldsJson} />,
