@@ -249,7 +249,7 @@ export const PaymentProvider: FC<
               payment_source &&
               links
             ) {
-              setOderDataLinks(links);
+              setOrderDataLinks(links);
               setOrderId(id);
             }
           }
@@ -352,7 +352,7 @@ export const PaymentProvider: FC<
     );
 
     const handleAuthenticateThreeDSOrder = async (
-      orderID: string
+      orderID: string,
     ): Promise<number> => {
       if (!authenticateThreeDSOrderUrl) {
         return 0;
@@ -362,7 +362,7 @@ export const PaymentProvider: FC<
         authenticateThreeDSOrderUrl,
         orderID,
         latestPaymentVersion,
-        paymentInfo.id
+        paymentInfo.id,
       );
 
       if (!result) {
@@ -378,7 +378,7 @@ export const PaymentProvider: FC<
       const action = getActionIndex(
         result.approve.three_d_secure.enrollment_status,
         result.approve.three_d_secure.authentication_status,
-        result.approve.liability_shift
+        result.approve.liability_shift,
       );
       return settings?.threeDSAction[action];
     };
