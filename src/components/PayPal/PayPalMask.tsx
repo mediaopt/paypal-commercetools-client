@@ -6,9 +6,11 @@ import { usePayment } from "../../app/usePayment";
 import { useSettings } from "../../app/useSettings";
 import { useLoader } from "../../app/useLoader";
 import { useNotifications } from "../../app/useNotifications";
+import { errorFunc } from "../errorNotification";
+import { useTranslation } from "react-i18next";
 
 export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
-  props
+  props,
 ) => {
   const {
     handleCreateOrder,
@@ -20,6 +22,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const { settings } = useSettings();
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
+  const { t } = useTranslation();
   const { enableVaulting, paypalMessages, ...restprops } = props;
   const save = useRef<HTMLInputElement>(null);
 
@@ -46,12 +49,6 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     return styles;
   }, [settings, restprops]);
 
-  const errorFunc = (err: Record<string, unknown>) => {
-    isLoading(false);
-    notify("Error", "an error occurred");
-    console.error(err);
-  };
-
   let actions: any;
 
   if (vaultOnly) {
@@ -77,7 +74,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...restprops}
         style={style}
         {...actions}
-        onError={errorFunc}
+        onError={(err) => errorFunc(err, isLoading, notify, t)}
       />
       {(enableVaulting || storeInVaultOnSuccess) && (
         <label>
