@@ -14,6 +14,18 @@ const params = {
   },
 };
 
+jest.mock("react-i18next", () => ({
+  Trans: ({ i18nKey }: { i18nKey: string }) => i18nKey,
+  useTranslation: () => {
+    return {
+      t: (str: string) => str,
+      i18n: {
+        changeLanguage: () => new Promise(() => {}),
+      },
+    };
+  },
+}));
+
 test("HostedFields is shown", () => {
   render(<HostedFields {...params} />);
   expect(screen).toBeDefined();
