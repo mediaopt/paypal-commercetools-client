@@ -4,6 +4,13 @@ import { HostedFieldsMask } from "./HostedFieldsMask";
 
 import { testParams, testRequestHeader, testOptions } from "../../constants";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return {
+      t: (str: string) => str,
+    };
+  },
+}));
 jest.mock("../../app/useSettings", () => {
   return {
     useSettings: () => {
