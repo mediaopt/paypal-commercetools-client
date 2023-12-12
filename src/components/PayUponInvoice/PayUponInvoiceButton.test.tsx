@@ -48,3 +48,67 @@ test("Mask is shown if settings and params are valid", () => {
   render(<PayUponInvoiceButton {...testButtonProps} />);
   expect(screen.getAllByText("Mocked mask").length).toEqual(1);
 });
+
+test("If intent is wrong corresponding error is shown", () => {
+  (usePayment as jest.Mock).mockReturnValue({
+    paymentInfo: { id: "123", amount: 20 },
+    clientToken: "123",
+  });
+  (useSettings as jest.Mock).mockReturnValue({
+    settings: { payPalIntent: "" },
+  });
+  render(<PayUponInvoiceButton {...testButtonProps} />);
+  expect(screen.getAllByText("invoice.merchantIssue").length).toEqual(1);
+});
+
+test("If amount is smaller than min corresponding error is shown", () => {
+  (usePayment as jest.Mock).mockReturnValue({
+    paymentInfo: { id: "123", amount: 1 },
+    clientToken: "123",
+  });
+  (useSettings as jest.Mock).mockReturnValue({
+    settings: { payPalIntent: "Capture" },
+  });
+  render(<PayUponInvoiceButton {...testButtonProps} />);
+  expect(screen.getAllByText("invoice.tooSmall").length).toEqual(1);
+});
+
+test("If amount is bigger than max corresponding error is shown", () => {
+  (usePayment as jest.Mock).mockReturnValue({
+    paymentInfo: { id: "123", amount: 100500 },
+    clientToken: "123",
+  });
+  (useSettings as jest.Mock).mockReturnValue({
+    settings: { payPalIntent: "Capture" },
+  });
+  render(<PayUponInvoiceButton {...testButtonProps} />);
+  expect(screen.getAllByText("invoice.tooBig").length).toEqual(1);
+});
+
+test("If client tocken is missing corresponding error is shown", () => {
+  (usePayment as jest.Mock).mockReturnValue({
+    paymentInfo: { id: "123", amount: 20 },
+    clientToken: "",
+  });
+  (useSettings as jest.Mock).mockReturnValue({
+    settings: { payPalIntent: "Capture" },
+  });
+  render(<PayUponInvoiceButton {...testButtonProps} />);
+  expect(screen.getAllByText("invoice.thirdPartyIssue").length).toEqual(1);
+});
+
+test("If payment id is missing mask and error messages are not rendered", () => {
+  (usePayment as jest.Mock).mockReturnValue({
+    paymentInfo: { id: "", amount: 20 },
+    clientToken: "123",
+  });
+  (useSettings as jest.Mock).mockReturnValue({
+    settings: { payPalIntent: "Capture" },
+  });
+  render(<PayUponInvoiceButton {...testButtonProps} />);
+  expect(screen.queryByText("Mocked mask")).toEqual(null);
+  expect(screen.queryByText("invoice.merchantIssue")).toEqual(null);
+  expect(screen.queryByText("invoice.tooSmall")).toEqual(null);
+  expect(screen.queryByText("invoice.tooBig")).toEqual(null);
+  expect(screen.queryByText("invoice.thirdPartyIssue")).toEqual(null);
+});
