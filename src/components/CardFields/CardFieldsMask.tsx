@@ -64,13 +64,11 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
         approveData as ApproveVaultSetupTokenData
       ).catch((err) => {
         setPaying(false);
-        isLoading(false);
         errorFunc(err, isLoading, notify, t);
       });
     } else {
       handleOnApprove(approveData as CustomOnApproveData).catch((err) => {
         setPaying(false);
-        isLoading(false);
         errorFunc(err, isLoading, notify, t);
       });
     }
@@ -136,7 +134,6 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
       },
       onError: function (error: Record<string, never>) {
         setPaying(false);
-        isLoading(false);
         errorFunc(error, isLoading, notify, t);
       },
     });
@@ -148,7 +145,6 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
     cardField.submit().catch((err: Record<string, never>) => {
       errorFunc(err, isLoading, notify, t);
-      isLoading(false);
       setPaying(false);
     });
   };
