@@ -58,8 +58,22 @@ afterEach(() => {
 
 test("Mask is shown if dependencies provided", () => {
   expect(screen.getAllByRole("button").length).toEqual(1);
+  expect(screen.getAllByText("invoice.invoiceBenefitsMessage").length).toEqual(
+    1,
+  );
   expect(screen.getAllByLabelText(phoneLabel).length).toEqual(1);
   expect(screen.getAllByLabelText(birthDateLabel).length).toEqual(1);
+});
+
+test("Custom message is shown if provided", () => {
+  cleanup();
+  render(
+    <PayUponInvoiceMask
+      fraudNetSessionId={fraudNetSessionId}
+      invoiceBenefitsMessage={"Custom message"}
+    />,
+  );
+  expect(screen.getAllByText("Custom message").length).toEqual(1);
 });
 
 test(`${validBirthDate} input value for birthdate for invoice payments is valid`, () => {
