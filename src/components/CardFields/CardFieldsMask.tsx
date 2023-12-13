@@ -10,6 +10,8 @@ import {
 import { CARD_FIELDS_INPUTS, CARD_FIELDS_BUTTON } from "./constants";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
+import { errorFunc } from "../errorNotification";
+import { useTranslation } from "react-i18next";
 
 export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   enableVaulting,
@@ -27,6 +29,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   const { settings, paymentTokens } = useSettings();
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
+  const { t } = useTranslation();
 
   const [vaultId, setVaultId] = useState<string>();
   const [paying, setPaying] = useState(false);
@@ -62,13 +65,13 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
       ).catch((err) => {
         setPaying(false);
         isLoading(false);
-        notify("Error", err.message);
+        errorFunc(err, isLoading, notify, t);
       });
     } else {
       handleOnApprove(approveData as CustomOnApproveData).catch((err) => {
         setPaying(false);
         isLoading(false);
-        notify("Error", err.message);
+        errorFunc(err, isLoading, notify, t);
       });
     }
   };
@@ -134,7 +137,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
       onError: function (error: Record<string, never>) {
         setPaying(false);
         isLoading(false);
-        notify("Error", error.message);
+        errorFunc(error, isLoading, notify, t);
       },
     });
   }, []);
@@ -144,7 +147,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
     isLoading(true);
 
     cardField.submit().catch((err: Record<string, never>) => {
-      notify("Error", err.message);
+      errorFunc(err, isLoading, notify, t);
       isLoading(false);
       setPaying(false);
     });
