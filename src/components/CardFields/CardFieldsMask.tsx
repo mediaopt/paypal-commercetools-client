@@ -201,7 +201,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
           {vaultId && (
             <div className="h-9">
               <button
-                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
+                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-right`}
                 onClick={() =>
                   handleCreateOrder({
                     paymentSource: "card",
