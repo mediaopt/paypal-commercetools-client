@@ -240,14 +240,15 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
               Save this card for future purchases
             </label>
           )}
-
-          <button
-            className={hostedFieldClasses.hostedFieldsPayButtonClasses}
-            onClick={handleClick}
-            disabled={paying}
-          >
-            Pay
-          </button>
+          <div className="py-2">
+            <button
+              className={hostedFieldClasses.hostedFieldsPayButtonClasses}
+              onClick={handleClick}
+              disabled={paying}
+            >
+              Pay
+            </button>
+          </div>
         </div>
       )}
     </>
