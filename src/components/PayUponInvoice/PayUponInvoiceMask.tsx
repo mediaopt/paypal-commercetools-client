@@ -31,16 +31,16 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   const { isLoading } = useLoader();
 
   const [phone, setPhone] = useState("+49 ");
+  const [birthDate, setBirthDate] = useState<string>();
   const notifyWrongPhone = () => notify("Warning", t("invoice.wrongPhone"));
   let date = new Date();
   date.setFullYear(date.getFullYear() - 18);
   const maxDate = date.toJSON().slice(0, 10);
   const [ratepayMessage, setRatepayMessage] = useState<string>();
 
-  const submitForm = async (formData: HTMLFormElement) => {
+  const submitForm = async () => {
     isLoading(true);
     setRatepayMessage("");
-    const birthDate = formData["birthDate"].value;
     const { countryCallingCode, nationalNumber } = {
       ...parsePhoneNumber(phone),
     };
@@ -62,11 +62,11 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
 
   return (
     <form
+      aria-label="form"
       className="my-4"
       onSubmit={async (event) => {
         event.preventDefault();
-
-        await submitForm(event.target as HTMLFormElement);
+        await submitForm();
       }}
     >
       <div className="my-2">
@@ -83,6 +83,7 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         autoComplete="bday"
         min="1900-01-01"
         max={maxDate}
+        onChange={({ target }) => setBirthDate(target.value)}
       />
       <label htmlFor="phone">{t("interface.phoneNumber")}</label>
       <input

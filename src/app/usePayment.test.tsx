@@ -35,7 +35,7 @@ test("PaymentProvider is shown", () => {
   render(
     <PaymentProvider {...params}>
       <span>test text</span>
-    </PaymentProvider>
+    </PaymentProvider>,
   );
   expect(screen).toBeDefined();
 });
@@ -44,7 +44,7 @@ test("PaymentProvider is shown text", () => {
   render(
     <PaymentProvider {...params}>
       <span>test text</span>
-    </PaymentProvider>
+    </PaymentProvider>,
   );
   const linkElement = screen.getAllByText(/test text/i);
   expect(linkElement.length).toEqual(1);
@@ -59,7 +59,7 @@ test("useNotifications check initial values", () => {
   expect(render.result.current.handleCreatePayment).toBeTruthy();
   expect(render.result.current.handleCreateVaultSetupToken).toBeTruthy();
   expect(render.result.current.handleOnApprove).toBeTruthy();
-  expect(render.result.current.oderDataLinks).toBeUndefined();
+  expect(render.result.current.orderDataLinks).toBeUndefined();
   expect(render.result.current.orderId).toBeUndefined();
   expect(render.result.current.paymentInfo).toBeTruthy();
   expect(render.result.current.requestHeader).toBeTruthy();
