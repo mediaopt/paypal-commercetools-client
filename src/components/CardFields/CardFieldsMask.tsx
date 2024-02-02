@@ -47,7 +47,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   let saveCard = false;
 
   const cardPaymentTokens = paymentTokens?.payment_tokens?.filter(
-    (paymentToken) => paymentToken.payment_source.card !== undefined
+    (paymentToken) => paymentToken.payment_source.card !== undefined,
   );
 
   const hostedFieldClasses = useMemo(() => {
@@ -61,7 +61,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   const approveTransaction = (approveData: any) => {
     if (vaultOnly) {
       handleApproveVaultSetupToken(
-        approveData as ApproveVaultSetupTokenData
+        approveData as ApproveVaultSetupTokenData,
       ).catch((err) => {
         setPaying(false);
         errorFunc(err, isLoading, notify, t);
@@ -75,7 +75,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   };
   useEffect(() => {
     let oderDataPayerAction = orderDataLinks?.filter(
-      (orderDataLink) => orderDataLink.rel === "payer-action"
+      (orderDataLink) => orderDataLink.rel === "payer-action",
     );
 
     if (oderDataPayerAction && oderDataPayerAction[0]) {
@@ -89,7 +89,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
         createOrder: () => {
           return handleCreateOrder({
             paymentSource: "card",
-            storeInVault: saveCard,
+            storeInVault: save?.current?.checked,
             verificationMethod: threeDSAuth || undefined,
           });
         },
