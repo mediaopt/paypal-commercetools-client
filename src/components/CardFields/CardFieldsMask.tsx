@@ -184,13 +184,17 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
                 const { id, payment_source } = paymentToken;
                 return (
                   <tr key={id}>
-                    <Card
-                      id={id}
-                      onChange={(e) => {
-                        setVaultId(e.target.value);
-                      }}
-                      {...payment_source.card}
-                    />
+                    <td>
+                      <input
+                        type="radio"
+                        name="card"
+                        value={id}
+                        onChange={(e) => {
+                          setVaultId(e.target.value);
+                        }}
+                      />
+                    </td>
+                    <Card id={id} {...payment_source.card} />
                   </tr>
                 );
               })}

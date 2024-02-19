@@ -6,7 +6,7 @@ import { PayPal } from "./PayPal";
 import { useSettings } from "../../app/useSettings";
 
 export const PaymentTokensList: React.FC = () => {
-  const { paymentTokens } = useSettings();
+  const { paymentTokens, handleRemovePaymentToken } = useSettings();
 
   return paymentTokens && paymentTokens.payment_tokens ? (
     <table cellPadding={5}>
@@ -22,20 +22,23 @@ export const PaymentTokensList: React.FC = () => {
         {paymentTokens.payment_tokens.map((paymentToken) => {
           const { id, payment_source } = paymentToken;
           const { card, paypal, venmo } = payment_source;
-          return card ? (
+          return (
             <tr key={id}>
-              <Card {...card} id={id} />
+              {card ? (
+                <Card {...card} id={id} />
+              ) : paypal ? (
+                <PayPal {...paypal} id={id} />
+              ) : venmo ? (
+                <PayPal {...venmo} id={id} />
+              ) : (
+                <></>
+              )}
+              <td>
+                <button onClick={() => handleRemovePaymentToken(id)}>
+                  Remove
+                </button>
+              </td>
             </tr>
-          ) : paypal ? (
-            <tr key={id}>
-              <PayPal {...paypal} id={id} />
-            </tr>
-          ) : venmo ? (
-            <tr key={id}>
-              <PayPal {...venmo} id={id} />
-            </tr>
-          ) : (
-            <></>
           );
         })}
       </tbody>
