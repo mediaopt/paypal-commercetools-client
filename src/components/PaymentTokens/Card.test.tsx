@@ -23,7 +23,7 @@ test("Card is shown", () => {
   expect(screen).toBeDefined();
 });
 
-test("Text is shown", () => {
+test("Last digits are shown", () => {
   render(
     <table>
       <tbody>
@@ -33,21 +33,7 @@ test("Text is shown", () => {
       </tbody>
     </table>,
   );
-  const linkElement = screen.getAllByText(/visa ending in 1234/i);
-  expect(linkElement.length).toEqual(1);
-});
-
-test("Button is shown", () => {
-  render(
-    <table>
-      <tbody>
-        <tr>
-          <Card {...params} />
-        </tr>
-      </tbody>
-    </table>,
-  );
-  const linkElement = screen.getAllByRole("button");
+  const linkElement = screen.getAllByText(/••• 1234/i);
   expect(linkElement.length).toEqual(1);
 });
 
@@ -62,5 +48,33 @@ test("Expiry is shown", () => {
     </table>,
   );
   const linkElement = screen.getAllByText(/12\/2020/i);
+  expect(linkElement.length).toEqual(1);
+});
+
+test("Name is shown", () => {
+  render(
+    <table>
+      <tbody>
+        <tr>
+          <Card {...params} />
+        </tr>
+      </tbody>
+    </table>,
+  );
+  const linkElement = screen.getAllByText(/Ursula Meerfrau/i);
+  expect(linkElement.length).toEqual(1);
+});
+
+test("Brand is shown", () => {
+  render(
+    <table>
+      <tbody>
+        <tr>
+          <Card {...params} />
+        </tr>
+      </tbody>
+    </table>,
+  );
+  const linkElement = screen.getAllByRole("img");
   expect(linkElement.length).toEqual(1);
 });

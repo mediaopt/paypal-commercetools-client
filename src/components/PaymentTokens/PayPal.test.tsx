@@ -15,7 +15,7 @@ test("PayPal is shown", () => {
           <PayPal {...params} />
         </tr>
       </tbody>
-    </table>
+    </table>,
   );
   expect(screen).toBeDefined();
 });
@@ -28,23 +28,9 @@ test("Text is shown", () => {
           <PayPal {...params} />
         </tr>
       </tbody>
-    </table>
+    </table>,
   );
   const linkElement = screen.getAllByText(/test@gmail.com/i);
-  expect(linkElement.length).toEqual(1);
-});
-
-test("Button is shown", () => {
-  render(
-    <table>
-      <tbody>
-        <tr>
-          <PayPal {...params} />
-        </tr>
-      </tbody>
-    </table>
-  );
-  const linkElement = screen.getAllByRole("button");
   expect(linkElement.length).toEqual(1);
 });
 
@@ -56,8 +42,22 @@ test("Expiry is shown", () => {
           <PayPal {...params} />
         </tr>
       </tbody>
-    </table>
+    </table>,
   );
   const linkElement = screen.getAllByText(/N\/A/i);
+  expect(linkElement.length).toEqual(1);
+});
+
+test("Logo is shown", () => {
+  render(
+    <table>
+      <tbody>
+        <tr>
+          <PayPal {...params} />
+        </tr>
+      </tbody>
+    </table>,
+  );
+  const linkElement = screen.getAllByRole("img");
   expect(linkElement.length).toEqual(1);
 });
