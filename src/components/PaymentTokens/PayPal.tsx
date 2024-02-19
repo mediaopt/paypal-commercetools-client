@@ -3,7 +3,7 @@ import React from "react";
 import { useSettings } from "../../app/useSettings";
 
 import { PayPalPaymentSource } from "../../types";
-import { brandToLogo } from "../../images/brandToLogo";
+import { brandToLogo } from "../images/brandToLogo";
 
 export type PayPalProps = Pick<PayPalPaymentSource, "email_address"> & {
   id: string;

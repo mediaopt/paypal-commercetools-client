@@ -1,8 +1,12 @@
 import React from "react";
 
-const masterCardImage = require("./masterCard.png");
-const visaImage = require("./visa.png");
-const paypalImage = require("./PP.png");
+// const masterCardImage = require("./masterCard.png");
+// const visaImage = require("./visa.png");
+// const paypalImage = require("./PP.png");
+
+import masterCardImage from "./masterCard.png";
+import visaImage from "./visa.png";
+import paypalImage from "./PP.png";
 
 export const brandToLogo = (brand: string) => {
   //h*4+my*8=40
