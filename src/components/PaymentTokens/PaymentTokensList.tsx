@@ -22,30 +22,21 @@ export const PaymentTokensList: React.FC = () => {
         {paymentTokens.payment_tokens.map((paymentToken) => {
           const { id, payment_source } = paymentToken;
           const { card, paypal, venmo } = payment_source;
-
-          if (card) {
-            return (
-              <tr key={id}>
-                <Card {...card} id={id} />
-              </tr>
-            );
-          }
-
-          if (paypal) {
-            return (
-              <tr key={id}>
-                <PayPal {...paypal} id={id} />
-              </tr>
-            );
-          }
-
-          if (venmo) {
-            return (
-              <tr key={id}>
-                <PayPal {...venmo} id={id} />
-              </tr>
-            );
-          }
+          return card ? (
+            <tr key={id}>
+              <Card {...card} id={id} />
+            </tr>
+          ) : paypal ? (
+            <tr key={id}>
+              <PayPal {...paypal} id={id} />
+            </tr>
+          ) : venmo ? (
+            <tr key={id}>
+              <PayPal {...venmo} id={id} />
+            </tr>
+          ) : (
+            <></>
+          );
         })}
       </tbody>
     </table>
