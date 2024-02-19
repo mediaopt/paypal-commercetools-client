@@ -179,7 +179,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
         <>
           {cardPaymentTokens.map((paymentToken) => {
             const { id, payment_source } = paymentToken;
-            const { brand, last_digits } = payment_source.card;
+            const { brand, name, last_digits, expiry } = payment_source.card;
 
             return (
               <div key={id}>
@@ -192,7 +192,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
                       setVaultId(e.target.value);
                     }}
                   />
-                  {brand} ending in {last_digits}
+                  {brand} {name} ••• {last_digits} {expiry}
                 </span>
               </div>
             );
