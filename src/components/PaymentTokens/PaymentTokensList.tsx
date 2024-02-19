@@ -25,7 +25,7 @@ export const PaymentTokensList: React.FC = () => {
           return (
             <tr key={id}>
               {card ? (
-                <Card {...card} id={id} />
+                <Card {...card} />
               ) : paypal ? (
                 <PayPal {...paypal} />
               ) : venmo ? (
