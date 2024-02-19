@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { PayPal, PayPalProps } from "./PayPal";
 
 const params: PayPalProps = {
-  id: "1",
   email_address: "test@gmail.com",
 };
 
