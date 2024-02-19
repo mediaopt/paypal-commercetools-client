@@ -4,7 +4,6 @@ import { Card, CardProps } from "./Card";
 
 const params: CardProps = {
   name: "Ursula Meerfrau",
-  id: "1",
   brand: "visa",
   last_digits: "1234",
   expiry: "12/2020",

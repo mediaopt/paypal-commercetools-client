@@ -194,7 +194,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
                         }}
                       />
                     </td>
-                    <Card id={id} {...payment_source.card} />
+                    <Card {...payment_source.card} />
                   </tr>
                 );
               })}

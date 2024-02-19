@@ -6,7 +6,7 @@ import { brandToLogo } from "../images/brandToLogo";
 export type CardProps = Pick<
   CardPaymentSource,
   "brand" | "last_digits" | "expiry" | "name"
-> & { id: string };
+>;
 
 export const Card: React.FC<CardProps> = ({
   name,
