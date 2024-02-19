@@ -12,6 +12,7 @@ import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import { errorFunc } from "../errorNotification";
 import { useTranslation } from "react-i18next";
+import { brandToLogo } from "../../images/brandToLogo";
 
 export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   enableVaulting,
@@ -192,7 +193,8 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
                       setVaultId(e.target.value);
                     }}
                   />
-                  {brand} {name} ••• {last_digits} {expiry}
+                  {brandToLogo(brand) ?? brand} {name} ••• {last_digits}{" "}
+                  {expiry}
                 </span>
               </div>
             );
