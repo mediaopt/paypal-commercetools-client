@@ -12,6 +12,7 @@ import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import { errorFunc } from "../errorNotification";
 import { useTranslation } from "react-i18next";
+import { Card } from "../PaymentTokens/Card";
 
 export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   enableVaulting,
@@ -177,30 +178,32 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
       cardPaymentTokens?.length > 0 &&
       !addNew ? (
         <>
-          {cardPaymentTokens.map((paymentToken) => {
-            const { id, payment_source } = paymentToken;
-            const { brand, last_digits } = payment_source.card;
-
-            return (
-              <div key={id}>
-                <span>
-                  <input
-                    type="radio"
-                    name="pay-with-vaulted-card"
-                    value={id}
-                    onChange={(e) => {
-                      setVaultId(e.target.value);
-                    }}
-                  />
-                  {brand} ending in {last_digits}
-                </span>
-              </div>
-            );
-          })}
+          <table cellPadding={5} className="max-w-fit">
+            <tbody>
+              {cardPaymentTokens.map((paymentToken) => {
+                const { id, payment_source } = paymentToken;
+                return (
+                  <tr key={id}>
+                    <td>
+                      <input
+                        type="radio"
+                        name="card"
+                        value={id}
+                        onChange={(e) => {
+                          setVaultId(e.target.value);
+                        }}
+                      />
+                    </td>
+                    <Card {...payment_source.card} />
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
           {vaultId && (
             <div className="h-9">
               <button
-                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-right`}
+                className={hostedFieldClasses.hostedFieldsPayButtonClasses}
                 onClick={() =>
                   handleCreateOrder({
                     paymentSource: "card",
