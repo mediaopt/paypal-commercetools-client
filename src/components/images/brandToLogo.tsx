@@ -1,8 +1,7 @@
 import React from "react";
-
-import masterCardImage from "./masterCard.png";
-import visaImage from "./visa.png";
-import paypalImage from "./PP.png";
+import { visaImage } from "./visa";
+import { pPImage } from "./pp";
+import { masterCardImage } from "./masterCard";
 
 export const brandToLogo = (brand: string) => {
   //h*4+my*8=40
@@ -18,6 +17,6 @@ export const brandToLogo = (brand: string) => {
         />
       );
     case "paypal":
-      return <img src={paypalImage} alt={"PayPal"} className="mx-2 h-6 my-2" />;
+      return <img src={pPImage} alt={"PayPal"} className="mx-2 h-6 my-2" />;
   }
 };
