@@ -2,7 +2,9 @@ export const CARD_FIELDS_INPUTS: string =
   "w-full p-3 mt-1.5 mb-4 h-10 text-base bg-white text-neutral-700 border border-gray-300 rounded box-border resize-y";
 
 export const CARD_FIELDS_BUTTON: string =
-  "float-right text-center whitespace-nowrap inline-block font-normal align-middle select-none cursor-pointer text-white text-base rounded py-1.5 px-3 bg-sky-500 border-sky-500";
+  "h-9 my-2 mr-2 text-center whitespace-nowrap border-2 inline-block font-normal align-middle select-none cursor-pointer text-base rounded py-1.5 px-3 border-sky-500";
+
+export const CARD_FIELDS_PAY_BUTTON: string = `${CARD_FIELDS_BUTTON} text-white bg-sky-500`;
 
 const ACTIONS: Record<string, string> = {
   YYPOSSIBLE: "threeDSAction_1",
@@ -24,11 +26,11 @@ const ACTIONS: Record<string, string> = {
 export const getActionIndex = (
   enrollmentStatus: string,
   authenticationStatus: string,
-  liabilityShift: string
+  liabilityShift: string,
 ): string => {
   const selector = enrollmentStatus.concat(
     authenticationStatus,
-    liabilityShift
+    liabilityShift,
   );
   return ACTIONS[selector];
 };

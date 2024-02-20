@@ -7,7 +7,11 @@ import {
   CardFieldsProps,
   CustomOnApproveData,
 } from "../../types";
-import { CARD_FIELDS_INPUTS, CARD_FIELDS_BUTTON } from "./constants";
+import {
+  CARD_FIELDS_BUTTON,
+  CARD_FIELDS_INPUTS,
+  CARD_FIELDS_PAY_BUTTON,
+} from "./constants";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import { errorFunc } from "../errorNotification";
@@ -53,7 +57,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
   const hostedFieldClasses = useMemo(() => {
     const hostedFieldsPayButtonClasses =
-      settings?.hostedFieldsPayButtonClasses || CARD_FIELDS_BUTTON;
+      settings?.hostedFieldsPayButtonClasses || CARD_FIELDS_PAY_BUTTON;
     const hostedFieldsInputFieldClasses =
       settings?.hostedFieldsInputFieldClasses || CARD_FIELDS_INPUTS;
     return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
@@ -201,22 +205,25 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
             </tbody>
           </table>
           {vaultId && (
-            <div className="h-9">
-              <button
-                className={hostedFieldClasses.hostedFieldsPayButtonClasses}
-                onClick={() =>
-                  handleCreateOrder({
-                    paymentSource: "card",
-                    storeInVault: saveCard,
-                    vaultId: vaultId,
-                  })
-                }
-              >
-                Pay
-              </button>
-            </div>
+            <button
+              className={hostedFieldClasses.hostedFieldsPayButtonClasses}
+              onClick={() =>
+                handleCreateOrder({
+                  paymentSource: "card",
+                  storeInVault: saveCard,
+                  vaultId: vaultId,
+                })
+              }
+            >
+              Pay with selected card
+            </button>
           )}
-          <button onClick={() => setAddNew(true)}>Add A New Card</button>
+          <button
+            className={CARD_FIELDS_BUTTON}
+            onClick={() => setAddNew(true)}
+          >
+            Add A New Card
+          </button>
         </>
       ) : (
         <div ref={cardFieldDiv} id="checkout-form">
