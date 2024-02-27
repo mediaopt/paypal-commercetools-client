@@ -7,11 +7,7 @@ import {
   CardFieldsProps,
   CustomOnApproveData,
 } from "../../types";
-import {
-  CARD_FIELDS_BUTTON,
-  CARD_FIELDS_INPUTS,
-  CARD_FIELDS_PAY_BUTTON,
-} from "./constants";
+import { CARD_FIELDS_INPUTS, CARD_FIELDS_PAY_BUTTON } from "./constants";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
 import { errorFunc } from "../errorNotification";
@@ -177,14 +173,11 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
   return (
     <>
-      {!vaultOnly &&
-      cardPaymentTokens &&
-      cardPaymentTokens?.length > 0 &&
-      !addNew ? (
+      {!vaultOnly && (
         <>
           <table cellPadding={5} className="max-w-fit">
             <tbody>
-              {cardPaymentTokens.map((paymentToken) => {
+              {cardPaymentTokens?.map((paymentToken) => {
                 const { id, payment_source } = paymentToken;
                 return (
                   <tr key={id}>
@@ -195,6 +188,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
                         value={id}
                         onChange={(e) => {
                           setVaultId(e.target.value);
+                          setAddNew(false);
                         }}
                       />
                     </td>
@@ -202,6 +196,22 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
                   </tr>
                 );
               })}
+              <tr>
+                <td>
+                  <input
+                    type="radio"
+                    name="card"
+                    id="addNewCart"
+                    onChange={(e) => {
+                      setAddNew(e.target.checked);
+                      setVaultId(undefined);
+                    }}
+                  />
+                </td>
+                <td colSpan={4}>
+                  <label htmlFor="addNewCart">Add a new card</label>
+                </td>
+              </tr>
             </tbody>
           </table>
           {vaultId && (
@@ -215,17 +225,12 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
                 })
               }
             >
-              Pay with selected card
+              Pay
             </button>
           )}
-          <button
-            className={CARD_FIELDS_BUTTON}
-            onClick={() => setAddNew(true)}
-          >
-            Add A New Card
-          </button>
         </>
-      ) : (
+      )}
+      {(addNew || vaultOnly) && (
         <div ref={cardFieldDiv} id="checkout-form">
           <div ref={nameField} id="card-name-field-container"></div>
 
@@ -236,7 +241,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
           <div ref={cvvField} id="card-cvv-field-container"></div>
 
           {enableVaulting && !vaultOnly && (
-            <label>
+            <label className="p-1.5">
               <input
                 type="checkbox"
                 id="save"
@@ -250,13 +255,13 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
               Save this card for future purchases
             </label>
           )}
-          <div className="py-2">
+          <div className="py-2 px-1.5">
             <button
               className={hostedFieldClasses.hostedFieldsPayButtonClasses}
               onClick={handleClick}
               disabled={paying}
             >
-              Pay
+              {vaultOnly ? "Save" : "Pay"}
             </button>
           </div>
         </div>
