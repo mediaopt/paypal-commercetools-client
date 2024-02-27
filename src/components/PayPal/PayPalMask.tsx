@@ -19,7 +19,7 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     handleCreateVaultSetupToken,
     handleApproveVaultSetupToken,
   } = usePayment();
-  const { settings } = useSettings();
+  const { settings, paymentTokens } = useSettings();
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
   const { t } = useTranslation();
@@ -27,6 +27,15 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const save = useRef<HTMLInputElement>(null);
 
   const storeInVaultOnSuccess = settings?.storeInVaultOnSuccess;
+
+  const hasPaypalToken = useMemo(() => {
+    if (paymentTokens?.payment_tokens) {
+      return paymentTokens.payment_tokens.some(
+        (token) => token.payment_source.paypal,
+      );
+    }
+    return false;
+  }, [paymentTokens]);
 
   const style = useMemo(() => {
     if (restprops.style || !settings) {
@@ -76,18 +85,20 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...actions}
         onError={(err) => errorFunc(err, isLoading, notify, t)}
       />
-      {(enableVaulting || storeInVaultOnSuccess) && (
-        <label>
-          <input
-            type="checkbox"
-            id="save"
-            name="save"
-            ref={save}
-            className="mr-1"
-          />
-          Save for future purchases
-        </label>
-      )}
+      {!vaultOnly &&
+        !hasPaypalToken &&
+        (enableVaulting || storeInVaultOnSuccess) && (
+          <label>
+            <input
+              type="checkbox"
+              id="save"
+              name="save"
+              ref={save}
+              className="mr-1"
+            />
+            Save for future purchases
+          </label>
+        )}
 
       {paypalMessages && <PayPalMessages {...paypalMessages} />}
     </>
