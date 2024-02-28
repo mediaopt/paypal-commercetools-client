@@ -77,8 +77,7 @@ function App() {
 
   const vaultOnlyParams = {
     ...commonParams,
-    getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
-    enableVaulting: true,
+    ...vaultParams,
     createVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/createVaultSetupToken`,
     approveVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/approveVaultSetupToken`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
