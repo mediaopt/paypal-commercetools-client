@@ -4,3 +4,4 @@ export { HostedFields } from "./src/components/HostedFields";
 export { PaymentTokens } from "./src/components/PaymentTokens";
 export { PayUponInvoice } from "./src/components/PayUponInvoice";
 export { CardFields } from "./src/components/CardFields";
+export { GooglePay } from "./src/components/GooglePay";
