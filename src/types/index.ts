@@ -428,3 +428,12 @@ type OrderDataLink = {
 };
 
 export type OrderDataLinks = OrderDataLink[];
+
+export type GooglePayOptionsType = {
+  environment?: "TEST" | "PRODUCTION";
+  allowedCardNetworks: string[];
+  allowedCardAuthMethods: string[];
+  callbackIntents: string[];
+  apiVersion?: number;
+  apiVersionMinor?: number;
+};

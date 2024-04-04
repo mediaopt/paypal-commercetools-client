@@ -11,12 +11,18 @@ import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
 import { CardFields } from "./components/CardFields";
 import { PayUponInvoice } from "./components/PayUponInvoice";
-import { PayUponInvoiceProps } from "./types";
+import {
+  GooglePayOptionsType,
+  PayUponInvoiceProps,
+  SmartComponentsProps,
+} from "./types";
 import { GooglePay } from "./components/GooglePay";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
+//const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNzQ0NTUxY2YtMWVjMS00OWJmLWIwOTMtM2I1YTEzMGU3MTE0IiwiY2FydElkIjoiZWFmZWVkNmQtZGI4Mi00ODk3LTg0MzUtNmNiYTc0YzI0YzcxIn0.NheVsGS4gqwGdxKDU4GouDKfT3cuS6NIyK8rwcDpQeY";
+  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNzQ0NTUxY2YtMWVjMS00OWJmLWIwOTMtM2I1YTEzMGU3MTE0IiwiY2FydElkIjoiZWFmZWVkNmQtZGI4Mi00ODk3LTg0MzUtNmNiYTc0YzI0YzcxIn0.NheVsGS4gqwGdxKDU4GouDKfT3cuS6NIyK8rwcDpQeY";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjMmU2NjdhZi05N2QyLTQ3NjEtOTY5ZS00M2JlZTc4MGNlNjQifQ.JZn7DTYnwjNF9xSnvTdbne0xw1Kl5pG1oCPRfi9wY5Y";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -87,7 +93,8 @@ function App() {
   const options = {
     clientId:
       //"ATUW0KT0pNdyWys2AzvohAWPhmo6zx6OH25SP8RtPRZFW60fiizfnywDJVekwddhHlxw1ac3ApQwUoQ8", //prod
-      "ASIX4GwxjaJ8t603IAUySrbFPTDijGxtNigDRxbuO4E4HVsUzpYYzfVq99MhIZ6dS0AAKjPpeHNj5tyS", //test
+      //"ASIX4GwxjaJ8t603IAUySrbFPTDijGxtNigDRxbuO4E4HVsUzpYYzfVq99MhIZ6dS0AAKjPpeHNj5tyS", //test
+      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9", //g pay
     currency: "EUR",
   };
 
@@ -162,6 +169,10 @@ function App() {
     requestHeader,
     ...params,
     options: { ...options, components: "googlepay" },
+    environment: "TEST" as "TEST",
+    allowedCardNetworks: ["MASTERCARD", "VISA"],
+    allowedCardAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+    callbackIntents: ["PAYMENT_AUTHORIZATION"],
   };
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {

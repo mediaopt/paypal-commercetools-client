@@ -5,8 +5,16 @@ import { useHandleCreatePayment } from "../../app/useHandleCreatePayment";
 import loadScript from "../../app/loadScript";
 import { GooglePayMask } from "./GooglePayMask";
 import { useLoader } from "../../app/useLoader";
+import { GooglePayOptionsType } from "../../types";
 
-export const GooglePayButton: React.FC = () => {
+export const GooglePayButton: React.FC<GooglePayOptionsType> = ({
+  apiVersion,
+  apiVersionMinor,
+  allowedCardNetworks,
+  allowedCardAuthMethods,
+  callbackIntents,
+  environment,
+}) => {
   const { isLoading } = useLoader();
   const scriptUrl: string = "https://pay.google.com/gp/p/js/pay.js";
   const { paymentInfo } = usePayment();
@@ -30,5 +38,16 @@ export const GooglePayButton: React.FC = () => {
     };
   }, [paymentInfo]);
 
-  return showComponent ? <GooglePayMask /> : <></>;
+  return showComponent ? (
+    <GooglePayMask
+      allowedCardAuthMethods={allowedCardAuthMethods}
+      allowedCardNetworks={allowedCardNetworks}
+      callbackIntents={callbackIntents}
+      apiVersion={apiVersion}
+      apiVersionMinor={apiVersionMinor}
+      environment={environment}
+    />
+  ) : (
+    <></>
+  );
 };

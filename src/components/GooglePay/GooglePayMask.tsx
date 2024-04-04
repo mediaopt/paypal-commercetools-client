@@ -1,7 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePayment } from "../../app/usePayment";
+import { GooglePayOptionsType } from "../../types";
 
-export const GooglePayMask = () => {
+export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
+  apiVersion,
+  apiVersionMinor,
+  allowedCardNetworks,
+  allowedCardAuthMethods,
+  callbackIntents,
+  environment = "TEST",
+}) => {
   const googlePayButton = useRef<HTMLDivElement>(null);
   const [paymentsClient, setPaymentsClient] = useState<{ [key: string]: any }>(
     {}
@@ -10,13 +18,9 @@ export const GooglePayMask = () => {
   const { handleCreateOrder, handleOnApprove } = usePayment();
 
   const baseRequest = {
-    apiVersion: 2,
-    apiVersionMinor: 0,
+    apiVersion: apiVersion || 2,
+    apiVersionMinor: apiVersionMinor || 0,
   };
-
-  const allowedCardNetworks = ["MASTERCARD", "VISA"];
-
-  const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
 
   const baseCardPaymentMethod = {
     type: "CARD",
@@ -55,18 +59,6 @@ export const GooglePayMask = () => {
     };
   };
 
-  const tokenizationSpecification = {
-    type: "PAYMENT_GATEWAY",
-    parameters: {
-      gateway: "example",
-      gatewayMerchantId: "exampleGatewayMerchantId",
-    },
-  };
-
-  const cardPaymentMethod = Object.assign({}, baseCardPaymentMethod, {
-    tokenizationSpecification: tokenizationSpecification,
-  });
-
   const processPayment = async (paymentData: { [key: string]: any }) => {
     try {
       const { currencyCode, totalPrice } = tmpStaticTransaction();
@@ -82,29 +74,8 @@ export const GooglePayMask = () => {
         ],
         paymentData: paymentData,
       };
-      /* Create Order */
+
       handleCreateOrder({ googlePayData: order, paymentSource: "google_pay" });
-      /*const { id } = await fetch(`/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(order),
-      }).then((res) => res.json());*/
-      //@ts-ignore
-      /*const { status } = await paypal.Googlepay().confirmOrder({
-        orderId: id,
-        paymentMethodData: paymentData.paymentMethodData,
-      });
-      if (status === "APPROVED") {
-        /!* Capture the Order *!/
-        const captureResponse = await fetch(`/orders/${id}/capture`, {
-          method: "POST",
-        }).then((res) => res.json());
-        return { transactionState: "SUCCESS" };
-      } else {
-        return { transactionState: "ERROR" };
-      }*/
     } catch (err: any) {
       return {
         transactionState: "ERROR",
@@ -131,8 +102,7 @@ export const GooglePayMask = () => {
     setPaymentsClient(
       // @ts-ignore
       new google.payments.api.PaymentsClient({
-        environment: "TEST",
-        //environment: "PRODUCTION",
+        environment: environment,
         paymentDataCallbacks: {
           onPaymentAuthorized: onPaymentAuthorized,
         },
@@ -141,33 +111,27 @@ export const GooglePayMask = () => {
   }, []);
 
   useEffect(() => {
-    console.log(paymentsClient);
     if (Object.keys(paymentsClient).length) {
       onGooglePayLoaded();
     }
   }, [paymentsClient]);
 
-  /* Note: the `googlePayConfig` object in this request is the response from `paypal.Googlepay().config()` */
   // @todo proper look, now just copypasta
   const getGooglePaymentDataRequest = async () => {
     // @ts-ignore
-    // const googlePayConfig = await paypal.Googlepay().config();
+    const googlePayConfig = await paypal.Googlepay().config();
 
     const paymentDataRequest: { [key: string]: any } = Object.assign(
       {},
       baseRequest
     );
 
-    //paymentDataRequest.allowedPaymentMethods = googlePayConfig.allowedPaymentMethods;
-    paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+    paymentDataRequest.allowedPaymentMethods =
+      googlePayConfig.allowedPaymentMethods;
 
     paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
-    //paymentDataRequest.merchantInfo = googlePayConfig.merchantInfo;
-    /*paymentDataRequest.merchantInfo = {
-      merchantName: "Example Merchant",
-      merchantId: "12345678901234567890",
-    };*/
-    paymentDataRequest.callbackIntents = ["PAYMENT_AUTHORIZATION"];
+    paymentDataRequest.merchantInfo = googlePayConfig.merchantInfo;
+    paymentDataRequest.callbackIntents = callbackIntents;
     return paymentDataRequest;
   };
 

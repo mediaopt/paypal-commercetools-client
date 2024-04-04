@@ -1,9 +1,11 @@
 import React from "react";
-import { SmartComponentsProps } from "../../types";
+import { GooglePayOptionsType, SmartComponentsProps } from "../../types";
 import { RenderTemplate } from "../RenderTemplate";
 import { GooglePayButton } from "./GooglePayButton";
 
-export const GooglePay: React.FC<SmartComponentsProps> = ({
+export const GooglePay: React.FC<
+  SmartComponentsProps & GooglePayOptionsType
+> = ({
   options,
   createPaymentUrl,
   getSettingsUrl,
@@ -16,6 +18,12 @@ export const GooglePay: React.FC<SmartComponentsProps> = ({
   purchaseCallback,
   getUserInfoUrl,
   authorizeOrderUrl,
+  apiVersion,
+  apiVersionMinor,
+  allowedCardNetworks,
+  allowedCardAuthMethods,
+  callbackIntents,
+  environment,
 }) => {
   return (
     <RenderTemplate
@@ -32,7 +40,14 @@ export const GooglePay: React.FC<SmartComponentsProps> = ({
       getUserInfoUrl={getUserInfoUrl}
       authorizeOrderUrl={authorizeOrderUrl}
     >
-      <GooglePayButton />
+      <GooglePayButton
+        allowedCardAuthMethods={allowedCardAuthMethods}
+        allowedCardNetworks={allowedCardNetworks}
+        callbackIntents={callbackIntents}
+        apiVersion={apiVersion}
+        apiVersionMinor={apiVersionMinor}
+        environment={environment}
+      />
     </RenderTemplate>
   );
 };
