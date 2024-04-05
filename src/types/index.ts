@@ -27,7 +27,7 @@ export type CreateOrderRequest = {
 };
 
 export type CreateOrderData = {
-  paymentSource?: FUNDING_SOURCE;
+  paymentSource?: FUNDING_SOURCE | "google_pay";
   storeInVault?: boolean;
   vaultId?: string;
   verificationMethod?: ThreeDSVerification;
@@ -396,8 +396,19 @@ export type CustomOnApproveData = {
 
 export type SetStringState = Dispatch<SetStateAction<string | undefined>>;
 
+type GooglePayDataType = {
+  purchase_units: {
+    amount: {
+      currency_code: string;
+      value: string;
+    };
+  }[];
+  paymentData: { [key: string]: any };
+};
+
 export type CustomOrderData = CreatePayPalOrderData & {
   setRatepayMessage?: SetStringState;
+  googlePayData?: GooglePayDataType;
 };
 
 export type SettingsProviderProps = {
@@ -417,3 +428,12 @@ type OrderDataLink = {
 };
 
 export type OrderDataLinks = OrderDataLink[];
+
+export type GooglePayOptionsType = {
+  environment?: "TEST" | "PRODUCTION";
+  allowedCardNetworks: string[];
+  allowedCardAuthMethods: string[];
+  callbackIntents: string[];
+  apiVersion?: number;
+  apiVersionMinor?: number;
+};

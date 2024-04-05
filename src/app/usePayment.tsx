@@ -64,10 +64,10 @@ type PaymentContextT = {
   vaultOnly: boolean;
   orderDataLinks?: OrderDataLinks;
   handleCreateVaultSetupToken: (
-    paymentSource: FUNDING_SOURCE,
+    paymentSource: FUNDING_SOURCE
   ) => Promise<string>;
   handleApproveVaultSetupToken: (
-    data: ApproveVaultSetupTokenData,
+    data: ApproveVaultSetupTokenData
   ) => Promise<void>;
   handleAuthenticateThreeDSOrder: (orderID: string) => Promise<number>;
   orderId?: string;
@@ -76,7 +76,7 @@ type PaymentContextT = {
 const setRelevantData = (
   orderData?: CustomOrderData,
   isInvoice?: boolean,
-  enableVaulting?: boolean,
+  enableVaulting?: boolean
 ) => {
   if (isInvoice) {
     return orderData as CreateInvoiceData;
@@ -139,7 +139,7 @@ export const PaymentProvider: FC<
   const { settings } = useSettings();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
-    PaymentInfoInitialObject,
+    PaymentInfoInitialObject
   );
 
   const { isLoading } = useLoader();
@@ -168,14 +168,14 @@ export const PaymentProvider: FC<
     };
 
     const handleCreateVaultSetupToken = async (
-      paymentSource: FUNDING_SOURCE,
+      paymentSource: FUNDING_SOURCE
     ) => {
       if (!createVaultSetupTokenUrl) return "";
 
       const createVaultSetupTokenResult = await createVaultSetupToken(
         requestHeader,
         createVaultSetupTokenUrl,
-        paymentSource,
+        paymentSource
       );
 
       return createVaultSetupTokenResult
@@ -190,7 +190,7 @@ export const PaymentProvider: FC<
       const result = await approveVaultSetupToken(
         requestHeader,
         approveVaultSetupTokenUrl,
-        vaultSetupToken,
+        vaultSetupToken
       );
       if (result) {
         setShowResult(true);
@@ -208,9 +208,9 @@ export const PaymentProvider: FC<
       const relevantOrderData = setRelevantData(
         orderData,
         !!setRatepayMessage,
-        enableVaulting,
+        enableVaulting
       );
-
+      console.log(relevantOrderData);
       const createOrderResult = await createOrder(
         requestHeader,
         createOrderUrl,
@@ -218,8 +218,10 @@ export const PaymentProvider: FC<
         latestPaymentVersion,
         {
           ...relevantOrderData,
-        },
+        }
       );
+      console.log(createOrderResult);
+      const oldOrderData = orderData;
 
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
@@ -233,10 +235,22 @@ export const PaymentProvider: FC<
             notify,
             details?.toString(),
             message,
-            setRatepayMessage,
+            setRatepayMessage
           );
           isLoading(false);
           return "";
+        } else if (oldOrderData?.googlePayData) {
+          //@ts-ignore
+          const { status } = await paypal.Googlepay().confirmOrder({
+            orderId: id,
+            paymentMethodData:
+              oldOrderData.googlePayData.paymentData.paymentMethodData,
+          });
+          if (status === "APPROVED") {
+            onSuccess(orderData);
+          } else {
+            return "";
+          }
         } else {
           if (setRatepayMessage) {
             setRatepayMessage && setRatepayMessage(undefined);
@@ -283,7 +297,7 @@ export const PaymentProvider: FC<
         paymentInfo.id,
         latestPaymentVersion,
         orderID,
-        saveCard,
+        saveCard
       );
 
       const { orderData } = onApproveResult as OnApproveResponse;
@@ -309,7 +323,7 @@ export const PaymentProvider: FC<
           requestHeader,
           createPaymentUrl,
           cartInformation,
-          shippingMethodId,
+          shippingMethodId
         )) as CreatePaymentResponse;
 
         if (!createPaymentResult) {
@@ -325,7 +339,7 @@ export const PaymentProvider: FC<
             getClientTokenUrl,
             createPaymentResult.id,
             createPaymentResult.version,
-            createPaymentResult.braintreeCustomerId,
+            createPaymentResult.braintreeCustomerId
           )) as ClientTokenResponse;
           setClientToken(clientTokenResult.clientToken);
           paymentVersion = clientTokenResult.paymentVersion;
@@ -352,7 +366,7 @@ export const PaymentProvider: FC<
     );
 
     const handleAuthenticateThreeDSOrder = async (
-      orderID: string,
+      orderID: string
     ): Promise<number> => {
       if (!authenticateThreeDSOrderUrl) {
         return 0;
@@ -362,7 +376,7 @@ export const PaymentProvider: FC<
         authenticateThreeDSOrderUrl,
         orderID,
         latestPaymentVersion,
-        paymentInfo.id,
+        paymentInfo.id
       );
 
       if (!result) {
@@ -378,7 +392,7 @@ export const PaymentProvider: FC<
       const action = getActionIndex(
         result.approve.three_d_secure.enrollment_status,
         result.approve.three_d_secure.authentication_status,
-        result.approve.liability_shift,
+        result.approve.liability_shift
       );
       return settings?.threeDSAction[action];
     };
