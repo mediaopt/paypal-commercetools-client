@@ -22,7 +22,7 @@ const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 //const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
   //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNzQ0NTUxY2YtMWVjMS00OWJmLWIwOTMtM2I1YTEzMGU3MTE0IiwiY2FydElkIjoiZWFmZWVkNmQtZGI4Mi00ODk3LTg0MzUtNmNiYTc0YzI0YzcxIn0.NheVsGS4gqwGdxKDU4GouDKfT3cuS6NIyK8rwcDpQeY";
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjMmU2NjdhZi05N2QyLTQ3NjEtOTY5ZS00M2JlZTc4MGNlNjQifQ.JZn7DTYnwjNF9xSnvTdbne0xw1Kl5pG1oCPRfi9wY5Y";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI4OWVhYmFjYS0wM2VmLTRmNWMtYmU2MC0yMTFkY2U2ZDIxMzEifQ.fpwkrtAp796VwjQb8mIHKi4NuqOpAzrfKiJRvfEqsJ0";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 

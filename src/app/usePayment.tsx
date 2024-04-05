@@ -247,7 +247,9 @@ export const PaymentProvider: FC<
               oldOrderData.googlePayData.paymentData.paymentMethodData,
           });
           if (status === "APPROVED") {
-            onSuccess(orderData);
+            handleOnApprove({ orderID: orderData.id }).then(() =>
+              onSuccess(orderData)
+            );
           } else {
             return "";
           }
