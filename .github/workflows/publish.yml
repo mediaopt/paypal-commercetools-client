@@ -13,7 +13,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{GITHUB_REF_NAME}}
+          ref: ${GITHUB_REF_NAME}
       - name: node
         uses: actions/setup-node@v2
         with:
