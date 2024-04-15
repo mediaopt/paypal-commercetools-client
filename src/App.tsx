@@ -6,6 +6,7 @@ import "./App.css";
 
 import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
+import { ApplePay } from "./components/ApplePay";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
@@ -18,11 +19,9 @@ import {
 } from "./types";
 import { GooglePay } from "./components/GooglePay";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
-//const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNzQ0NTUxY2YtMWVjMS00OWJmLWIwOTMtM2I1YTEzMGU3MTE0IiwiY2FydElkIjoiZWFmZWVkNmQtZGI4Mi00ODk3LTg0MzUtNmNiYTc0YzI0YzcxIn0.NheVsGS4gqwGdxKDU4GouDKfT3cuS6NIyK8rwcDpQeY";
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjMmU2NjdhZi05N2QyLTQ3NjEtOTY5ZS00M2JlZTc4MGNlNjQifQ.JZn7DTYnwjNF9xSnvTdbne0xw1Kl5pG1oCPRfi9wY5Y";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjZjU5NTFmOS03NzQwLTQwZmUtYjhjNi1jZmI5OTBkYjg0NGIifQ.XS0RwVEwTubOMxbeoldVSDGF9-coa3Sr4kKR7iIsXQg";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -189,6 +188,18 @@ function App() {
         requestHeader={requestHeader}
         options={options}
         fundingSource="paypal"
+      />
+    ),
+    ApplePay: (
+      <ApplePay
+        {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "applepay,buttons",
+          buyerCountry: "US",
+        }}
+        fundingSource="applepay"
       />
     ),
     Venmo: (
