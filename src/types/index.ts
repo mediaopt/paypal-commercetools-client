@@ -64,6 +64,7 @@ export type OrderData = {
 export type CreateOrderResponse = {
   orderData: OrderData;
   paymentVersion: number;
+  ok?: boolean;
 };
 
 export type OnApproveRequest = {
@@ -92,6 +93,7 @@ export type GeneralComponentsProps = {
   createPaymentUrl: string;
   getSettingsUrl: string;
   createOrderUrl?: string;
+  getOrderUrl?: string;
   onApproveUrl?: string;
   onApproveRedirectionUrl?: string;
   authorizeOrderUrl?: string;
@@ -436,4 +438,17 @@ export type GooglePayOptionsType = {
   callbackIntents: string[];
   apiVersion?: number;
   apiVersionMinor?: number;
+  totalPriceStatus?: "FINAL" | "ESTIMATED";
+  buttonColor?: "default" | "white" | "black";
+  buttonType?:
+    | "book"
+    | "buy"
+    | "checkout"
+    | "donate"
+    | "order"
+    | "pay"
+    | "plain"
+    | "subscribe";
+  buttonRadius?: number;
+  buttonSizeMode?: "static" | "fill";
 };

@@ -19,6 +19,7 @@ export const RenderTemplate: FC<
   getSettingsUrl,
   getClientTokenUrl,
   createOrderUrl,
+  getOrderUrl,
   authorizeOrderUrl,
   getUserInfoUrl,
   removePaymentTokenUrl,
@@ -52,6 +53,7 @@ export const RenderTemplate: FC<
             getClientTokenUrl={getClientTokenUrl}
             getSettingsUrl={getSettingsUrl}
             createOrderUrl={createOrderUrl}
+            getOrderUrl={getOrderUrl}
             onApproveUrl={onApproveUrl}
             requestHeader={requestHeader}
             shippingMethodId={shippingMethodId}

@@ -22,7 +22,9 @@ const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 //const CC_FRONTEND_EXTENSION_VERSION: string = "devliudmylamasliuk";
 const FRONTASTIC_SESSION: string =
   //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNzQ0NTUxY2YtMWVjMS00OWJmLWIwOTMtM2I1YTEzMGU3MTE0IiwiY2FydElkIjoiZWFmZWVkNmQtZGI4Mi00ODk3LTg0MzUtNmNiYTc0YzI0YzcxIn0.NheVsGS4gqwGdxKDU4GouDKfT3cuS6NIyK8rwcDpQeY";
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI4OWVhYmFjYS0wM2VmLTRmNWMtYmU2MC0yMTFkY2U2ZDIxMzEifQ.fpwkrtAp796VwjQb8mIHKi4NuqOpAzrfKiJRvfEqsJ0";
+  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI4OWVhYmFjYS0wM2VmLTRmNWMtYmU2MC0yMTFkY2U2ZDIxMzEifQ.fpwkrtAp796VwjQb8mIHKi4NuqOpAzrfKiJRvfEqsJ0";
+  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiOGUzM2E4YmMtODAyNy00MjYxLWI0ZGMtYWM0YTQ3ZTIzZTE1IiwiY2FydElkIjoiN2I2NjM4MTYtYzk0Yi00MzIzLWI0ZTgtMmVjZmU1ZTJiNWJhIn0.rkW35uUhEGyaQopayLceH-YoHuEuw26Kd5690t6L_EY";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiMTYwYzFkM2EtZDZlNC00ZTc3LWJlZWMtZTg5OThkM2JiMjEwIiwiY2FydElkIjoiYWFjMGVhZTEtNDg4ZC00YTZjLTgzMWMtYjE3ZjRmMWE1NzllIn0.03vHCrgCfgmp4jC1g1w7yFaQCLYnF1pDVnirqxIxP1c";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -70,6 +72,7 @@ function App() {
   const params = {
     ...commonParams,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    getOrderUrl: `${ENDPOINT_URL}/payment/getPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
