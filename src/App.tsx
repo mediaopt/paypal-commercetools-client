@@ -12,7 +12,12 @@ import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
 import { CardFields } from "./components/CardFields";
 import { PayUponInvoice } from "./components/PayUponInvoice";
-import { PayUponInvoiceProps } from "./types";
+import {
+  GooglePayOptionsType,
+  PayUponInvoiceProps,
+  SmartComponentsProps,
+} from "./types";
+import { GooglePay } from "./components/GooglePay";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
@@ -86,7 +91,9 @@ function App() {
 
   const options = {
     clientId:
-      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
+      //"ATUW0KT0pNdyWys2AzvohAWPhmo6zx6OH25SP8RtPRZFW60fiizfnywDJVekwddhHlxw1ac3ApQwUoQ8", //prod
+      //"ASIX4GwxjaJ8t603IAUySrbFPTDijGxtNigDRxbuO4E4HVsUzpYYzfVq99MhIZ6dS0AAKjPpeHNj5tyS", //test
+      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9", //g pay
     currency: "EUR",
   };
 
@@ -155,6 +162,16 @@ function App() {
     requestHeader,
     ...params,
     ...paypalInvoiceParams,
+  };
+
+  const GooglePayParams = {
+    requestHeader,
+    ...params,
+    options: { ...options, components: "googlepay" },
+    environment: "TEST" as "TEST",
+    allowedCardNetworks: ["MASTERCARD", "VISA"],
+    allowedCardAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+    callbackIntents: ["PAYMENT_AUTHORIZATION"],
   };
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {
@@ -293,6 +310,7 @@ function App() {
     ),
     PaymentTokens: <PaymentTokens {...PaymentTokensJson} />,
     PayUponInvoice: <PayUponInvoice {...PayUponInvoiceJson} />,
+    GooglePay: <GooglePay {...GooglePayParams} />,
   };
 
   const changePaymentMethod = (e: React.ChangeEvent<HTMLInputElement>) => {
