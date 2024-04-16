@@ -39,8 +39,8 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
         try {
           const applepay = paypal.Applepay();
           const applepayConfig = applepay.config();
+          console.log("applepayConfig", applepayConfig);
           if (applepayConfig.isEligible) {
-            console.log("applepayConfig", applepayConfig);
             setIsEligible(true);
           }
         } catch (error) {
