@@ -29,17 +29,16 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 ) => {
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
+  const [applePaySession, setApplePaySession] = useState<ApplePaySession>();
+  const [applepay, setApplepay] = useState<Applepay>();
+  const [applepayConfig, setApplepayConfig] = useState<ApplepayConfig>();
 
   const { paymentInfo } = usePayment();
-
-  let applePaySession: ApplePaySession;
-  let applepay: Applepay;
-  let applepayConfig: ApplepayConfig;
 
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
       async () => {
-        applePaySession = window.ApplePaySession;
+        const applePaySession = window.ApplePaySession;
         console.log("ApplePaySession", applePaySession);
         if (!applePaySession) {
           setError("This device does not support Apple Pay");
@@ -50,12 +49,15 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
           return;
         }
         try {
-          applepay = await paypal.Applepay();
+          const applepay = await paypal.Applepay();
           console.log("applepay", applepay);
-          applepayConfig = await applepay.config();
+          const applepayConfig = await applepay.config();
           console.log("applepayConfig", applepayConfig);
           if (applepayConfig.isEligible) {
             setIsEligible(true);
+            setApplePaySession(applePaySession);
+            setApplepay(applepay);
+            setApplepayConfig(applepayConfig);
           }
         } catch (error) {
           setError("Error while fetching Apple Pay configuration.");
@@ -67,6 +69,10 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
   const onApplePayButtonClicked = () => {
     console.log("Apple Pay button clicked");
+    if (!applePaySession || !applepayConfig || !paymentInfo || !applepay) {
+      console.log("Apple Pay session, config or payment info not available");
+      return;
+    }
     console.log("applePaySession", applePaySession);
     console.log("applepayConfig", applepayConfig);
     console.log("paymentInfo", paymentInfo);
