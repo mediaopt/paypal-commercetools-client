@@ -18,10 +18,25 @@ type ApplepayConfig = {
   supportedNetworks: string[];
 };
 
+type ApplepayValidateMerchant = {
+  validationUrl: string;
+  displayName: string;
+};
+
+type ConfirmOrder = {
+  orderId: string;
+  token: string;
+  billingContact: string;
+};
+
+type ApplepayValidateMerchantResult = {
+  merchantSession: string;
+};
+
 type Applepay = {
   config: () => Promise<ApplepayConfig>;
-  confirmOrder: () => Promise<void>;
-  validateMerchant: () => Promise<void>;
+  confirmOrder: ({}: ConfirmOrder) => Promise<void>;
+  validateMerchant: ({}: ApplepayValidateMerchant) => Promise<ApplepayValidateMerchantResult>;
 };
 
 export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
@@ -30,8 +45,9 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const [payConfig, setPayConfig] = useState<ApplepayConfig>();
+  const [pay, setPay] = useState<Applepay>();
 
-  const { paymentInfo } = usePayment();
+  const { paymentInfo, handleCreateOrder, handleOnApprove } = usePayment();
 
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
@@ -54,6 +70,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
           if (applepayConfig.isEligible) {
             setIsEligible(true);
             setPayConfig(applepayConfig);
+            setPay(applepay);
           }
         } catch (error) {
           setError("Error while fetching Apple Pay configuration.");
@@ -70,10 +87,13 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
     console.log("applePaySession", applePaySession);
     console.log("applepayConfig", payConfig);
+    console.log("applepay", pay);
     console.log("paymentInfo", paymentInfo);
 
-    if (!applePaySession || !payConfig || !paymentInfo) {
-      console.log("Apple Pay session, config or payment info not available");
+    if (!applePaySession || !payConfig || !paymentInfo || !pay) {
+      console.log(
+        "Apple Pay session, config, pay or payment info not available"
+      );
       return;
     }
 
@@ -99,6 +119,64 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
     const session = new applePaySession(4, paymentRequest);
     console.log("session", session);
+
+    session.onvalidatemerchant = (event: any) => {
+      pay
+        .validateMerchant({
+          validationUrl: event.validationURL,
+          displayName: "My Store",
+        })
+        .then((validateResult) => {
+          console.log("onvalidatemerchant validateResult", validateResult);
+          session.completeMerchantValidation(validateResult.merchantSession);
+        })
+        .catch((validateError) => {
+          console.error("Error validating merchant");
+          console.error(validateError);
+          session.abort();
+        });
+    };
+
+    session.onpaymentauthorized = (event: any) => {
+      console.log("Your billing address is:", event.payment.billingContact);
+      console.log("Your shipping address is:", event.payment.shippingContact);
+
+      handleCreateOrder({
+        storeInVault: false,
+        paymentSource: "applepay",
+      })
+        .then((orderId) => {
+          console.log("onpaymentauthorized orderId", orderId);
+          pay
+            .confirmOrder({
+              orderId: orderId,
+              token: event.payment.token,
+              billingContact: event.payment.billingContact,
+            })
+            .then((confirmResult) => {
+              console.log("onpaymentauthorized confirmResult", confirmResult);
+              handleOnApprove({ orderID: orderId })
+                .then((captureResult) => {
+                  console.log(
+                    "onpaymentauthorized captureResult",
+                    captureResult
+                  );
+                })
+                .catch((captureError) => console.error(captureError));
+            })
+            .catch((confirmError) => {
+              console.error("Error confirming order with applepay token");
+              console.error(confirmError);
+              session.completePayment(applePaySession.STATUS_FAILURE);
+            });
+        })
+        .catch((createError) => {
+          console.error("Error creating order");
+          console.error(createError);
+        });
+    };
+
+    session.begin();
   };
 
   return (
