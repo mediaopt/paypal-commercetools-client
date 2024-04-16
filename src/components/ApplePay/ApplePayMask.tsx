@@ -27,7 +27,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
-      () => {
+      async () => {
         if (!window.ApplePaySession) {
           setError("This device does not support Apple Pay");
           return;
@@ -37,8 +37,9 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
           return;
         }
         try {
-          const applepay = paypal.Applepay();
-          const applepayConfig = applepay.config();
+          const applepay = await paypal.Applepay();
+          console.log("applepay", applepay);
+          const applepayConfig = await applepay.config();
           console.log("applepayConfig", applepayConfig);
           if (applepayConfig.isEligible) {
             setIsEligible(true);
