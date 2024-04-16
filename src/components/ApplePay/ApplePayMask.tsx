@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from "react";
 
-import { CustomPayPalButtonsComponentProps } from "../../types";
 import loadScript from "../../app/loadScript";
+import { usePayment } from "../../app/usePayment";
+import { CustomPayPalButtonsComponentProps } from "../../types";
 
 declare const window: any;
 declare const paypal: any;
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      "apple-pay-button": {
-        id: string;
-        buttonstyle: string;
-        type: string;
-        locale: string;
-      };
-    }
-  }
-}
+type ApplePaySession = any;
+
+type ApplepayConfig = {
+  countryCode: string;
+  currencyCode: string;
+  isEligible: boolean;
+  merchantCapabilities: string[];
+  merchantCountry: string;
+  supportedNetworks: string[];
+};
+
+type Applepay = {
+  config: () => Promise<ApplepayConfig>;
+  confirmOrder: () => Promise<void>;
+  validateMerchant: () => Promise<void>;
+};
 
 export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
   props
@@ -25,25 +30,29 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
 
-  let ApplePaySession;
+  const { paymentInfo } = usePayment();
+
+  let applePaySession: ApplePaySession;
+  let applepay: Applepay;
+  let applepayConfig: ApplepayConfig;
 
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
       async () => {
-        ApplePaySession = window.ApplePaySession;
-        console.log("ApplePaySession", ApplePaySession);
-        if (!ApplePaySession) {
+        applePaySession = window.ApplePaySession;
+        console.log("ApplePaySession", applePaySession);
+        if (!applePaySession) {
           setError("This device does not support Apple Pay");
           return;
         }
-        if (!ApplePaySession.canMakePayments()) {
+        if (!applePaySession.canMakePayments()) {
           setError("This device is not capable of making Apple Pay payments");
           return;
         }
         try {
-          const applepay = await paypal.Applepay();
+          applepay = await paypal.Applepay();
           console.log("applepay", applepay);
-          const applepayConfig = await applepay.config();
+          applepayConfig = await applepay.config();
           console.log("applepayConfig", applepayConfig);
           if (applepayConfig.isEligible) {
             setIsEligible(true);
@@ -58,6 +67,32 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
   const onApplePayButtonClicked = () => {
     console.log("Apple Pay button clicked");
+    console.log("applePaySession", applePaySession);
+    console.log("applepayConfig", applepayConfig);
+    console.log("paymentInfo", paymentInfo);
+
+    const paymentRequest = {
+      countryCode: applepayConfig.countryCode,
+      merchantCapabilities: applepayConfig.merchantCapabilities,
+      supportedNetworks: applepayConfig.supportedNetworks,
+      currencyCode: paymentInfo.currency,
+      requiredShippingContactFields: [
+        "name",
+        "phone",
+        "email",
+        "postalAddress",
+      ],
+      requiredBillingContactFields: ["postalAddress"],
+      total: {
+        label: "Demo",
+        type: "final",
+        amount: paymentInfo.amount,
+      },
+    };
+    console.log("paymentRequest", paymentRequest);
+
+    const session = new applePaySession(4, paymentRequest);
+    console.log("session", session);
   };
 
   return (
