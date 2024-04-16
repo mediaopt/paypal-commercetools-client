@@ -14,6 +14,7 @@ declare global {
         buttonstyle: string;
         type: string;
         locale: string;
+        onClick: () => void;
       };
     }
   }
@@ -25,14 +26,18 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
 
+  let ApplePaySession;
+
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
       async () => {
-        if (!window.ApplePaySession) {
+        ApplePaySession = window.ApplePaySession;
+
+        if (!ApplePaySession) {
           setError("This device does not support Apple Pay");
           return;
         }
-        if (!window.ApplePaySession.canMakePayments()) {
+        if (!ApplePaySession.canMakePayments()) {
           setError("This device is not capable of making Apple Pay payments");
           return;
         }
@@ -63,6 +68,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
               buttonstyle="black"
               type="buy"
               locale="en"
+              onClick={() => console.log("Apple Pay button clicked")}
             ></apple-pay-button>
           </>
         ) : (
