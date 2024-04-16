@@ -14,7 +14,6 @@ declare global {
         buttonstyle: string;
         type: string;
         locale: string;
-        onclick: () => void;
       };
     }
   }
@@ -57,19 +56,22 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
     );
   }, [props]);
 
+  const onApplePayButtonClicked = () => {
+    console.log("Apple Pay button clicked");
+  };
+
   return (
     <>
       <div id="applepay-container">
         {isEligible ? (
-          <>
+          <button className="bg-none" onClick={onApplePayButtonClicked}>
             <apple-pay-button
               id="btn-appl"
               buttonstyle="black"
               type="buy"
               locale="en"
-              onclick={() => console.log("Apple Pay button clicked")}
             ></apple-pay-button>
-          </>
+          </button>
         ) : (
           <>{error}</>
         )}
