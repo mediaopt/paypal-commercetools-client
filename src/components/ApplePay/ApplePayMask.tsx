@@ -29,16 +29,17 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 ) => {
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
-  const [applePaySession, setApplePaySession] = useState<ApplePaySession>();
-  const [applepay, setApplepay] = useState<Applepay>();
-  const [applepayConfig, setApplepayConfig] = useState<ApplepayConfig>();
+
+  let applePaySession: ApplePaySession;
+  let applepay: Applepay;
+  let applepayConfig: ApplepayConfig;
 
   const { paymentInfo } = usePayment();
 
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
       async () => {
-        const applePaySession = window.ApplePaySession;
+        applePaySession = window.ApplePaySession;
         console.log("ApplePaySession", applePaySession);
         if (!applePaySession) {
           setError("This device does not support Apple Pay");
@@ -49,15 +50,12 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
           return;
         }
         try {
-          const applepay = await paypal.Applepay();
+          applepay = await paypal.Applepay();
           console.log("applepay", applepay);
-          const applepayConfig = await applepay.config();
+          applepayConfig = await applepay.config();
           console.log("applepayConfig", applepayConfig);
           if (applepayConfig.isEligible) {
             setIsEligible(true);
-            setApplePaySession(applePaySession);
-            setApplepay(applepay);
-            setApplepayConfig(applepayConfig);
           }
         } catch (error) {
           setError("Error while fetching Apple Pay configuration.");
@@ -67,9 +65,12 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
     );
   }, [props]);
 
-  const onApplePayButtonClicked = () => {
+  const onApplePayButtonClicked = (
+    applePaySession: ApplePaySession,
+    applepayConfig: ApplepayConfig
+  ) => {
     console.log("Apple Pay button clicked");
-    if (!applePaySession || !applepayConfig || !paymentInfo || !applepay) {
+    if (!applePaySession || !applepayConfig || !paymentInfo) {
       console.log("Apple Pay session, config or payment info not available");
       return;
     }
@@ -106,7 +107,9 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
       <div id="applepay-container">
         {isEligible ? (
           <button
-            onClick={onApplePayButtonClicked}
+            onClick={() =>
+              onApplePayButtonClicked(applePaySession, applepayConfig)
+            }
             type="button"
             className="w-full justify-center text-white bg-primary-900 focus:ring-4 focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 mr-2 mb-2"
           >
