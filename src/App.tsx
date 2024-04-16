@@ -21,7 +21,7 @@ import { GooglePay } from "./components/GooglePay";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjZjU5NTFmOS03NzQwLTQwZmUtYjhjNi1jZmI5OTBkYjg0NGIifQ.XS0RwVEwTubOMxbeoldVSDGF9-coa3Sr4kKR7iIsXQg";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiMmFhMGI1MDMtZmQ5Mi00MDM2LTgzMWYtYWIyNDBlM2VjYmMyIiwiY2FydElkIjoiYjVkYjUxNDktYjIwZi00NWVkLTkwMmUtNzRiMmVkOThmNWNiIn0.sw2x2co_FBW7jNBw5O_jjMcPF0jdnjYqoNH_cXhv288";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -199,7 +199,6 @@ function App() {
           components: "applepay,buttons",
           buyerCountry: "US",
         }}
-        fundingSource="applepay"
       />
     ),
     Venmo: (
