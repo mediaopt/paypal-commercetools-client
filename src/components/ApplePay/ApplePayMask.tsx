@@ -42,6 +42,7 @@ type Applepay = {
 export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
   props
 ) => {
+  const [logs, setLogs] = useState<string[]>([]);
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const [payConfig, setPayConfig] = useState<ApplepayConfig>();
@@ -127,6 +128,10 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
         .catch((validateError) => {
           console.error("Error validating merchant");
           console.error(validateError);
+          setLogs([
+            ...logs,
+            "Error validating merchant: " + validateError.toString(),
+          ]);
           session.abort();
         });
     };
@@ -141,6 +146,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
       })
         .then((orderId) => {
           console.log("onpaymentauthorized orderId", orderId);
+          setLogs([...logs, "orderId: " + orderId.toString()]);
           pay
             .confirmOrder({
               orderId: orderId,
@@ -155,18 +161,34 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
                     "onpaymentauthorized captureResult",
                     captureResult
                   );
+
+                  setLogs([...logs, "captureResult: " + captureResult]);
                 })
-                .catch((captureError) => console.error(captureError));
+                .catch((captureError) => {
+                  setLogs([
+                    ...logs,
+                    "capture Error: " + captureError.toString(),
+                  ]);
+
+                  console.error(captureError);
+                });
             })
             .catch((confirmError) => {
               console.error("Error confirming order with applepay token");
               console.error(confirmError);
+              setLogs([
+                ...logs,
+                "Error confirming order with applepay token: " +
+                  confirmError.toString(),
+              ]);
+
               session.completePayment(applePaySession.STATUS_FAILURE);
             });
         })
         .catch((createError) => {
           console.error("Error creating order");
           console.error(createError);
+          setLogs([...logs, "Error creating order: " + createError.toString()]);
         });
     };
 
@@ -202,6 +224,12 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
         ) : (
           <>{error}</>
         )}
+
+        <ul>
+          {logs.map((log, index) => (
+            <li key={index}>{log}</li>
+          ))}
+        </ul>
       </div>
     </>
   );
