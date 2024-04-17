@@ -140,10 +140,9 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
       console.log("Your billing address is:", event.payment.billingContact);
       console.log("Your shipping address is:", event.payment.shippingContact);
 
-      handleCreateOrder({
-        storeInVault: false,
-        paymentSource: "applepay",
-      })
+      setLogs([...logs, "paymentinfo: " + paymentInfo.id]);
+
+      handleCreateOrder()
         .then((orderId) => {
           console.log("onpaymentauthorized orderId", orderId);
           setLogs([...logs, "orderId: " + orderId.toString()]);
