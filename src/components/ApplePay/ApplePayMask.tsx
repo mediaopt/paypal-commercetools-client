@@ -98,20 +98,9 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
     }
 
     const paymentRequest = {
-      countryCode: payConfig.countryCode,
-      merchantCapabilities: payConfig.merchantCapabilities,
-      supportedNetworks: payConfig.supportedNetworks,
-      currencyCode: paymentInfo.currency,
-      requiredShippingContactFields: [
-        "name",
-        "phone",
-        "email",
-        "postalAddress",
-      ],
       requiredBillingContactFields: ["postalAddress"],
       total: {
         label: "Demo",
-        type: "final",
         amount: paymentInfo.amount,
       },
     };
