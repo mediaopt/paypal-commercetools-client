@@ -3,9 +3,9 @@ import React from "react";
 import { RenderTemplate } from "../RenderTemplate";
 import { ApplePayButton } from "./ApplePayButton";
 
-import { SmartComponentsProps } from "../../types";
+import { ApplePayComponentsProps } from "../../types";
 
-export const ApplePay: React.FC<SmartComponentsProps> = ({
+export const ApplePay: React.FC<ApplePayComponentsProps> = ({
   options,
 
   createPaymentUrl,

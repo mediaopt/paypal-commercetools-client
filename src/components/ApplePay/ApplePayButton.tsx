@@ -6,9 +6,12 @@ import { useHandleCreatePayment } from "../../app/useHandleCreatePayment";
 
 import { ApplePayMask } from "./ApplePayMask";
 
-type CustomPayPalButtonsComponentProps = PayPalButtonsComponentProps & {
-  enableVaulting?: boolean;
-};
+import { ApplePayProps } from "../../types";
+
+type CustomPayPalButtonsComponentProps = ApplePayProps &
+  PayPalButtonsComponentProps & {
+    enableVaulting?: boolean;
+  };
 
 export const ApplePayButton: React.FC<CustomPayPalButtonsComponentProps> = (
   props

@@ -200,6 +200,7 @@ function App() {
           components: "applepay,buttons",
           buyerCountry: "US",
         }}
+        applePayDisplayName="My Store"
       />
     ),
     Venmo: (
