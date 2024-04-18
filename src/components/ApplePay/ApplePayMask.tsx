@@ -42,7 +42,9 @@ type Applepay = {
 export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
   props
 ) => {
-  const [logs, setLogs] = useState<string[]>([]);
+  const [logs, setLogs] = useState<string>();
+  const [paymentId, setPaymentId] = useState<string>();
+
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const [payConfig, setPayConfig] = useState<ApplepayConfig>();
@@ -133,17 +135,37 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
         });
     };
 
-    session.onpaymentauthorized = (event: any) => {
+    session.onpaymentauthorized = async (event: any) => {
       console.log("Your billing address is:", event.payment.billingContact);
       console.log("Your shipping address is:", event.payment.shippingContact);
 
-      var newLogs: string[] = [];
-      newLogs.push("paymentinfo: " + paymentInfo.id);
+      setPaymentId("payment id: " + paymentInfo.id);
 
+      try {
+        const orderId = await handleCreateOrder({ paymentSource: "paypal" });
+        setLogs("orderId: " + orderId);
+
+        const confirmResult = await pay.confirmOrder({
+          orderId: orderId,
+          token: event.payment.token,
+          billingContact: event.payment.billingContact,
+        });
+        setLogs("confirmResult: " + confirmResult);
+
+        const captureResult = await handleOnApprove({ orderID: orderId });
+        setLogs("captureResult: " + captureResult);
+      } catch (error) {
+        console.error("error");
+        console.error(error);
+        setLogs("Error: " + error);
+        session.completePayment(applePaySession.STATUS_FAILURE);
+      }
+
+      /*
       handleCreateOrder({ paymentSource: "paypal" })
         .then((orderId) => {
           console.log("onpaymentauthorized orderId", orderId);
-          newLogs.push("orderId: " + orderId.toString());
+          setLogs("orderId: " + orderId.toString());
           pay
             .confirmOrder({
               orderId: orderId,
@@ -159,10 +181,10 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
                     captureResult
                   );
 
-                  newLogs.push("captureResult: " + captureResult);
+                  setLogs("captureResult: " + captureResult);
                 })
                 .catch((captureError) => {
-                  newLogs.push("capture Error: " + captureError.toString());
+                  setLogs("capture Error: " + captureError.toString());
 
                   console.error(captureError);
                 });
@@ -170,7 +192,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
             .catch((confirmError) => {
               console.error("Error confirming order with applepay token");
               console.error(confirmError);
-              newLogs.push(
+              setLogs(
                 "Error confirming order with applepay token: " +
                   confirmError.toString()
               );
@@ -181,10 +203,8 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
         .catch((createError) => {
           console.error("Error creating order");
           console.error(createError);
-          newLogs.push("Error creating order: " + createError.toString());
-        });
-
-      setLogs([...newLogs]);
+          setLogs("Error creating order: " + createError.toString());
+        });*/
     };
 
     session.begin();
@@ -221,9 +241,8 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
         )}
 
         <ul>
-          {logs.map((log, index) => (
-            <li key={index}>{log}</li>
-          ))}
+          {paymentId && <li>{paymentId}</li>}
+          {logs && <li>{logs}</li>}
         </ul>
       </div>
     </>
