@@ -140,7 +140,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
       setPaymentId("payment id: " + paymentInfo.id);
 
       try {
-        const orderId = await handleCreateOrder({ paymentSource: "paypal" });
+        const orderId = await handleCreateOrder({ paymentSource: "applepay" });
         setLogs("orderId: " + orderId);
 
         const confirmResult = await pay.confirmOrder({
