@@ -173,6 +173,12 @@ export type CustomPayPalButtonsComponentProps = Omit<
 export type SmartComponentsProps = CustomPayPalButtonsComponentProps &
   GeneralComponentsProps;
 
+export type ApplePayProps = {
+  applePayDisplayName: string;
+};
+
+export type ApplePayComponentsProps = ApplePayProps & SmartComponentsProps;
+
 export type CartInformation = {
   account: {
     email: string;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import loadScript from "../../app/loadScript";
 import { usePayment } from "../../app/usePayment";
-import { CustomPayPalButtonsComponentProps } from "../../types";
+import { CustomPayPalButtonsComponentProps, ApplePayProps } from "../../types";
 import { ERROR_TEXT_STYLE } from "../../styles";
 
 declare const window: any;
@@ -40,9 +40,10 @@ type Applepay = {
   validateMerchant: ({}: ApplepayValidateMerchant) => Promise<ApplepayValidateMerchantResult>;
 };
 
-export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
-  props
-) => {
+type ApplePayMaskComponentProps = ApplePayProps &
+  CustomPayPalButtonsComponentProps;
+
+export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
   const [logs, setLogs] = useState<string>();
   const [paymentId, setPaymentId] = useState<string>();
 
@@ -52,6 +53,8 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
   const [pay, setPay] = useState<Applepay>();
 
   const { paymentInfo, handleCreateOrder, handleOnApprove } = usePayment();
+
+  const { applePayDisplayName } = props;
 
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
@@ -105,7 +108,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
       currencyCode: paymentInfo.currency,
       requiredBillingContactFields: ["postalAddress"],
       total: {
-        label: "Demo",
+        label: applePayDisplayName,
         type: "final",
         amount: paymentInfo.amount,
       },
@@ -119,7 +122,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
       try {
         const validateResult = await pay.validateMerchant({
           validationUrl: event.validationURL,
-          displayName: "My Store",
+          displayName: applePayDisplayName,
         });
 
         console.log("onvalidatemerchant validateResult", validateResult);
