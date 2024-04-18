@@ -201,6 +201,7 @@ function App() {
           buyerCountry: "US",
         }}
         applePayDisplayName="My Store"
+        enableVaulting={true}
       />
     ),
     Venmo: (
