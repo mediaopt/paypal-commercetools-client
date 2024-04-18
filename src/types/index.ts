@@ -443,3 +443,35 @@ export type GooglePayOptionsType = {
   apiVersion?: number;
   apiVersionMinor?: number;
 };
+
+export type ApplePaySession = any;
+
+export type ApplepayConfig = {
+  countryCode: string;
+  currencyCode: string;
+  isEligible: boolean;
+  merchantCapabilities: string[];
+  merchantCountry: string;
+  supportedNetworks: string[];
+};
+
+type ApplepayValidateMerchant = {
+  validationUrl: string;
+  displayName: string;
+};
+
+type ApplepayConfirmOrder = {
+  orderId: string;
+  token: string;
+  billingContact: string;
+};
+
+type ApplepayValidateMerchantResult = {
+  merchantSession: string;
+};
+
+export type Applepay = {
+  config: () => Promise<ApplepayConfig>;
+  confirmOrder: ({}: ApplepayConfirmOrder) => Promise<void>;
+  validateMerchant: ({}: ApplepayValidateMerchant) => Promise<ApplepayValidateMerchantResult>;
+};
