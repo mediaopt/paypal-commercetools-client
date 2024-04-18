@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import loadScript from "../../app/loadScript";
 import { usePayment } from "../../app/usePayment";
 import { CustomPayPalButtonsComponentProps } from "../../types";
+import { ERROR_TEXT_STYLE } from "../../styles";
 
 declare const window: any;
 declare const paypal: any;
@@ -93,9 +94,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
     console.log("paymentInfo", paymentInfo);
 
     if (!applePaySession || !payConfig || !paymentInfo || !pay) {
-      console.log(
-        "Apple Pay session, config, pay or payment info not available"
-      );
+      setError("Apple Pay session, config, pay or payment info not available");
       return;
     }
 
@@ -126,21 +125,19 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
         console.log("onvalidatemerchant validateResult", validateResult);
         session.completeMerchantValidation(validateResult.merchantSession);
       } catch (validateError) {
-        console.error("Error validating merchant");
-        console.error(validateError);
+        console.error("Error validating merchant", validateError);
+        console.error();
+        setError("Error validating merchant");
 
         session.abort();
       }
     };
 
     session.onpaymentauthorized = async (event: any) => {
-      console.log("Your billing address is:", event.payment.billingContact);
-      console.log("Your shipping address is:", event.payment.shippingContact);
-
       setPaymentId("payment id: " + paymentInfo.id);
 
       try {
-        const orderId = await handleCreateOrder({ paymentSource: "applepay" });
+        const orderId = await handleCreateOrder({ paymentSource: "paypal" });
         setLogs("orderId: " + orderId);
 
         const confirmResult = await pay.confirmOrder({
@@ -152,10 +149,11 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
         const captureResult = await handleOnApprove({ orderID: orderId });
         setLogs("captureResult: " + captureResult);
+
+        session.completePayment(applePaySession.STATUS_SUCCESS);
       } catch (error) {
-        console.error("error");
-        console.error(error);
-        setLogs("Error: " + error);
+        console.error("error", error);
+        setError("Error in payment authorization");
         session.completePayment(applePaySession.STATUS_FAILURE);
       }
     };
@@ -190,7 +188,7 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
             </svg>
           </button>
         ) : (
-          <>{error}</>
+          <div className={ERROR_TEXT_STYLE}>{error}</div>
         )}
 
         <ul>
