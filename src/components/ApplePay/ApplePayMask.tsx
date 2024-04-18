@@ -137,10 +137,10 @@ export const ApplePayMask: React.FC<CustomPayPalButtonsComponentProps> = (
       console.log("Your billing address is:", event.payment.billingContact);
       console.log("Your shipping address is:", event.payment.shippingContact);
 
-      const newLogs: string[] = [];
+      var newLogs: string[] = [];
       newLogs.push("paymentinfo: " + paymentInfo.id);
 
-      handleCreateOrder()
+      handleCreateOrder({ paymentSource: "paypal" })
         .then((orderId) => {
           console.log("onpaymentauthorized orderId", orderId);
           newLogs.push("orderId: " + orderId.toString());
