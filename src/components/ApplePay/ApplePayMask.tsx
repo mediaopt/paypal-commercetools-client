@@ -23,8 +23,8 @@ type ApplePayMaskComponentProps = ApplePayProps &
   CustomPayPalButtonsComponentProps;
 
 export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
-  //const [logs, setLogs] = useState<string>();
-  //const [paymentId, setPaymentId] = useState<string>();
+  const [logs, setLogs] = useState<string>();
+  const [paymentId, setPaymentId] = useState<string>();
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const [payConfig, setPayConfig] = useState<ApplepayConfig>();
@@ -135,24 +135,24 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
     };
 
     session.onpaymentauthorized = async (event: any) => {
-      //setPaymentId("payment id: " + paymentInfo.id);
+      setPaymentId("payment id: " + paymentInfo.id);
 
       try {
         const orderId = await handleCreateOrder({
-          paymentSource: "paypal",
+          paymentSource: "apple_pay",
           storeInVault: save.current?.checked,
         });
-        //setLogs("orderId: " + orderId);
+        setLogs("orderId: " + orderId);
 
         const confirmResult = await pay.confirmOrder({
           orderId: orderId,
           token: event.payment.token,
           billingContact: event.payment.billingContact,
         });
-        //setLogs("confirmResult: " + confirmResult);
+        setLogs("confirmResult: " + confirmResult);
 
         const captureResult = await handleOnApprove({ orderID: orderId });
-        //setLogs("captureResult: " + captureResult);
+        setLogs("captureResult: " + captureResult);
 
         session.completePayment(applePaySession.STATUS_SUCCESS);
       } catch (error) {
@@ -196,12 +196,16 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
               <div className="h-9">
                 <button
                   className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
-                  onClick={() =>
-                    handleCreateOrder({
-                      paymentSource: "paypal",
+                  onClick={() => {
+                    setPaymentId("payment id: " + paymentInfo.id);
+
+                    const orderId = handleCreateOrder({
+                      paymentSource: "apple_pay",
                       vaultId: vaultId,
-                    })
-                  }
+                    });
+
+                    setLogs("orderId: " + orderId);
+                  }}
                 >
                   Pay
                 </button>
