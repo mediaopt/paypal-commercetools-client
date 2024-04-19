@@ -257,6 +257,9 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
           ) : (
             <div className={ERROR_TEXT_STYLE}>{error}</div>
           )}
+
+          {paymentId && <div>{paymentId}</div>}
+          {logs && <div>{logs}</div>}
         </div>
       )}
     </>
