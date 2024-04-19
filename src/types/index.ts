@@ -27,7 +27,7 @@ export type CreateOrderRequest = {
 };
 
 export type CreateOrderData = {
-  paymentSource?: FUNDING_SOURCE | "google_pay";
+  paymentSource?: FUNDING_SOURCE | "google_pay" | "apple_pay";
   storeInVault?: boolean;
   vaultId?: string;
   verificationMethod?: ThreeDSVerification;
