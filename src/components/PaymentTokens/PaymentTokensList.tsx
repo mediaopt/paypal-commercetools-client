@@ -8,6 +8,8 @@ import { useSettings } from "../../app/useSettings";
 export const PaymentTokensList: React.FC = () => {
   const { paymentTokens, handleRemovePaymentToken } = useSettings();
 
+  console.log(paymentTokens);
+
   return paymentTokens && paymentTokens.payment_tokens ? (
     <table cellPadding={5}>
       <thead>
@@ -21,7 +23,7 @@ export const PaymentTokensList: React.FC = () => {
       <tbody>
         {paymentTokens.payment_tokens.map((paymentToken) => {
           const { id, payment_source } = paymentToken;
-          const { card, paypal, venmo } = payment_source;
+          const { card, paypal, venmo, apple_pay } = payment_source;
           return (
             <tr key={id}>
               {card ? (
@@ -30,6 +32,8 @@ export const PaymentTokensList: React.FC = () => {
                 <PayPal {...paypal} />
               ) : venmo ? (
                 <PayPal {...venmo} />
+              ) : apple_pay ? (
+                <Card {...apple_pay.card} />
               ) : (
                 <></>
               )}

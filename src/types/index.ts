@@ -319,6 +319,9 @@ export type PaymentTokens = {
       card: CardPaymentSource;
       paypal: PayPalPaymentSource;
       venmo: PayPalPaymentSource;
+      apple_pay: {
+        card: CardPaymentSource;
+      };
     };
   }>;
 };
