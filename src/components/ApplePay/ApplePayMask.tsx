@@ -139,7 +139,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
 
       try {
         const orderId = await handleCreateOrder({
-          paymentSource: "apple_pay",
+          paymentSource: "paypal",
         });
         setLogs("orderId: " + orderId);
 
@@ -156,7 +156,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
         session.completePayment(applePaySession.STATUS_SUCCESS);
       } catch (error) {
         console.error("error", error);
-        setError("Error in payment authorization");
+        setError("Error in payment authorization" + error);
         session.completePayment(applePaySession.STATUS_FAILURE);
       }
     };
@@ -256,6 +256,8 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
           ) : (
             <div className={ERROR_TEXT_STYLE}>{error}</div>
           )}
+
+          {error && <div className={ERROR_TEXT_STYLE}>{error}</div>}
 
           {paymentId && <div>{paymentId}</div>}
           {logs && <div>{logs}</div>}
