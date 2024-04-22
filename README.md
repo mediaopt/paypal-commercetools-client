@@ -122,13 +122,17 @@ PayPal components props are based on PayPal props and you can see them on PayPal
 
 PayPal messages props are based on PayPalMessages props and you can see them on PayPal official documentation [_PayPalMessagesComponentOptions_](https://github.com/paypal/react-paypal-js/blob/main/src/components/PayPalMessages.tsx).
 
+### ApplePay
+
+- **applePayDisplayName**: `string`  
+   Name of your store.
+
 ### CardFields
 
 - **authenticateThreeDSOrderUrl**: `string`
   _POST_-Request
   Communicates with commercetools backend to get the 3d Secure validation results and returns an object with the _liability_shift_, _enrollment_status_, and _authentication_status_.  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
-
 
 ### HostedFields
 
