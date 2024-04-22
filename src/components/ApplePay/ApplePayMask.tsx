@@ -140,7 +140,6 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
       try {
         const orderId = await handleCreateOrder({
           paymentSource: "apple_pay",
-          storeInVault: save.current?.checked,
         });
         setLogs("orderId: " + orderId);
 
