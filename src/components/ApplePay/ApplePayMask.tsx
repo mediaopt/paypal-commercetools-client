@@ -4,6 +4,7 @@ import { useSettings } from "../../app/useSettings";
 import loadScript from "../../app/loadScript";
 import { usePayment } from "../../app/usePayment";
 import { ERROR_TEXT_STYLE } from "../../styles";
+import { useLoader } from "../../app/useLoader";
 import {
   CustomPayPalButtonsComponentProps,
   ApplePayProps,
@@ -23,8 +24,6 @@ type ApplePayMaskComponentProps = ApplePayProps &
   CustomPayPalButtonsComponentProps;
 
 export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
-  const [logs, setLogs] = useState<string>();
-  const [paymentId, setPaymentId] = useState<string>();
   const [error, setError] = useState<string>();
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const [payConfig, setPayConfig] = useState<ApplepayConfig>();
@@ -34,6 +33,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
 
   const { settings, paymentTokens } = useSettings();
   const { paymentInfo, handleCreateOrder, handleOnApprove } = usePayment();
+  const { isLoading } = useLoader();
 
   const applepayPaymentTokens = paymentTokens?.payment_tokens?.filter(
     (paymentToken) => paymentToken.payment_source.apple_pay !== undefined
@@ -52,13 +52,10 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
     return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
   }, [settings]);
 
-  console.log(applepayPaymentTokens);
-
   useEffect(() => {
     loadScript("https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js").then(
       async () => {
         const applePaySession: ApplePaySession = window.ApplePaySession;
-        //console.log("ApplePaySession", applePaySession);
         if (!applePaySession) {
           setError("This device does not support Apple Pay");
           return;
@@ -69,9 +66,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
         }
         try {
           const applepay: Applepay = await paypal.Applepay();
-          //console.log("applepay", applepay);
           const applepayConfig: ApplepayConfig = await applepay.config();
-          //console.log("applepayConfig", applepayConfig);
           if (applepayConfig.isEligible) {
             setIsEligible(true);
             setPayConfig(applepayConfig);
@@ -87,13 +82,6 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
 
   const onApplePayButtonClicked = () => {
     const applePaySession: ApplePaySession = window.ApplePaySession;
-
-    //console.log("Apple Pay button clicked");
-    //console.log("applePaySession", applePaySession);
-    //console.log("applepayConfig", payConfig);
-    //console.log("applepay", pay);
-    //console.log("paymentInfo", paymentInfo);
-
     if (!applePaySession || !payConfig || !paymentInfo || !pay) {
       setError("Apple Pay session, config, pay or payment info not available");
       return;
@@ -111,10 +99,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
         amount: paymentInfo.amount,
       },
     };
-    //console.log("paymentRequest", paymentRequest);
-
     const session = new applePaySession(4, paymentRequest);
-    //console.log("session", session);
 
     session.onvalidatemerchant = async (event: any) => {
       try {
@@ -123,11 +108,9 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
           displayName: applePayDisplayName,
         });
 
-        //console.log("onvalidatemerchant validateResult", validateResult);
         session.completeMerchantValidation(validateResult.merchantSession);
       } catch (validateError) {
         console.error("Error validating merchant", validateError);
-        console.error();
         setError("Error validating merchant");
 
         session.abort();
@@ -135,29 +118,24 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
     };
 
     session.onpaymentauthorized = async (event: any) => {
-      setPaymentId("payment id: " + paymentInfo.id);
-
       try {
         const orderId = await handleCreateOrder({
           paymentSource: "apple_pay",
           storeInVault: save.current?.checked,
         });
-        setLogs("orderId: " + orderId);
 
-        const confirmResult = await pay.confirmOrder({
+        await pay.confirmOrder({
           orderId: orderId,
           token: event.payment.token,
           billingContact: event.payment.billingContact,
         });
-        setLogs("confirmResult: " + confirmResult);
 
-        const captureResult = await handleOnApprove({ orderID: orderId });
-        setLogs("captureResult: " + captureResult);
+        await handleOnApprove({ orderID: orderId });
 
         session.completePayment(applePaySession.STATUS_SUCCESS);
       } catch (error) {
         console.error("error", error);
-        setError("Error in payment authorization" + error);
+        setError("Error in payment authorization");
         session.completePayment(applePaySession.STATUS_FAILURE);
       }
     };
@@ -196,15 +174,13 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
               <div className="h-9">
                 <button
                   className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
-                  onClick={() => {
-                    setPaymentId("payment id: " + paymentInfo.id);
-
-                    const orderId = handleCreateOrder({
+                  onClick={async () => {
+                    isLoading(true);
+                    await handleCreateOrder({
                       paymentSource: "apple_pay",
                       vaultId: vaultId,
                     });
-
-                    setLogs("orderId: " + orderId);
+                    isLoading(false);
                   }}
                 >
                   Pay
@@ -217,7 +193,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
         </>
       ) : (
         <div id="applepay-container">
-          {isEligible ? (
+          {isEligible && (
             <>
               <button
                 onClick={onApplePayButtonClicked}
@@ -254,14 +230,9 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
                 </label>
               )}
             </>
-          ) : (
-            <div className={ERROR_TEXT_STYLE}>{error}</div>
           )}
 
           {error && <div className={ERROR_TEXT_STYLE}>{error}</div>}
-
-          {paymentId && <div>{paymentId}</div>}
-          {logs && <div>{logs}</div>}
         </div>
       )}
     </>
