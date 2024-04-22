@@ -5,6 +5,7 @@ import loadScript from "../../app/loadScript";
 import { usePayment } from "../../app/usePayment";
 import { ERROR_TEXT_STYLE } from "../../styles";
 import { useLoader } from "../../app/useLoader";
+import { DEVICE_ERROR } from "./constants";
 import {
   CustomPayPalButtonsComponentProps,
   ApplePayProps,
@@ -57,7 +58,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
       async () => {
         const applePaySession: ApplePaySession = window.ApplePaySession;
         if (!applePaySession) {
-          setError("This device does not support Apple Pay");
+          setError(DEVICE_ERROR);
           return;
         }
         if (!applePaySession.canMakePayments()) {

@@ -210,7 +210,6 @@ export const PaymentProvider: FC<
         !!setRatepayMessage,
         enableVaulting
       );
-      console.log(relevantOrderData);
       const createOrderResult = await createOrder(
         requestHeader,
         createOrderUrl,
@@ -220,7 +219,6 @@ export const PaymentProvider: FC<
           ...relevantOrderData,
         }
       );
-      console.log(createOrderResult);
       const oldOrderData = orderData;
 
       if (createOrderResult) {
