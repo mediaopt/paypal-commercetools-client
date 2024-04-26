@@ -45,7 +45,7 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
 
   const getGoogleTransactionInfo = () => {
     return {
-      currencyCode: paymentInfo,
+      currencyCode: paymentInfo.currency,
       totalPriceStatus: totalPriceStatus,
       totalPrice: paymentInfo.amount.toString(),
       //transactionId: paymentInfo.id,
