@@ -16,13 +16,17 @@ import {
   GooglePayOptionsType,
   PayUponInvoiceProps,
   SmartComponentsProps,
+  ThreeDSVerification,
 } from "./types";
 import { GooglePay } from "./components/GooglePay";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI3NTlhZDdkMS1jZTNhLTRmZmUtYjc1MC1lODFmNWRiMTZiYTMiLCJhY2NvdW50Ijp7ImFjY291bnRJZCI6ImYyMmE0ZmUzLWMyYjgtNDgwMS04MjA4LTQxNGQyMDYyMGUwYiIsImVtYWlsIjoibWFqaWQuYWJiYXNpQG1lZGlhb3B0LmRlIiwic2FsdXRhdGlvbiI6IiIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJiaXJ0aGRheSI6IjE5ODktMDMtMDVUMDA6MDA6MDAuMDAwWiIsImNvbmZpcm1lZCI6dHJ1ZSwiYWRkcmVzc2VzIjpbeyJhZGRyZXNzSWQiOiJqYlRKWG0zTSIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJzdHJlZXROYW1lIjoiSG9jaHN0cmFcdTAwZGZlIDM3Iiwic3RyZWV0TnVtYmVyIjoiSG9jaHN0cmFcdTAwZGZlIDM3IiwicG9zdGFsQ29kZSI6IjEzMzU3IiwiY2l0eSI6IkRFIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6ZmFsc2UsImlzRGVmYXVsdFNoaXBwaW5nQWRkcmVzcyI6ZmFsc2V9LHsiYWRkcmVzc0lkIjoia3J6UjdtMFEiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkNvdW50eSBTdC4gTWlhbWkiLCJzdHJlZXROdW1iZXIiOiI0MzIiLCJwb3N0YWxDb2RlIjoiMzMwMTgiLCJjaXR5IjoiVVMiLCJjb3VudHJ5IjoiREUiLCJwaG9uZSI6IjU5OTM1NzU2MiIsImlzRGVmYXVsdEJpbGxpbmdBZGRyZXNzIjp0cnVlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOnRydWV9XX0sIndpc2hsaXN0SWQiOiJjZTM4MzVkMC02OWM0LTRlZWUtYTBjZC1hM2I4NjgyYTU2OTUifQ.iixjVD4AkF2io8SJZ-AS8-cVE8v-Xou_2EKV6YaptXE";
-
+  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiNzQ0NTUxY2YtMWVjMS00OWJmLWIwOTMtM2I1YTEzMGU3MTE0IiwiY2FydElkIjoiZWFmZWVkNmQtZGI4Mi00ODk3LTg0MzUtNmNiYTc0YzI0YzcxIn0.NheVsGS4gqwGdxKDU4GouDKfT3cuS6NIyK8rwcDpQeY";
+  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI4OWVhYmFjYS0wM2VmLTRmNWMtYmU2MC0yMTFkY2U2ZDIxMzEifQ.fpwkrtAp796VwjQb8mIHKi4NuqOpAzrfKiJRvfEqsJ0";
+  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiOGUzM2E4YmMtODAyNy00MjYxLWI0ZGMtYWM0YTQ3ZTIzZTE1IiwiY2FydElkIjoiN2I2NjM4MTYtYzk0Yi00MzIzLWI0ZTgtMmVjZmU1ZTJiNWJhIn0.rkW35uUhEGyaQopayLceH-YoHuEuw26Kd5690t6L_EY";
+  //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiMTYwYzFkM2EtZDZlNC00ZTc3LWJlZWMtZTg5OThkM2JiMjEwIiwiY2FydElkIjoiYWFjMGVhZTEtNDg4ZC00YTZjLTgzMWMtYjE3ZjRmMWE1NzllIn0.03vHCrgCfgmp4jC1g1w7yFaQCLYnF1pDVnirqxIxP1c";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJjNGVhNWE0MS1mMDAzLTQ2OTgtOTUwOS05NmE3ZjUzZTYwOGIifQ.aZB-EwfshtXC77jO4qoVOXbDQgJttRIkE141OVX2GRs";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -70,6 +74,7 @@ function App() {
   const params = {
     ...commonParams,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    getOrderUrl: `${ENDPOINT_URL}/payment/getPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
@@ -173,6 +178,7 @@ function App() {
     allowedCardNetworks: ["MASTERCARD", "VISA"],
     allowedCardAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
     callbackIntents: ["PAYMENT_AUTHORIZATION"],
+    verificationMethod: "SCA_ALWAYS" as ThreeDSVerification,
   };
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {

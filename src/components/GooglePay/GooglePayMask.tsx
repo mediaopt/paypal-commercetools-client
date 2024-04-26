@@ -1,25 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
 import { usePayment } from "../../app/usePayment";
 import { GooglePayOptionsType } from "../../types";
+import { errorFunc } from "../errorNotification";
+import { useLoader } from "../../app/useLoader";
+import { useNotifications } from "../../app/useNotifications";
+import { useTranslation } from "react-i18next";
 
 export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
-  apiVersion,
-  apiVersionMinor,
+  apiVersion = 2,
+  apiVersionMinor = 0,
   allowedCardNetworks,
   allowedCardAuthMethods,
   callbackIntents,
   environment = "TEST",
+  totalPriceStatus = "FINAL",
+  buttonColor = "default",
+  buttonType = "buy",
+  buttonRadius,
+  buttonSizeMode = "static",
+  verificationMethod,
 }) => {
   const googlePayButton = useRef<HTMLDivElement>(null);
   const [paymentsClient, setPaymentsClient] = useState<{ [key: string]: any }>(
     {}
   );
   const [buttonCreated, setButtonCreated] = useState(false);
-  const { handleCreateOrder, handleOnApprove } = usePayment();
+  const { handleCreateOrder, paymentInfo } = usePayment();
+  const { isLoading } = useLoader();
+  const { notify } = useNotifications();
+  const { t } = useTranslation();
 
   const baseRequest = {
-    apiVersion: apiVersion || 2,
-    apiVersionMinor: apiVersionMinor || 0,
+    apiVersion: apiVersion,
+    apiVersionMinor: apiVersionMinor,
   };
 
   const baseCardPaymentMethod = {
@@ -30,53 +43,36 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
     },
   };
 
-  const tmpStaticTransaction = () => {
-    return {
-      displayItems: [
-        {
-          label: "Subtotal",
-          type: "SUBTOTAL",
-          price: "1.00",
-        },
-        {
-          label: "tax",
-          type: "TAX",
-          price: "0.00",
-        },
-      ],
-      countryCode: "DE",
-      currencyCode: "EUR",
-      totalPriceStatus: "FINAL",
-      totalPrice: "1.00",
-    };
-  };
-
   const getGoogleTransactionInfo = () => {
     return {
-      currencyCode: "EUR",
-      totalPriceStatus: "FINAL",
-      totalPrice: "1.00",
+      currencyCode: paymentInfo,
+      totalPriceStatus: totalPriceStatus,
+      totalPrice: paymentInfo.amount.toString(),
+      //transactionId: paymentInfo.id,
     };
   };
 
   const processPayment = async (paymentData: { [key: string]: any }) => {
     try {
-      const { currencyCode, totalPrice } = tmpStaticTransaction();
+      const { currency, amount } = paymentInfo;
       const order = {
-        //intent: "CAPTURE",
         purchase_units: [
           {
             amount: {
-              currency_code: currencyCode,
-              value: totalPrice,
+              currency_code: currency,
+              value: amount.toString(),
             },
           },
         ],
         paymentData: paymentData,
       };
 
-      handleCreateOrder({ googlePayData: order, paymentSource: "google_pay" });
+      await handleCreateOrder({
+        googlePayData: order,
+        paymentSource: "google_pay",
+      });
     } catch (err: any) {
+      errorFunc(err, isLoading, notify, t);
       return {
         transactionState: "ERROR",
         error: {
@@ -116,7 +112,6 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
     }
   }, [paymentsClient]);
 
-  // @todo proper look, now just copypasta
   const getGooglePaymentDataRequest = async () => {
     // @ts-ignore
     const googlePayConfig = await paypal.Googlepay().config();
@@ -137,17 +132,33 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
 
   const onGooglePaymentButtonClicked = async () => {
     const paymentDataRequest = await getGooglePaymentDataRequest();
-    console.log(paymentDataRequest);
-    paymentsClient.loadPaymentData(paymentDataRequest);
+    paymentsClient.loadPaymentData(paymentDataRequest).catch((err: any) => {
+      notify("Error", err.statusCode);
+      console.log(err);
+    });
   };
 
   const addGooglePayButton = () => {
     if (buttonCreated) return;
+    const buttonOptions: Record<string, any> = {
+      buttonColor: buttonColor,
+      buttonType: buttonType,
+      buttonSizeMode: buttonSizeMode,
+    };
+    if (buttonRadius) {
+      buttonOptions.buttonRadius = buttonRadius;
+    }
     const button = paymentsClient.createButton({
       onClick: () => {
-        onGooglePaymentButtonClicked();
+        isLoading(true);
+        onGooglePaymentButtonClicked()
+          .then(() => isLoading(false))
+          .catch((err: Record<string, never>) => {
+            errorFunc(err, isLoading, notify, t);
+          });
       },
       allowedPaymentMethods: [baseCardPaymentMethod],
+      ...buttonOptions,
     });
     if (googlePayButton.current) {
       googlePayButton.current.appendChild(button);
@@ -169,7 +180,7 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
         }
       })
       .catch((err: { [key: string]: any }) => {
-        console.error(err);
+        errorFunc(err, isLoading, notify, t);
       });
   };
   return (

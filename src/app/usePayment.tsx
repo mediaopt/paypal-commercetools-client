@@ -40,6 +40,7 @@ import { getClientToken } from "../services/getClientToken";
 import { getActionIndex } from "../components/CardFields/constants";
 import { useTranslation } from "react-i18next";
 import { handleResponseError } from "../messages/errorMessages";
+import { getOrder } from "../services/getOrder";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -113,6 +114,7 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
+  getOrderUrl,
   authorizeOrderUrl,
   authenticateThreeDSOrderUrl,
 
@@ -219,6 +221,16 @@ export const PaymentProvider: FC<
           ...relevantOrderData,
         }
       );
+
+      if (
+        !createOrderResult ||
+        (createOrderResult && createOrderResult.ok === false)
+      ) {
+        notify("Error", "something went wrong");
+        isLoading(false);
+        return "";
+      }
+
       const oldOrderData = orderData;
 
       if (createOrderResult) {
@@ -245,7 +257,35 @@ export const PaymentProvider: FC<
               oldOrderData.googlePayData.paymentData.paymentMethodData,
           });
           if (status === "APPROVED") {
-            onSuccess(orderData);
+            handleOnApprove({ orderID: orderData.id }).then(() =>
+              onSuccess(orderData)
+            );
+          } else if (status === "PAYER_ACTION_REQUIRED") {
+            //@ts-ignore
+            paypal
+              .Googlepay()
+              .initiatePayerAction({ orderId: id })
+              .then(async (data: any) => {
+                console.log("===== Payer Action Completed =====");
+                console.log(data);
+                const orderResponse = await getOrder(
+                  requestHeader,
+                  getOrderUrl || "",
+                  paymentInfo.id,
+                  latestPaymentVersion
+                ).then((res: any) => console.log(res));
+                console.log("===== 3DS Contingency Result Fetched =====");
+                console.log(
+                  //@ts-ignore
+                  orderResponse?.payment_source?.google_pay?.card
+                    ?.authentication_result
+                );
+                /* CAPTURE THE ORDER*/
+
+                /*handleOnApprove({ orderID: orderData.id }).then(() =>
+                  onSuccess(orderData)
+                );*/
+              });
           } else {
             return "";
           }

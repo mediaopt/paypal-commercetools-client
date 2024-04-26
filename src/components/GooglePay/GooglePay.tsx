@@ -14,6 +14,7 @@ export const GooglePay: React.FC<
   shippingMethodId,
   cartInformation,
   createOrderUrl,
+  getOrderUrl,
   onApproveUrl,
   purchaseCallback,
   getUserInfoUrl,
@@ -24,6 +25,8 @@ export const GooglePay: React.FC<
   allowedCardAuthMethods,
   callbackIntents,
   environment,
+  totalPriceStatus,
+  verificationMethod,
 }) => {
   return (
     <RenderTemplate
@@ -35,6 +38,7 @@ export const GooglePay: React.FC<
       shippingMethodId={shippingMethodId}
       cartInformation={cartInformation}
       createOrderUrl={createOrderUrl}
+      getOrderUrl={getOrderUrl}
       onApproveUrl={onApproveUrl}
       purchaseCallback={purchaseCallback}
       getUserInfoUrl={getUserInfoUrl}
@@ -47,6 +51,8 @@ export const GooglePay: React.FC<
         apiVersion={apiVersion}
         apiVersionMinor={apiVersionMinor}
         environment={environment}
+        totalPriceStatus={totalPriceStatus}
+        verificationMethod={verificationMethod}
       />
     </RenderTemplate>
   );
