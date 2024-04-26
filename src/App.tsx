@@ -176,7 +176,7 @@ function App() {
     options: { ...options, components: "googlepay" },
     environment: "TEST" as "TEST",
     allowedCardNetworks: ["MASTERCARD", "VISA"],
-    allowedCardAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+    allowedCardAuthMethods: ["PAN_ONLY"],
     callbackIntents: ["PAYMENT_AUTHORIZATION"],
     verificationMethod: "SCA_ALWAYS" as ThreeDSVerification,
   };
