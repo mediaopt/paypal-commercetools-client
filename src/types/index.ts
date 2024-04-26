@@ -110,7 +110,7 @@ export type GeneralComponentsProps = {
   enableVaulting?: boolean;
 } & CartInformationProps;
 
-type ThreeDSVerification = "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
+export type ThreeDSVerification = "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
 
 export type HostedFieldsThreeDSAuth = {
   threeDSAuth?: ThreeDSVerification;
@@ -451,4 +451,5 @@ export type GooglePayOptionsType = {
     | "subscribe";
   buttonRadius?: number;
   buttonSizeMode?: "static" | "fill";
+  verificationMethod: ThreeDSVerification;
 };

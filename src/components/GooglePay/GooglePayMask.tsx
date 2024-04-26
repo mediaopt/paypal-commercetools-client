@@ -18,6 +18,7 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
   buttonType = "buy",
   buttonRadius,
   buttonSizeMode = "static",
+  verificationMethod,
 }) => {
   const googlePayButton = useRef<HTMLDivElement>(null);
   const [paymentsClient, setPaymentsClient] = useState<{ [key: string]: any }>(
@@ -66,7 +67,10 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
         paymentData: paymentData,
       };
 
-      handleCreateOrder({ googlePayData: order, paymentSource: "google_pay" });
+      await handleCreateOrder({
+        googlePayData: order,
+        paymentSource: "google_pay",
+      });
     } catch (err: any) {
       errorFunc(err, isLoading, notify, t);
       return {
@@ -128,7 +132,10 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
 
   const onGooglePaymentButtonClicked = async () => {
     const paymentDataRequest = await getGooglePaymentDataRequest();
-    paymentsClient.loadPaymentData(paymentDataRequest);
+    paymentsClient.loadPaymentData(paymentDataRequest).catch((err: any) => {
+      notify("Error", err.statusCode);
+      console.log(err);
+    });
   };
 
   const addGooglePayButton = () => {

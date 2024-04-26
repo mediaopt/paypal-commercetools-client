@@ -26,6 +26,7 @@ export const GooglePay: React.FC<
   callbackIntents,
   environment,
   totalPriceStatus,
+  verificationMethod,
 }) => {
   return (
     <RenderTemplate
@@ -51,6 +52,7 @@ export const GooglePay: React.FC<
         apiVersionMinor={apiVersionMinor}
         environment={environment}
         totalPriceStatus={totalPriceStatus}
+        verificationMethod={verificationMethod}
       />
     </RenderTemplate>
   );

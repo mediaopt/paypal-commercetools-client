@@ -15,6 +15,7 @@ export const GooglePayButton: React.FC<GooglePayOptionsType> = ({
   callbackIntents,
   environment,
   totalPriceStatus,
+  verificationMethod,
 }) => {
   const { isLoading } = useLoader();
   const scriptUrl: string = "https://pay.google.com/gp/p/js/pay.js";
@@ -48,6 +49,7 @@ export const GooglePayButton: React.FC<GooglePayOptionsType> = ({
       apiVersionMinor={apiVersionMinor}
       environment={environment}
       totalPriceStatus={totalPriceStatus}
+      verificationMethod={verificationMethod}
     />
   ) : (
     <></>
