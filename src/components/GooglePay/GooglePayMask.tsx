@@ -70,6 +70,7 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
       await handleCreateOrder({
         googlePayData: order,
         paymentSource: "google_pay",
+        verificationMethod: verificationMethod,
       });
     } catch (err: any) {
       errorFunc(err, isLoading, notify, t);

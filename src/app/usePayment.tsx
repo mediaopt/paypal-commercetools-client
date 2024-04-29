@@ -339,6 +339,12 @@ export const PaymentProvider: FC<
         saveCard
       );
 
+      //@ts-ignore
+      if (onApproveResult.ok === false) {
+        isLoading(false);
+        notify("Error", "There was an error completing the payment");
+        return;
+      }
       const { orderData } = onApproveResult as OnApproveResponse;
       if (orderData.status === "COMPLETED") {
         setShowResult(true);
