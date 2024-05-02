@@ -6,6 +6,9 @@ import { useLoader } from "../../app/useLoader";
 import { useNotifications } from "../../app/useNotifications";
 import { useTranslation } from "react-i18next";
 
+declare const google: any;
+declare const paypal: any;
+
 export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
   apiVersion = 2,
   apiVersionMinor = 0,
@@ -97,7 +100,6 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
 
   useEffect(() => {
     setPaymentsClient(
-      // @ts-ignore
       new google.payments.api.PaymentsClient({
         environment: environment,
         paymentDataCallbacks: {
@@ -114,7 +116,6 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
   }, [paymentsClient]);
 
   const getGooglePaymentDataRequest = async () => {
-    // @ts-ignore
     const googlePayConfig = await paypal.Googlepay().config();
 
     const paymentDataRequest: { [key: string]: any } = Object.assign(
@@ -135,7 +136,6 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
     const paymentDataRequest = await getGooglePaymentDataRequest();
     paymentsClient.loadPaymentData(paymentDataRequest).catch((err: any) => {
       notify("Error", err.statusCode);
-      console.log(err);
     });
   };
 

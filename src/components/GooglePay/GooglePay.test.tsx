@@ -1,9 +1,21 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { GooglePay } from "./GooglePay";
 
 import { GooglePayTestParams } from "./constants";
 
-test("GooglePay is shown", () => {
+const MockText: string = "GooglePayMask";
+jest.mock("./GooglePayMask", () => ({
+  GooglePayMask: () => <div>{MockText}</div>,
+}));
+
+jest.mock("../../app/loadScript", () => ({
+  __esModule: true,
+  default: () => Promise.resolve(),
+}));
+
+test("GooglePay is shown", async () => {
   render(<GooglePay {...GooglePayTestParams} />);
-  expect(screen).toBeDefined();
+  await waitFor(() => {
+    expect(screen).toBeDefined();
+  });
 });
