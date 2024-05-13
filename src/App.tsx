@@ -16,13 +16,13 @@ import {
   GooglePayOptionsType,
   PayUponInvoiceProps,
   SmartComponentsProps,
+  ThreeDSVerification,
 } from "./types";
 import { GooglePay } from "./components/GooglePay";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI3NTlhZDdkMS1jZTNhLTRmZmUtYjc1MC1lODFmNWRiMTZiYTMiLCJhY2NvdW50Ijp7ImFjY291bnRJZCI6ImYyMmE0ZmUzLWMyYjgtNDgwMS04MjA4LTQxNGQyMDYyMGUwYiIsImVtYWlsIjoibWFqaWQuYWJiYXNpQG1lZGlhb3B0LmRlIiwic2FsdXRhdGlvbiI6IiIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJiaXJ0aGRheSI6IjE5ODktMDMtMDVUMDA6MDA6MDAuMDAwWiIsImNvbmZpcm1lZCI6dHJ1ZSwiYWRkcmVzc2VzIjpbeyJhZGRyZXNzSWQiOiJqYlRKWG0zTSIsImZpcnN0TmFtZSI6Ik1hamlkIiwibGFzdE5hbWUiOiJBYmJhc2kiLCJzdHJlZXROYW1lIjoiSG9jaHN0cmFcdTAwZGZlIDM3Iiwic3RyZWV0TnVtYmVyIjoiSG9jaHN0cmFcdTAwZGZlIDM3IiwicG9zdGFsQ29kZSI6IjEzMzU3IiwiY2l0eSI6IkRFIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6ZmFsc2UsImlzRGVmYXVsdFNoaXBwaW5nQWRkcmVzcyI6ZmFsc2V9LHsiYWRkcmVzc0lkIjoia3J6UjdtMFEiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkNvdW50eSBTdC4gTWlhbWkiLCJzdHJlZXROdW1iZXIiOiI0MzIiLCJwb3N0YWxDb2RlIjoiMzMwMTgiLCJjaXR5IjoiVVMiLCJjb3VudHJ5IjoiREUiLCJwaG9uZSI6IjU5OTM1NzU2MiIsImlzRGVmYXVsdEJpbGxpbmdBZGRyZXNzIjp0cnVlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOnRydWV9XX0sIndpc2hsaXN0SWQiOiJjZTM4MzVkMC02OWM0LTRlZWUtYTBjZC1hM2I4NjgyYTU2OTUifQ.iixjVD4AkF2io8SJZ-AS8-cVE8v-Xou_2EKV6YaptXE";
-
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJhMGFkZjllNy00YmJlLTRiMzgtYmZjZS1mMTdlMWFiZDM0OTcifQ.dFSz1WocjOFGUkHqjQYdkT1DEebN63vp0MrZzIXXoIM";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -70,6 +70,7 @@ function App() {
   const params = {
     ...commonParams,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    getOrderUrl: `${ENDPOINT_URL}/payment/getPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
@@ -171,8 +172,9 @@ function App() {
     options: { ...options, components: "googlepay" },
     environment: "TEST" as "TEST",
     allowedCardNetworks: ["MASTERCARD", "VISA"],
-    allowedCardAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+    allowedCardAuthMethods: ["PAN_ONLY"],
     callbackIntents: ["PAYMENT_AUTHORIZATION"],
+    verificationMethod: "SCA_ALWAYS" as ThreeDSVerification,
   };
 
   const paymentMethods: { [index: string]: React.JSX.Element } = {

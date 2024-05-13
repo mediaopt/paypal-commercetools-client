@@ -127,6 +127,29 @@ PayPal messages props are based on PayPalMessages props and you can see them on 
 - **applePayDisplayName**: `string`  
    Name of your store.
 
+
+### GooglePay
+Have a look at [Googles specification](https://developers.google.com/pay/api/web/reference/request-objects) for a detailed explanation of the options
+- **environment**: `string`  
+    "TEST" or "PRODUCTION";
+- **allowedCardNetworks**: `string[]`
+    One or more card networks that you support, also supported by the Google Pay API.
+- **allowedCardAuthMethods**: `string`  
+    "PAN_ONLY" (cards on file) and "CRYPTOGRAM_3DS" (Android powered device token)
+- **callbackIntents**: `string[]`  
+    Specifies intents for PaymentDataCallback
+- **apiVersion**: `number`  
+    Major API version
+- **apiVersionMinor**: `number`  
+    Minor API version
+- **totalPriceStatus**: `string`  
+    "FINAL" or "ESTIMATED"
+- **buttonColor**: `string`
+- **buttonType**: `string`
+- **buttonRadius**: `number`
+- **buttonSizeMode**: `string`
+- **verificationMethod**: `string`
+
 ### CardFields
 
 - **authenticateThreeDSOrderUrl**: `string`

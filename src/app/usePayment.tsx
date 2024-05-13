@@ -40,6 +40,7 @@ import { getClientToken } from "../services/getClientToken";
 import { getActionIndex } from "../components/CardFields/constants";
 import { useTranslation } from "react-i18next";
 import { handleResponseError } from "../messages/errorMessages";
+import { getOrder } from "../services/getOrder";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -113,6 +114,7 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
+  getOrderUrl,
   authorizeOrderUrl,
   authenticateThreeDSOrderUrl,
 
@@ -210,6 +212,7 @@ export const PaymentProvider: FC<
         !!setRatepayMessage,
         enableVaulting
       );
+
       const createOrderResult = await createOrder(
         requestHeader,
         createOrderUrl,
@@ -219,6 +222,16 @@ export const PaymentProvider: FC<
           ...relevantOrderData,
         }
       );
+
+      if (
+        !createOrderResult ||
+        (createOrderResult && createOrderResult.ok === false)
+      ) {
+        notify("Error", "something went wrong");
+        isLoading(false);
+        return "";
+      }
+
       const oldOrderData = orderData;
 
       if (createOrderResult) {
@@ -245,7 +258,12 @@ export const PaymentProvider: FC<
               oldOrderData.googlePayData.paymentData.paymentMethodData,
           });
           if (status === "APPROVED") {
-            onSuccess(orderData);
+            handleOnApprove({ orderID: orderData.id }).then(() =>
+              onSuccess(orderData)
+            );
+          } else if (status === "PAYER_ACTION_REQUIRED") {
+            //@todo 3DS implementation
+            return "";
           } else {
             return "";
           }
@@ -298,6 +316,12 @@ export const PaymentProvider: FC<
         saveCard
       );
 
+      //@ts-ignore
+      if (onApproveResult.ok === false) {
+        isLoading(false);
+        notify("Error", "There was an error completing the payment");
+        return;
+      }
       const { orderData } = onApproveResult as OnApproveResponse;
       if (orderData.status === "COMPLETED") {
         setShowResult(true);
