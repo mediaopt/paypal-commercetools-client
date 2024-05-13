@@ -262,22 +262,8 @@ export const PaymentProvider: FC<
               onSuccess(orderData)
             );
           } else if (status === "PAYER_ACTION_REQUIRED") {
-            //@ts-ignore
-            paypal
-              .Googlepay()
-              .initiatePayerAction({ orderId: id })
-              .then(async () => {
-                const orderResponse = await getOrder(
-                  requestHeader,
-                  getOrderUrl || "",
-                  paymentInfo.id,
-                  latestPaymentVersion
-                ).then((res: any) => console.log(res));
-
-                handleOnApprove({ orderID: orderData.id }).then(() =>
-                  onSuccess(orderData)
-                );
-              });
+            //@todo 3DS implementation
+            return "";
           } else {
             return "";
           }
