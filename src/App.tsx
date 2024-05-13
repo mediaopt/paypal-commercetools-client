@@ -6,6 +6,7 @@ import "./App.css";
 
 import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
+import { ApplePay } from "./components/ApplePay";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
@@ -190,6 +191,19 @@ function App() {
         requestHeader={requestHeader}
         options={options}
         fundingSource="paypal"
+      />
+    ),
+    ApplePay: (
+      <ApplePay
+        {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "applepay,buttons",
+          buyerCountry: "US",
+        }}
+        applePayDisplayName="My Store"
+        {...vaultParams}
       />
     ),
     Venmo: (

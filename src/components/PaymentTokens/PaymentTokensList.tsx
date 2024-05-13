@@ -21,7 +21,7 @@ export const PaymentTokensList: React.FC = () => {
       <tbody>
         {paymentTokens.payment_tokens.map((paymentToken) => {
           const { id, payment_source } = paymentToken;
-          const { card, paypal, venmo } = payment_source;
+          const { card, paypal, venmo, apple_pay } = payment_source;
           return (
             <tr key={id}>
               {card ? (
@@ -30,6 +30,8 @@ export const PaymentTokensList: React.FC = () => {
                 <PayPal {...paypal} />
               ) : venmo ? (
                 <PayPal {...venmo} />
+              ) : apple_pay ? (
+                <Card {...apple_pay.card} />
               ) : (
                 <></>
               )}

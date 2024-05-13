@@ -27,7 +27,7 @@ export type CreateOrderRequest = {
 };
 
 export type CreateOrderData = {
-  paymentSource?: FUNDING_SOURCE | "google_pay";
+  paymentSource?: FUNDING_SOURCE | "google_pay" | "apple_pay";
   storeInVault?: boolean;
   vaultId?: string;
   verificationMethod?: ThreeDSVerification;
@@ -175,6 +175,12 @@ export type CustomPayPalButtonsComponentProps = Omit<
 export type SmartComponentsProps = CustomPayPalButtonsComponentProps &
   GeneralComponentsProps;
 
+export type ApplePayProps = {
+  applePayDisplayName: string;
+};
+
+export type ApplePayComponentsProps = ApplePayProps & SmartComponentsProps;
+
 export type CartInformation = {
   account: {
     email: string;
@@ -315,6 +321,9 @@ export type PaymentTokens = {
       card: CardPaymentSource;
       paypal: PayPalPaymentSource;
       venmo: PayPalPaymentSource;
+      apple_pay: {
+        card: CardPaymentSource;
+      };
     };
   }>;
 };
@@ -452,4 +461,36 @@ export type GooglePayOptionsType = {
   buttonRadius?: number;
   buttonSizeMode?: "static" | "fill";
   verificationMethod: ThreeDSVerification;
+};
+
+export type ApplePaySession = any;
+
+export type ApplepayConfig = {
+  countryCode: string;
+  currencyCode: string;
+  isEligible: boolean;
+  merchantCapabilities: string[];
+  merchantCountry: string;
+  supportedNetworks: string[];
+};
+
+type ApplepayValidateMerchant = {
+  validationUrl: string;
+  displayName: string;
+};
+
+type ApplepayConfirmOrder = {
+  orderId: string;
+  token: string;
+  billingContact: string;
+};
+
+type ApplepayValidateMerchantResult = {
+  merchantSession: string;
+};
+
+export type Applepay = {
+  config: () => Promise<ApplepayConfig>;
+  confirmOrder: ({}: ApplepayConfirmOrder) => Promise<void>;
+  validateMerchant: ({}: ApplepayValidateMerchant) => Promise<ApplepayValidateMerchantResult>;
 };
