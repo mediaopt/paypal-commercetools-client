@@ -262,8 +262,32 @@ export const PaymentProvider: FC<
               onSuccess(orderData)
             );
           } else if (status === "PAYER_ACTION_REQUIRED") {
-            //@todo 3DS implementation
-            return "";
+            //@ts-ignore
+            paypal
+              .Googlepay()
+              .initiatePayerAction({ orderId: id })
+              .then(async (data: any) => {
+                console.log("===== Payer Action Completed =====");
+                console.log(data);
+                const orderResponse = await getOrder(
+                  requestHeader,
+                  getOrderUrl || "",
+                  paymentInfo.id,
+                  latestPaymentVersion
+                );
+                console.log(orderResponse);
+                console.log("===== 3DS Contingency Result Fetched =====");
+                console.log(
+                  //@ts-ignore
+                  orderResponse?.payment_source?.google_pay?.card
+                    ?.authentication_result
+                );
+                /* CAPTURE THE ORDER*/
+
+                /*handleOnApprove({ orderID: orderData.id }).then(() =>
+                  onSuccess(orderData)
+                );*/
+              });
           } else {
             return "";
           }
