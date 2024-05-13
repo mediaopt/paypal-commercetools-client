@@ -266,26 +266,17 @@ export const PaymentProvider: FC<
             paypal
               .Googlepay()
               .initiatePayerAction({ orderId: id })
-              .then(async (data: any) => {
-                console.log("===== Payer Action Completed =====");
-                console.log(data);
+              .then(async () => {
                 const orderResponse = await getOrder(
                   requestHeader,
                   getOrderUrl || "",
                   paymentInfo.id,
                   latestPaymentVersion
                 ).then((res: any) => console.log(res));
-                console.log("===== 3DS Contingency Result Fetched =====");
-                console.log(
-                  //@ts-ignore
-                  orderResponse?.payment_source?.google_pay?.card
-                    ?.authentication_result
-                );
-                /* CAPTURE THE ORDER*/
 
-                /*handleOnApprove({ orderID: orderData.id }).then(() =>
+                handleOnApprove({ orderID: orderData.id }).then(() =>
                   onSuccess(orderData)
-                );*/
+                );
               });
           } else {
             return "";
