@@ -22,7 +22,7 @@ import { GooglePay } from "./components/GooglePay";
 
 const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiJhMGFkZjllNy00YmJlLTRiMzgtYmZjZS1mMTdlMWFiZDM0OTcifQ.dFSz1WocjOFGUkHqjQYdkT1DEebN63vp0MrZzIXXoIM";
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiIzMzljMzY0MS1kYzE5LTQzNzAtYTBlOS0zNzI1MDJiMDI4MjciLCJ3aXNobGlzdElkIjoiZjhmZTUzZWEtN2NlMi00OGU2LTgxNzAtMmQwZjk5YTQ3ZjFlIn0.VZ0tW8cp0UcGd4h3hQEXNs6ppbtd4bYzAYBgovpbrC4";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 

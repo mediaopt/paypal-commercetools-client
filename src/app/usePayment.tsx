@@ -252,11 +252,13 @@ export const PaymentProvider: FC<
           return "";
         } else if (oldOrderData?.googlePayData) {
           //@ts-ignore
-          const { status } = await paypal.Googlepay().confirmOrder({
-            orderId: id,
+          const confirmOrderResult = await paypal.Googlepay().confirmOrder({
+            orderId: orderData.id,
             paymentMethodData:
               oldOrderData.googlePayData.paymentData.paymentMethodData,
           });
+          console.log(confirmOrderResult);
+          const { status } = confirmOrderResult;
           if (status === "APPROVED") {
             handleOnApprove({ orderID: orderData.id }).then(() =>
               onSuccess(orderData)
@@ -265,28 +267,14 @@ export const PaymentProvider: FC<
             //@ts-ignore
             paypal
               .Googlepay()
-              .initiatePayerAction({ orderId: id })
-              .then(async (data: any) => {
-                console.log("===== Payer Action Completed =====");
-                console.log(data);
-                const orderResponse = await getOrder(
-                  requestHeader,
-                  getOrderUrl || "",
-                  paymentInfo.id,
-                  latestPaymentVersion
-                );
-                console.log(orderResponse);
-                console.log("===== 3DS Contingency Result Fetched =====");
-                console.log(
-                  //@ts-ignore
-                  orderResponse?.payment_source?.google_pay?.card
-                    ?.authentication_result
-                );
-                /* CAPTURE THE ORDER*/
-
-                /*handleOnApprove({ orderID: orderData.id }).then(() =>
-                  onSuccess(orderData)
-                );*/
+              .initiatePayerAction({ orderId: orderData.id })
+              .then(async () => {
+                handleAuthenticateThreeDSOrder(orderData.id).then((result) => {
+                  console.log(result);
+                  /*handleOnApprove({ orderID: orderData.id }).then(() =>
+                    onSuccess(orderData)
+                  );*/
+                });
               });
           } else {
             return "";
