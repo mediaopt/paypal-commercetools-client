@@ -98,13 +98,16 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
   };
 
   useEffect(() => {
+    const paymentsClientOptions: Record<string, any> = {
+      environment: environment,
+    };
+    if (environment === "PRODUCTION") {
+      paymentsClientOptions.paymentDataCallbacks = {
+        onPaymentAuthorized: onPaymentAuthorized,
+      };
+    }
     setPaymentsClient(
-      new google.payments.api.PaymentsClient({
-        environment: environment,
-        paymentDataCallbacks: {
-          onPaymentAuthorized: onPaymentAuthorized,
-        },
-      })
+      new google.payments.api.PaymentsClient(paymentsClientOptions)
     );
   }, []);
 
@@ -127,15 +130,28 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
 
     paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
     paymentDataRequest.merchantInfo = googlePayConfig.merchantInfo;
-    paymentDataRequest.callbackIntents = callbackIntents;
+    if (environment === "PRODUCTION") {
+      paymentDataRequest.callbackIntents = callbackIntents;
+    }
     return paymentDataRequest;
   };
 
   const onGooglePaymentButtonClicked = async () => {
     const paymentDataRequest = await getGooglePaymentDataRequest();
-    paymentsClient.loadPaymentData(paymentDataRequest).catch((err: any) => {
-      notify("Error", err.statusCode);
-    });
+    if (environment === "PRODUCTION") {
+      paymentsClient.loadPaymentData(paymentDataRequest).catch((err: any) => {
+        notify("Error", err.statusCode);
+      });
+    } else {
+      paymentsClient
+        .loadPaymentData(paymentDataRequest)
+        .then((paymentData: Record<string, any>) => {
+          onPaymentAuthorized(paymentData);
+        })
+        .catch((err: any) => {
+          notify("Error", err.statusCode);
+        });
+    }
   };
 
   const addGooglePayButton = () => {
@@ -160,6 +176,7 @@ export const GooglePayMask: React.FC<GooglePayOptionsType> = ({
       allowedPaymentMethods: [baseCardPaymentMethod],
       ...buttonOptions,
     });
+
     if (googlePayButton.current) {
       googlePayButton.current.appendChild(button);
       setButtonCreated(true);

@@ -7,13 +7,15 @@ export const authenticateThreeDSOrder = async (
   url: string,
   orderID: string,
   paymentVersion: number,
-  paymentId: string
+  paymentId: string,
+  isGPay: boolean = false
 ) => {
   try {
-    const data: Record<string, string | number> = {
+    const data: Record<string, string | number | boolean> = {
       orderID,
       paymentVersion,
       paymentId,
+      isGPay,
     };
 
     return await makeRequest<
@@ -27,7 +29,7 @@ export const authenticateThreeDSOrder = async (
           };
         };
       },
-      Record<string, string | number>
+      Record<string, string | number | boolean>
     >(requestHeader, url, "POST", data);
   } catch (error) {
     console.warn(error);
