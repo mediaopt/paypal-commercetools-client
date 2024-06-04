@@ -262,7 +262,10 @@ export const PaymentProvider: FC<
             handleOnApprove({ orderID: orderData.id }).then(() =>
               onSuccess(orderData)
             );
-          } else if (status === "PAYER_ACTION_REQUIRED") {
+          } else if (
+            oldOrderData?.googlePayData &&
+            status === "PAYER_ACTION_REQUIRED"
+          ) {
             //@ts-ignore
             paypal
               .Googlepay()
