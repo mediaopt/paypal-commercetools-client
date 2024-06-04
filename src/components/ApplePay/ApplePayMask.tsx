@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import { useSettings } from "../../app/useSettings";
 import loadScript from "../../app/loadScript";
@@ -40,10 +40,7 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
     (paymentToken) => paymentToken.payment_source.apple_pay !== undefined
   );
 
-  const save = useRef<HTMLInputElement>(null);
-
-  const { applePayDisplayName, enableVaulting } = props;
-  const storeInVaultOnSuccess = settings?.storeInVaultOnSuccess;
+  const { applePayDisplayName } = props;
 
   const hostedFieldClasses = useMemo(() => {
     const hostedFieldsPayButtonClasses =
@@ -122,7 +119,6 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
       try {
         const orderId = await handleCreateOrder({
           paymentSource: "apple_pay",
-          storeInVault: save.current?.checked,
         });
 
         await pay.confirmOrder({
@@ -218,18 +214,6 @@ export const ApplePayMask: React.FC<ApplePayMaskComponentProps> = (props) => {
                   ></path>
                 </svg>
               </button>
-              {(enableVaulting || storeInVaultOnSuccess) && (
-                <label>
-                  <input
-                    type="checkbox"
-                    id="save"
-                    name="save"
-                    ref={save}
-                    className="mr-1"
-                  />
-                  Save for future purchases
-                </label>
-              )}
             </>
           )}
 
