@@ -257,7 +257,6 @@ export const PaymentProvider: FC<
             paymentMethodData:
               oldOrderData.googlePayData.paymentData.paymentMethodData,
           });
-          console.log(confirmOrderResult);
           const { status } = confirmOrderResult;
           if (status === "APPROVED") {
             handleOnApprove({ orderID: orderData.id }).then(() =>
