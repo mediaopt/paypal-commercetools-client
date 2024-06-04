@@ -27,6 +27,7 @@ export const GooglePay: React.FC<
   environment,
   totalPriceStatus,
   verificationMethod,
+  authenticateThreeDSOrderUrl,
 }) => {
   return (
     <RenderTemplate
@@ -43,6 +44,7 @@ export const GooglePay: React.FC<
       purchaseCallback={purchaseCallback}
       getUserInfoUrl={getUserInfoUrl}
       authorizeOrderUrl={authorizeOrderUrl}
+      authenticateThreeDSOrderUrl={authenticateThreeDSOrderUrl}
     >
       <GooglePayButton
         allowedCardAuthMethods={allowedCardAuthMethods}

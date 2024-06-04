@@ -269,12 +269,34 @@ export const PaymentProvider: FC<
               .Googlepay()
               .initiatePayerAction({ orderId: orderData.id })
               .then(async () => {
-                handleAuthenticateThreeDSOrder(orderData.id).then((result) => {
-                  console.log(result);
-                  /*handleOnApprove({ orderID: orderData.id }).then(() =>
-                    onSuccess(orderData)
-                  );*/
-                });
+                handleAuthenticateThreeDSOrder(orderData.id, true).then(
+                  (result) => {
+                    if (!result) {
+                      notify("Error", "Please select different payment method");
+                      isLoading(false);
+                      return "";
+                    }
+                    switch (result.toString(10)) {
+                      case "2":
+                        handleOnApprove({ orderID: orderData.id }).then(() =>
+                          onSuccess(orderData)
+                        );
+                        break;
+                      case "1":
+                        notify("Warning", "Try again");
+                        isLoading(false);
+                        break;
+                      case "0":
+                      default:
+                        notify(
+                          "Error",
+                          "Please select different payment method"
+                        );
+                        isLoading(false);
+                        break;
+                    }
+                  }
+                );
               });
           } else {
             return "";
@@ -400,7 +422,8 @@ export const PaymentProvider: FC<
     );
 
     const handleAuthenticateThreeDSOrder = async (
-      orderID: string
+      orderID: string,
+      isGPay?: boolean
     ): Promise<number> => {
       if (!authenticateThreeDSOrderUrl) {
         return 0;
@@ -410,7 +433,8 @@ export const PaymentProvider: FC<
         authenticateThreeDSOrderUrl,
         orderID,
         latestPaymentVersion,
-        paymentInfo.id
+        paymentInfo.id,
+        isGPay
       );
 
       if (!result) {
@@ -420,13 +444,17 @@ export const PaymentProvider: FC<
       latestPaymentVersion = result.version;
 
       if (!result.hasOwnProperty("approve")) {
-        return 2;
+        if (isGPay) {
+          return 1;
+        } else {
+          return 2;
+        }
       }
 
       const action = getActionIndex(
-        result.approve.three_d_secure.enrollment_status,
-        result.approve.three_d_secure.authentication_status,
-        result.approve.liability_shift
+        result.approve.three_d_secure.enrollment_status || "",
+        result.approve.three_d_secure.authentication_status || "",
+        result.approve.liability_shift || ""
       );
       return settings?.threeDSAction[action];
     };
