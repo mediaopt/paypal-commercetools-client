@@ -129,7 +129,7 @@ PayPal messages props are based on PayPalMessages props and you can see them on 
 
 ### GooglePay
 
-Have a look at [Googles specification](https://developers.google.com/pay/api/web/reference/request-objects) for a detailed explanation of the options
+Have a look at [Google's specification](https://developers.google.com/pay/api/web/reference/request-objects) for a detailed explanation of the options
 
 - **environment**: `string`  
    "TEST" or "PRODUCTION";
