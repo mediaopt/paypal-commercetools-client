@@ -7,29 +7,29 @@ In here we explain how to use the client app and get payment methods to work.
 Each payment component takes a set of props that will be the same for everything. They are as follows:
 
 - **createPaymentUrl**: `string`  
-  _POST_-Request - we get a [_CreatePaymentResponse_](src/types/index.ts)  
+  _POST_-Request - we get a [_CreatePaymentResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to create a payment in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **getSettingsUrl**: `string`  
-  _POST_-Request - we get a [_GetSettingsResponse_](src/types/index.ts)  
+  _POST_-Request - we get a [_GetSettingsResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to get settings of PayPal in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **createOrderUrl**: `string`  
-  _POST_-Request - we get a [_CreateOrderResponse_](src/types/index.ts)  
+  _POST_-Request - we get a [_CreateOrderResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to create a PayPal order in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **onApproveUrl**: `string`  
-  _POST_-Request - we get a [_OnApproveResponse_](src/types/index.ts)  
+  _POST_-Request - we get a [_OnApproveResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to capture a PayPal order in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 - **onApproveRedirectionUrl**: `string`
   If you want to redirect to a page in onApprove step then set it to this property. It is useful for the `buy now` process and its review page.
 - **authorizeOrderUrl**: `string`  
-  _POST_-Request - we get a [_OnApproveResponse_](src/types/index.ts)  
+  _POST_-Request - we get a [_OnApproveResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The url that gets called to the endpoint of the connect app to authorize a PayPal order in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
@@ -86,7 +86,7 @@ These properties are used when you want to set up vaulting during purchase.
   Set `true` if you want to enable vaulting in the payment method.
 
 - **getUserInfoUrl**: `string`  
-   _POST_-Request - we get a [_GetUserInfoResponse_](src/types/index.ts)  
+   _POST_-Request - we get a [_GetUserInfoResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
    It is **your** responsibility to develop this API  
    The URL that gets called to the endpoint of the connect app to get some information related to vaulting for the logged-in user. Communicates with commercetools backend  
    See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
@@ -96,13 +96,13 @@ These properties are used when you want to set up vaulting during purchase.
 In addition to `Vaulting properties` we have the following properties to vault for purchase later.
 
 - **createVaultSetupTokenUrl**: `string`  
-   _POST_-Request - we get a [_CreateVaultSetupTokenResponse_](src/types/index.ts)  
+   _POST_-Request - we get a [_CreateVaultSetupTokenResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
    It is **your** responsibility to develop this API  
    The URL that gets called to the endpoint of the connect app to create a vault setup token for the logged-in user. Communicates with commercetools backend  
    See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
 
 - **approveVaultSetupTokenUrl**: `string`  
-   _POST_-Request - we get a [_ApproveVaultSetupTokenResponse_](src/types/index.ts)  
+   _POST_-Request - we get a [_ApproveVaultSetupTokenResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
    It is **your** responsibility to develop this API  
    The URL that gets called to the endpoint of the connect app to approve a vault setup token for the logged-in user. Communicates with commercetools backend  
    See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
@@ -127,23 +127,24 @@ PayPal messages props are based on PayPalMessages props and you can see them on 
 - **applePayDisplayName**: `string`  
    Name of your store.
 
-
 ### GooglePay
-Have a look at [Googles specification](https://developers.google.com/pay/api/web/reference/request-objects) for a detailed explanation of the options
+
+Have a look at [Google's specification](https://developers.google.com/pay/api/web/reference/request-objects) for a detailed explanation of the options
+
 - **environment**: `string`  
-    "TEST" or "PRODUCTION";
+   "TEST" or "PRODUCTION";
 - **allowedCardNetworks**: `string[]`
-    One or more card networks that you support, also supported by the Google Pay API.
+  One or more card networks that you support, also supported by the Google Pay API.
 - **allowedCardAuthMethods**: `string`  
-    "PAN_ONLY" (cards on file) and "CRYPTOGRAM_3DS" (Android powered device token)
+   "PAN_ONLY" (cards on file) and "CRYPTOGRAM_3DS" (Android powered device token)
 - **callbackIntents**: `string[]`  
-    Specifies intents for PaymentDataCallback
+   Specifies intents for PaymentDataCallback
 - **apiVersion**: `number`  
-    Major API version
+   Major API version
 - **apiVersionMinor**: `number`  
-    Minor API version
+   Minor API version
 - **totalPriceStatus**: `string`  
-    "FINAL" or "ESTIMATED"
+   "FINAL" or "ESTIMATED"
 - **buttonColor**: `string`
 - **buttonType**: `string`
 - **buttonRadius**: `number`
@@ -162,7 +163,7 @@ Have a look at [Googles specification](https://developers.google.com/pay/api/web
 HostedFields are deprecated; CardFields is the preferred way to use advanced card payments.
 
 - **getClientTokenUrl**: `string`  
-  _POST_-Request - we get a [_ClientTokenResponse_](src/types/index.ts)  
+  _POST_-Request - we get a [_ClientTokenResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The URL that gets called to the endpoint of the connect app to get the client token to use in PayPalHostedFieldsProvider component in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
@@ -174,7 +175,7 @@ If you want to get a list of vaulted payments you can use this component. It wil
 You need to pass properties that are mentioned in the `Vaulting properties` section and also pass the following specific property.
 
 - **removePaymentTokenUrl**: `string`  
-  _POST_-Request - we get a [_GetUserInfoResponse_](src/types/index.ts)  
+  _POST_-Request - we get a [_GetUserInfoResponse_](https://github.com/mediaopt/paypal-commercetools-client/blob/main/src/types/index.ts)  
   It is **your** responsibility to develop this API  
   The URL that gets called to the endpoint of the connect app to remove a `Payment Token` in the PaymentTokens component in commercetools. Communicates with commercetools backend  
   See the examples in our [CoFe integration example repository](https://github.com/mediaopt/paypal-commercetools-cofe-integration/blob/main/packages/poc/backend/payment-paypal/actionControllers/PayPalController.ts)
