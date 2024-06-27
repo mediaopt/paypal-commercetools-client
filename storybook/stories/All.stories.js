@@ -18,7 +18,6 @@ export default {
         "sepa",
         "bancontact",
         "giropay",
-        "sofort",
         "eps",
         "mybank",
         "p24",
