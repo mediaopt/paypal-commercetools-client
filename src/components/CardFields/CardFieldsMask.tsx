@@ -7,9 +7,12 @@ import {
   CardFieldsProps,
   CustomOnApproveData,
 } from "../../types";
-import { CARD_FIELDS_INPUTS, CARD_FIELDS_BUTTON } from "./constants";
+import { CARD_FIELDS_INPUTS, CARD_FIELDS_PAY_BUTTON } from "./constants";
 import { useNotifications } from "../../app/useNotifications";
 import { useLoader } from "../../app/useLoader";
+import { errorFunc } from "../errorNotification";
+import { useTranslation } from "react-i18next";
+import { Card } from "../PaymentTokens/Card";
 
 export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   enableVaulting,
@@ -27,6 +30,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   const { settings, paymentTokens } = useSettings();
   const { notify } = useNotifications();
   const { isLoading } = useLoader();
+  const { t } = useTranslation();
 
   const [vaultId, setVaultId] = useState<string>();
   const [paying, setPaying] = useState(false);
@@ -44,12 +48,12 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   let saveCard = false;
 
   const cardPaymentTokens = paymentTokens?.payment_tokens?.filter(
-    (paymentToken) => paymentToken.payment_source.card !== undefined
+    (paymentToken) => paymentToken.payment_source.card !== undefined,
   );
 
   const hostedFieldClasses = useMemo(() => {
     const hostedFieldsPayButtonClasses =
-      settings?.hostedFieldsPayButtonClasses || CARD_FIELDS_BUTTON;
+      settings?.hostedFieldsPayButtonClasses || CARD_FIELDS_PAY_BUTTON;
     const hostedFieldsInputFieldClasses =
       settings?.hostedFieldsInputFieldClasses || CARD_FIELDS_INPUTS;
     return { hostedFieldsPayButtonClasses, hostedFieldsInputFieldClasses };
@@ -58,23 +62,21 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
   const approveTransaction = (approveData: any) => {
     if (vaultOnly) {
       handleApproveVaultSetupToken(
-        approveData as ApproveVaultSetupTokenData
+        approveData as ApproveVaultSetupTokenData,
       ).catch((err) => {
         setPaying(false);
-        isLoading(false);
-        notify("Error", err.message);
+        errorFunc(err, isLoading, notify, t);
       });
     } else {
       handleOnApprove(approveData as CustomOnApproveData).catch((err) => {
         setPaying(false);
-        isLoading(false);
-        notify("Error", err.message);
+        errorFunc(err, isLoading, notify, t);
       });
     }
   };
   useEffect(() => {
     let oderDataPayerAction = orderDataLinks?.filter(
-      (orderDataLink) => orderDataLink.rel === "payer-action"
+      (orderDataLink) => orderDataLink.rel === "payer-action",
     );
 
     if (oderDataPayerAction && oderDataPayerAction[0]) {
@@ -88,7 +90,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
         createOrder: () => {
           return handleCreateOrder({
             paymentSource: "card",
-            storeInVault: saveCard,
+            storeInVault: save?.current?.checked,
             verificationMethod: threeDSAuth || undefined,
           });
         },
@@ -133,8 +135,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
       },
       onError: function (error: Record<string, never>) {
         setPaying(false);
-        isLoading(false);
-        notify("Error", error.message);
+        errorFunc(error, isLoading, notify, t);
       },
     });
   }, []);
@@ -144,8 +145,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
     isLoading(true);
 
     cardField.submit().catch((err: Record<string, never>) => {
-      notify("Error", err.message);
-      isLoading(false);
+      errorFunc(err, isLoading, notify, t);
       setPaying(false);
     });
   };
@@ -173,50 +173,64 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
 
   return (
     <>
-      {!vaultOnly &&
-      cardPaymentTokens &&
-      cardPaymentTokens?.length > 0 &&
-      !addNew ? (
+      {!vaultOnly && (
         <>
-          {cardPaymentTokens.map((paymentToken) => {
-            const { id, payment_source } = paymentToken;
-            const { brand, last_digits } = payment_source.card;
-
-            return (
-              <div key={id}>
-                <span>
+          <table cellPadding={5} className="max-w-fit">
+            <tbody>
+              {cardPaymentTokens?.map((paymentToken) => {
+                const { id, payment_source } = paymentToken;
+                return (
+                  <tr key={id}>
+                    <td>
+                      <input
+                        type="radio"
+                        name="card"
+                        value={id}
+                        onChange={(e) => {
+                          setVaultId(e.target.value);
+                          setAddNew(false);
+                        }}
+                      />
+                    </td>
+                    <Card {...payment_source.card} />
+                  </tr>
+                );
+              })}
+              <tr>
+                <td>
                   <input
                     type="radio"
-                    name="pay-with-vaulted-card"
-                    value={id}
+                    name="card"
+                    id="addNewCart"
                     onChange={(e) => {
-                      setVaultId(e.target.value);
+                      setAddNew(e.target.checked);
+                      setVaultId(undefined);
                     }}
                   />
-                  {brand} ending in {last_digits}
-                </span>
-              </div>
-            );
-          })}
+                </td>
+                <td colSpan={4}>
+                  <label htmlFor="addNewCart">Add a new card</label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           {vaultId && (
-            <div className="h-9">
-              <button
-                className={`${hostedFieldClasses.hostedFieldsPayButtonClasses} float-left`}
-                onClick={() =>
-                  handleCreateOrder({
-                    paymentSource: "card",
-                    storeInVault: saveCard,
-                    vaultId: vaultId,
-                  })
-                }
-              >
-                Pay
-              </button>
-            </div>
+            <button
+              className={hostedFieldClasses.hostedFieldsPayButtonClasses}
+              onClick={() =>
+                handleCreateOrder({
+                  paymentSource: "card",
+                  storeInVault: saveCard,
+                  vaultId: vaultId,
+                })
+              }
+            >
+              Pay
+            </button>
           )}
-          <button onClick={() => setAddNew(true)}>Add A New Card</button>
         </>
-      ) : (
+      )}
+      {(addNew || vaultOnly) && (
         <div ref={cardFieldDiv} id="checkout-form">
           <div ref={nameField} id="card-name-field-container"></div>
 
@@ -227,7 +241,7 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
           <div ref={cvvField} id="card-cvv-field-container"></div>
 
           {enableVaulting && !vaultOnly && (
-            <label>
+            <label className="p-1.5">
               <input
                 type="checkbox"
                 id="save"
@@ -241,14 +255,15 @@ export const CardFieldsMask: React.FC<CardFieldsProps> = ({
               Save this card for future purchases
             </label>
           )}
-
-          <button
-            className={hostedFieldClasses.hostedFieldsPayButtonClasses}
-            onClick={handleClick}
-            disabled={paying}
-          >
-            Pay
-          </button>
+          <div className="py-2 px-1.5">
+            <button
+              className={hostedFieldClasses.hostedFieldsPayButtonClasses}
+              onClick={handleClick}
+              disabled={paying}
+            >
+              {vaultOnly ? "Save" : "Pay"}
+            </button>
+          </div>
         </div>
       )}
     </>

@@ -6,17 +6,23 @@ import "./App.css";
 
 import { TestButton } from "./components/TestButton";
 import { PayPal } from "./components/PayPal";
+import { ApplePay } from "./components/ApplePay";
 import { PayPalMessages } from "./components/PayPalMessages";
 import { HostedFields } from "./components/HostedFields";
 import { PaymentTokens } from "./components/PaymentTokens";
 import { CardFields } from "./components/CardFields";
 import { PayUponInvoice } from "./components/PayUponInvoice";
-import { PayUponInvoiceProps } from "./types";
+import {
+  GooglePayOptionsType,
+  PayUponInvoiceProps,
+  SmartComponentsProps,
+  ThreeDSVerification,
+} from "./types";
+import { GooglePay } from "./components/GooglePay";
 
-const CC_FRONTEND_EXTENSION_VERSION: string = "devjonathanyeboah";
+const CC_FRONTEND_EXTENSION_VERSION: string = "devmajidabbasi";
 const FRONTASTIC_SESSION: string =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI2ZTcxZDk1My0yZjlmLTQwZDYtYWU5My1iYWU1NzdmMjc5YWIiLCJ3aXNobGlzdElkIjoiZTU3MjY4ODAtNDZhYy00OTEzLWExNjQtMGMzNDZkNjA5OWYyIiwiYWNjb3VudCI6eyJhY2NvdW50SWQiOiJmMjJhNGZlMy1jMmI4LTQ4MDEtODIwOC00MTRkMjA2MjBlMGIiLCJlbWFpbCI6Im1hamlkLmFiYmFzaUBtZWRpYW9wdC5kZSIsInNhbHV0YXRpb24iOiIiLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwiYmlydGhkYXkiOiIxOTg5LTAzLTA1VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W3siYWRkcmVzc0lkIjoiamJUSlhtM00iLCJmaXJzdE5hbWUiOiJNYWppZCIsImxhc3ROYW1lIjoiQWJiYXNpIiwic3RyZWV0TmFtZSI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInN0cmVldE51bWJlciI6IkhvY2hzdHJhXHUwMGRmZSAzNyIsInBvc3RhbENvZGUiOiIxMzM1NyIsImNpdHkiOiJERSIsImNvdW50cnkiOiJERSIsInBob25lIjoiNTk5MzU3NTYyIiwiaXNEZWZhdWx0QmlsbGluZ0FkZHJlc3MiOmZhbHNlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOmZhbHNlfSx7ImFkZHJlc3NJZCI6ImtyelI3bTBRIiwiZmlyc3ROYW1lIjoiTWFqaWQiLCJsYXN0TmFtZSI6IkFiYmFzaSIsInN0cmVldE5hbWUiOiJDb3VudHkgU3QuIE1pYW1pIiwic3RyZWV0TnVtYmVyIjoiNDMyIiwicG9zdGFsQ29kZSI6IjMzMDE4IiwiY2l0eSI6IlVTIiwiY291bnRyeSI6IkRFIiwicGhvbmUiOiI1OTkzNTc1NjIiLCJpc0RlZmF1bHRCaWxsaW5nQWRkcmVzcyI6dHJ1ZSwiaXNEZWZhdWx0U2hpcHBpbmdBZGRyZXNzIjp0cnVlfV19fQ.0xY4S8rdeO9uXzl5xd7RE9e9KpXdMy4diadjpulpd_s";
-
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ3aXNobGlzdElkIjoiMWNjZTYzY2MtNjNiMC00OWU2LWI0YWYtYWM4NzU3NmRlMzBlIiwiY2FydElkIjoiNzI0OTE4YzktMWRhZC00MDA0LWJlYzgtYzJlZGMwNzQ0MTg5In0.FNT6_jImR6UbeDzBFiooX6P4FRdzvYlyHXKAvp70r2w";
 function App() {
   const [choosenPaymentMethod, setChoosenPaymentMethod] = useState("");
 
@@ -64,6 +70,7 @@ function App() {
   const params = {
     ...commonParams,
     createOrderUrl: `${ENDPOINT_URL}/payment/createPayPalOrder`,
+    getOrderUrl: `${ENDPOINT_URL}/payment/getPayPalOrder`,
     authorizeOrderUrl: `${ENDPOINT_URL}/payment/authorizePayPalOrder`,
     onApproveUrl: `${ENDPOINT_URL}/payment/capturePayPalOrder`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
@@ -78,8 +85,7 @@ function App() {
 
   const vaultOnlyParams = {
     ...commonParams,
-    getUserInfoUrl: `${ENDPOINT_URL}/payment/getUserInfo`,
-    enableVaulting: true,
+    ...vaultParams,
     createVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/createVaultSetupToken`,
     approveVaultSetupTokenUrl: `${ENDPOINT_URL}/payment/approveVaultSetupToken`,
     shippingMethodId: "da416140-39bf-4677-8882-8b6cab23d981",
@@ -87,7 +93,9 @@ function App() {
 
   const options = {
     clientId:
-      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9",
+      //"ATUW0KT0pNdyWys2AzvohAWPhmo6zx6OH25SP8RtPRZFW60fiizfnywDJVekwddhHlxw1ac3ApQwUoQ8", //prod
+      //"ASIX4GwxjaJ8t603IAUySrbFPTDijGxtNigDRxbuO4E4HVsUzpYYzfVq99MhIZ6dS0AAKjPpeHNj5tyS", //test
+      "AQlyw_Usbq3XVXnbs2JfrtmDAzJ2ECVzs4WM7Nm9QkoOWb8_s_C6-bkgs0o4ggzCYp_RhJO5OLS_sEi9", //g pay
     currency: "EUR",
   };
 
@@ -158,6 +166,17 @@ function App() {
     ...paypalInvoiceParams,
   };
 
+  const GooglePayParams = {
+    requestHeader,
+    ...params,
+    options: { ...options, components: "googlepay" },
+    environment: "TEST" as "TEST",
+    allowedCardNetworks: ["MASTERCARD", "VISA"],
+    allowedCardAuthMethods: ["PAN_ONLY"],
+    callbackIntents: ["PAYMENT_AUTHORIZATION"],
+    verificationMethod: "SCA_ALWAYS" as ThreeDSVerification,
+  };
+
   const paymentMethods: { [index: string]: React.JSX.Element } = {
     TestButton: (
       <TestButton {...params} requestHeader={requestHeader} options={options} />
@@ -172,6 +191,19 @@ function App() {
         requestHeader={requestHeader}
         options={options}
         fundingSource="paypal"
+      />
+    ),
+    ApplePay: (
+      <ApplePay
+        {...params}
+        requestHeader={requestHeader}
+        options={{
+          ...options,
+          components: "applepay,buttons",
+          buyerCountry: "US",
+        }}
+        applePayDisplayName="My Store"
+        {...vaultParams}
       />
     ),
     Venmo: (
@@ -282,6 +314,7 @@ function App() {
     ),
     PaymentTokens: <PaymentTokens {...PaymentTokensJson} />,
     PayUponInvoice: <PayUponInvoice {...PayUponInvoiceJson} />,
+    GooglePay: <GooglePay {...GooglePayParams} />,
   };
 
   const changePaymentMethod = (e: React.ChangeEvent<HTMLInputElement>) => {

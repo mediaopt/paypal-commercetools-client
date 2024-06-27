@@ -53,7 +53,7 @@ test("Expires is shown", () => {
   expect(linkElement.length).toEqual(1);
 });
 
-test("Buttons is shown", () => {
+test("Buttons are shown", () => {
   render(<PaymentTokensList />);
   const linkElement = screen.getAllByRole("button");
   expect(linkElement.length).toEqual(2);

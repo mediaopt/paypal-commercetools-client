@@ -22,6 +22,7 @@ import {
   ApproveVaultSetupTokenData,
   CreateInvoiceData,
   OrderDataLinks,
+  OrderData,
 } from "../types";
 import {
   createPayment,
@@ -38,7 +39,8 @@ import { useSettings } from "./useSettings";
 import { getClientToken } from "../services/getClientToken";
 import { getActionIndex } from "../components/CardFields/constants";
 import { useTranslation } from "react-i18next";
-import { relevantError } from "../components/PayUponInvoice/RatepayErrorNote";
+import { handleResponseError } from "../messages/errorMessages";
+import { getOrder } from "../services/getOrder";
 
 const PaymentInfoInitialObject = {
   version: 0,
@@ -112,6 +114,7 @@ export const PaymentProvider: FC<
 
   createPaymentUrl,
   createOrderUrl,
+  getOrderUrl,
   authorizeOrderUrl,
   authenticateThreeDSOrderUrl,
 
@@ -136,7 +139,6 @@ export const PaymentProvider: FC<
   const [orderId, setOrderId] = useState<string>();
 
   const { settings } = useSettings();
-  const { t } = useTranslation();
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>(
     PaymentInfoInitialObject
@@ -144,6 +146,13 @@ export const PaymentProvider: FC<
 
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
+  const { t } = useTranslation();
+
+  const onSuccess = (orderData: OrderData) => {
+    setShowResult(true);
+    setResultSuccess(true);
+    purchaseCallback(orderData);
+  };
 
   let latestPaymentVersion = paymentInfo.version;
 
@@ -194,6 +203,7 @@ export const PaymentProvider: FC<
         setResultSuccess(false);
       }
     };
+
     const handleCreateOrder = async (orderData?: CustomOrderData) => {
       if (!createOrderUrl) return "";
       const setRatepayMessage = orderData?.setRatepayMessage ?? undefined;
@@ -213,58 +223,113 @@ export const PaymentProvider: FC<
         }
       );
 
+      if (
+        !createOrderResult ||
+        (createOrderResult && createOrderResult.ok === false)
+      ) {
+        notify("Error", "something went wrong");
+        isLoading(false);
+        return "";
+      }
+
+      const oldOrderData = orderData;
+
       if (createOrderResult) {
         const { orderData, paymentVersion } = createOrderResult;
-        const { id, status, payment_source, details, links } = orderData;
+        const { id, status, payment_source, details, links, message } =
+          orderData;
         latestPaymentVersion = paymentVersion;
-        if (setRatepayMessage) {
-          if (paymentVersion)
-            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
-          if (id) {
-            setRatepayMessage && setRatepayMessage(undefined);
-            setShowResult(true);
-            setResultSuccess(true);
-            purchaseCallback(orderData);
-            return id;
+
+        if (!id) {
+          handleResponseError(
+            t,
+            notify,
+            details?.toString(),
+            message,
+            setRatepayMessage
+          );
+          isLoading(false);
+          return "";
+        } else if (oldOrderData?.googlePayData) {
+          //@ts-ignore
+          const confirmOrderResult = await paypal.Googlepay().confirmOrder({
+            orderId: orderData.id,
+            paymentMethodData:
+              oldOrderData.googlePayData.paymentData.paymentMethodData,
+          });
+          const { status } = confirmOrderResult;
+          if (status === "APPROVED") {
+            handleOnApprove({ orderID: orderData.id }).then(() =>
+              onSuccess(orderData)
+            );
+          } else if (
+            oldOrderData?.googlePayData &&
+            status === "PAYER_ACTION_REQUIRED"
+          ) {
+            //@ts-ignore
+            paypal
+              .Googlepay()
+              .initiatePayerAction({ orderId: orderData.id })
+              .then(async () => {
+                handleAuthenticateThreeDSOrder(orderData.id, true).then(
+                  (result) => {
+                    if (!result) {
+                      notify("Error", "Please select different payment method");
+                      isLoading(false);
+                      return "";
+                    }
+                    switch (result.toString(10)) {
+                      case "2":
+                        handleOnApprove({ orderID: orderData.id }).then(() =>
+                          onSuccess(orderData)
+                        );
+                        break;
+                      case "1":
+                        notify("Warning", "Try again");
+                        isLoading(false);
+                        break;
+                      case "0":
+                      default:
+                        notify(
+                          "Error",
+                          "Please select different payment method"
+                        );
+                        isLoading(false);
+                        break;
+                    }
+                  }
+                );
+              });
           } else {
-            const errorDetails = details?.length && details[0];
-            if (errorDetails) {
-              const ratepayError = relevantError(errorDetails);
-              if (ratepayError) {
-                setRatepayMessage && setRatepayMessage(ratepayError);
-                return "";
-              }
-            }
-            notify("Error", orderData?.message ?? t("thirdPartyIssue"));
             return "";
           }
         } else {
-          if (status === "COMPLETED" && payment_source) {
-            setShowResult(true);
-            setResultSuccess(true);
-            purchaseCallback(orderData);
-            return "";
-          } else if (
-            status === "PAYER_ACTION_REQUIRED" &&
-            payment_source &&
-            links
-          ) {
-            setPaymentInfo({ ...paymentInfo, version: paymentVersion });
-            setOrderDataLinks(links);
-            setOrderId(id);
-            return "";
+          if (setRatepayMessage) {
+            setRatepayMessage && setRatepayMessage(undefined);
+            onSuccess(orderData);
           } else {
-            return id;
+            if (status === "COMPLETED" && payment_source) {
+              onSuccess(orderData);
+            } else if (
+              status === "PAYER_ACTION_REQUIRED" &&
+              payment_source &&
+              links
+            ) {
+              setOrderDataLinks(links);
+              setOrderId(id);
+            }
           }
         }
+        return id;
       } else return "";
     };
+
     const handleOnApprove = async (data: CustomOnApproveData) => {
       if (!onApproveUrl && !authorizeOrderUrl && !onApproveRedirectionUrl)
         return;
-      isLoading(true);
 
       const { orderID, saveCard } = data;
+      isLoading(true);
 
       if (onApproveRedirectionUrl) {
         window.location.href = `${onApproveRedirectionUrl}?order_id=${orderID}`;
@@ -287,6 +352,12 @@ export const PaymentProvider: FC<
         saveCard
       );
 
+      //@ts-ignore
+      if (onApproveResult.ok === false) {
+        isLoading(false);
+        notify("Error", "There was an error completing the payment");
+        return;
+      }
       const { orderData } = onApproveResult as OnApproveResponse;
       if (orderData.status === "COMPLETED") {
         setShowResult(true);
@@ -301,6 +372,7 @@ export const PaymentProvider: FC<
       }
       isLoading(false);
     };
+
     const handleCreatePayment = async () => {
       isLoading(true);
 
@@ -346,12 +418,14 @@ export const PaymentProvider: FC<
       }
       isLoading(false);
     };
+
     let vaultOnly: boolean = !!(
       createVaultSetupTokenUrl && approveVaultSetupTokenUrl
     );
 
     const handleAuthenticateThreeDSOrder = async (
-      orderID: string
+      orderID: string,
+      isGPay?: boolean
     ): Promise<number> => {
       if (!authenticateThreeDSOrderUrl) {
         return 0;
@@ -361,7 +435,8 @@ export const PaymentProvider: FC<
         authenticateThreeDSOrderUrl,
         orderID,
         latestPaymentVersion,
-        paymentInfo.id
+        paymentInfo.id,
+        isGPay
       );
 
       if (!result) {
@@ -371,13 +446,17 @@ export const PaymentProvider: FC<
       latestPaymentVersion = result.version;
 
       if (!result.hasOwnProperty("approve")) {
-        return 2;
+        if (isGPay) {
+          return 1;
+        } else {
+          return 2;
+        }
       }
 
       const action = getActionIndex(
-        result.approve.three_d_secure.enrollment_status,
-        result.approve.three_d_secure.authentication_status,
-        result.approve.liability_shift
+        result.approve.three_d_secure.enrollment_status || "",
+        result.approve.three_d_secure.authentication_status || "",
+        result.approve.liability_shift || ""
       );
       return settings?.threeDSAction[action];
     };

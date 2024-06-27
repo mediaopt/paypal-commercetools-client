@@ -27,7 +27,7 @@ export type CreateOrderRequest = {
 };
 
 export type CreateOrderData = {
-  paymentSource?: FUNDING_SOURCE;
+  paymentSource?: FUNDING_SOURCE | "google_pay" | "apple_pay";
   storeInVault?: boolean;
   vaultId?: string;
   verificationMethod?: ThreeDSVerification;
@@ -42,26 +42,29 @@ export type CreateInvoiceData = {
 
 export type CreatePayPalOrderData = CreateOrderData & CreateInvoiceData;
 
-export type CreateOrderResponse = {
-  orderData: {
-    id: string;
-    status: string;
-    success?: boolean;
-    message?: string;
-    details?: string;
-    payment_source?: {
-      card: {
-        name: string;
-        last_digits: string;
-        expiry: string;
-        brand: string;
-        available_networks: string[];
-        type: string;
-      };
+export type OrderData = {
+  id: string;
+  status: string;
+  success?: boolean;
+  message?: string;
+  details?: string;
+  payment_source?: {
+    card: {
+      name: string;
+      last_digits: string;
+      expiry: string;
+      brand: string;
+      available_networks: string[];
+      type: string;
     };
-    links?: OrderDataLinks;
   };
+  links?: OrderDataLinks;
+};
+
+export type CreateOrderResponse = {
+  orderData: OrderData;
   paymentVersion: number;
+  ok?: boolean;
 };
 
 export type OnApproveRequest = {
@@ -90,6 +93,7 @@ export type GeneralComponentsProps = {
   createPaymentUrl: string;
   getSettingsUrl: string;
   createOrderUrl?: string;
+  getOrderUrl?: string;
   onApproveUrl?: string;
   onApproveRedirectionUrl?: string;
   authorizeOrderUrl?: string;
@@ -106,7 +110,7 @@ export type GeneralComponentsProps = {
   enableVaulting?: boolean;
 } & CartInformationProps;
 
-type ThreeDSVerification = "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
+export type ThreeDSVerification = "SCA_ALWAYS" | "SCA_WHEN_REQUIRED";
 
 export type HostedFieldsThreeDSAuth = {
   threeDSAuth?: ThreeDSVerification;
@@ -170,6 +174,12 @@ export type CustomPayPalButtonsComponentProps = Omit<
 
 export type SmartComponentsProps = CustomPayPalButtonsComponentProps &
   GeneralComponentsProps;
+
+export type ApplePayProps = {
+  applePayDisplayName: string;
+};
+
+export type ApplePayComponentsProps = ApplePayProps & SmartComponentsProps;
 
 export type CartInformation = {
   account: {
@@ -311,6 +321,9 @@ export type PaymentTokens = {
       card: CardPaymentSource;
       paypal: PayPalPaymentSource;
       venmo: PayPalPaymentSource;
+      apple_pay: {
+        card: CardPaymentSource;
+      };
     };
   }>;
 };
@@ -392,8 +405,21 @@ export type CustomOnApproveData = {
   liabilityShift?: string;
 };
 
+export type SetStringState = Dispatch<SetStateAction<string | undefined>>;
+
+type GooglePayDataType = {
+  purchase_units: {
+    amount: {
+      currency_code: string;
+      value: string;
+    };
+  }[];
+  paymentData: { [key: string]: any };
+};
+
 export type CustomOrderData = CreatePayPalOrderData & {
-  setRatepayMessage?: Dispatch<SetStateAction<string | undefined>>;
+  setRatepayMessage?: SetStringState;
+  googlePayData?: GooglePayDataType;
 };
 
 export type SettingsProviderProps = {
@@ -413,3 +439,58 @@ type OrderDataLink = {
 };
 
 export type OrderDataLinks = OrderDataLink[];
+
+export type GooglePayOptionsType = {
+  environment?: "TEST" | "PRODUCTION";
+  allowedCardNetworks: string[];
+  allowedCardAuthMethods: string[];
+  callbackIntents: string[];
+  apiVersion?: number;
+  apiVersionMinor?: number;
+  totalPriceStatus?: "FINAL" | "ESTIMATED";
+  buttonColor?: "default" | "white" | "black";
+  buttonType?:
+    | "book"
+    | "buy"
+    | "checkout"
+    | "donate"
+    | "order"
+    | "pay"
+    | "plain"
+    | "subscribe";
+  buttonRadius?: number;
+  buttonSizeMode?: "static" | "fill";
+  verificationMethod: ThreeDSVerification;
+};
+
+export type ApplePaySession = any;
+
+export type ApplepayConfig = {
+  countryCode: string;
+  currencyCode: string;
+  isEligible: boolean;
+  merchantCapabilities: string[];
+  merchantCountry: string;
+  supportedNetworks: string[];
+};
+
+type ApplepayValidateMerchant = {
+  validationUrl: string;
+  displayName: string;
+};
+
+type ApplepayConfirmOrder = {
+  orderId: string;
+  token: string;
+  billingContact: string;
+};
+
+type ApplepayValidateMerchantResult = {
+  merchantSession: string;
+};
+
+export type Applepay = {
+  config: () => Promise<ApplepayConfig>;
+  confirmOrder: ({}: ApplepayConfirmOrder) => Promise<void>;
+  validateMerchant: ({}: ApplepayValidateMerchant) => Promise<ApplepayValidateMerchantResult>;
+};

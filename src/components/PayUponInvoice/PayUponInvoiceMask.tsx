@@ -6,8 +6,10 @@ import { InvoiceLegalNote } from "./InvoiceLegalNote";
 import { PayUponInvoiceMaskProps } from "../../types";
 import { STYLED_PAYMENT_BUTTON, STYLED_PAYMENT_FIELDS } from "../../styles";
 import { useTranslation } from "react-i18next";
-import { RatepayErrorNote } from "./RatepayErrorNote";
+
 import { useLoader } from "../../app/useLoader";
+import { RatepayErrorNote } from "./RatepayErrorNote";
+import { errorFunc } from "../errorNotification";
 
 const parsePhone = (phone: string) => {
   const formattedPhone = `+${phone.replace(/\D/g, "")}`;
@@ -29,45 +31,49 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
   const { isLoading } = useLoader();
 
   const [phone, setPhone] = useState("+49 ");
-  const notifyWrongPhone = () => notify("Warning", t("wrongPhone"));
+  const [birthDate, setBirthDate] = useState<string>();
+  const notifyWrongPhone = () => notify("Warning", t("invoice.wrongPhone"));
   let date = new Date();
   date.setFullYear(date.getFullYear() - 18);
   const maxDate = date.toJSON().slice(0, 10);
   const [ratepayMessage, setRatepayMessage] = useState<string>();
 
-  const submitForm = async (formData: HTMLFormElement) => {
+  const submitForm = async () => {
     isLoading(true);
     setRatepayMessage("");
-    const birthDate = formData["birthDate"].value;
     const { countryCallingCode, nationalNumber } = {
       ...parsePhoneNumber(phone),
     };
     if (countryCallingCode && nationalNumber) {
-      await handleCreateOrder({
-        fraudNetSessionId,
-        nationalNumber,
-        countryCode: countryCallingCode,
-        birthDate,
-        setRatepayMessage,
-      });
+      try {
+        await handleCreateOrder({
+          fraudNetSessionId,
+          nationalNumber,
+          countryCode: countryCallingCode,
+          birthDate,
+          setRatepayMessage,
+        });
+      } catch (err: any) {
+        errorFunc(err, isLoading, notify, t);
+      }
     } else notifyWrongPhone();
     isLoading(false);
   };
 
   return (
     <form
+      aria-label="form"
       className="my-4"
       onSubmit={async (event) => {
         event.preventDefault();
-
-        await submitForm(event.target as HTMLFormElement);
+        await submitForm();
       }}
     >
       <div className="my-2">
-        {invoiceBenefitsMessage ?? t("invoiceBenefitsMessage")}
+        {invoiceBenefitsMessage ?? t("invoice.invoiceBenefitsMessage")}
       </div>
 
-      <label htmlFor="birthDate">{t("birthDate")}</label>
+      <label htmlFor="birthDate">{t("interface.birthDate")}</label>
       <input
         id="birthDate"
         name="birthDate"
@@ -77,8 +83,9 @@ export const PayUponInvoiceMask: FC<PayUponInvoiceMaskProps> = ({
         autoComplete="bday"
         min="1900-01-01"
         max={maxDate}
+        onChange={({ target }) => setBirthDate(target.value)}
       />
-      <label htmlFor="phone">{t("phoneNumber")}</label>
+      <label htmlFor="phone">{t("interface.phoneNumber")}</label>
       <input
         type="tel"
         name="phone"

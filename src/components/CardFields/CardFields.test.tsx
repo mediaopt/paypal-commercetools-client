@@ -4,6 +4,14 @@ import { CardFields } from "./CardFields";
 
 import { testParams, testRequestHeader, testOptions } from "../../constants";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return {
+      t: (str: string) => str,
+    };
+  },
+}));
+
 const params = {
   ...testParams,
   requestHeader: testRequestHeader,

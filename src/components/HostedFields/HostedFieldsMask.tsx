@@ -22,17 +22,17 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
   options,
   enableVaulting,
 }) => {
-  const { handleCreateOrder, orderDataLinks, handleOnApprove, orderId } =
+  const { handleCreateOrder, orderDataLinks, orderId, clientToken } =
     usePayment();
   const { settings, paymentTokens } = useSettings();
-  const { clientToken } = usePayment();
+
   const [addNew, setAddNew] = useState(false);
   const [vaultId, setVaultId] = useState<string>();
 
   let saveCard = false;
 
   const cardPaymentTokens = paymentTokens?.payment_tokens?.filter(
-    (paymentToken) => paymentToken.payment_source.card !== undefined
+    (paymentToken) => paymentToken.payment_source.card !== undefined,
   );
 
   const hostedFieldClasses = useMemo(() => {
@@ -45,7 +45,7 @@ export const HostedFieldsMask: React.FC<HostedFieldsProps> = ({
 
   useEffect(() => {
     let oderDataPayerAction = orderDataLinks?.filter(
-      (orderDataLink) => orderDataLink.rel === "payer-action"
+      (orderDataLink) => orderDataLink.rel === "payer-action",
     );
 
     if (oderDataPayerAction && oderDataPayerAction[0]) {

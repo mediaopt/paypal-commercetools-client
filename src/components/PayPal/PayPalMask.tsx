@@ -6,9 +6,11 @@ import { usePayment } from "../../app/usePayment";
 import { useSettings } from "../../app/useSettings";
 import { useLoader } from "../../app/useLoader";
 import { useNotifications } from "../../app/useNotifications";
+import { errorFunc } from "../errorNotification";
+import { useTranslation } from "react-i18next";
 
 export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
-  props
+  props,
 ) => {
   const {
     handleCreateOrder,
@@ -17,13 +19,23 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
     handleCreateVaultSetupToken,
     handleApproveVaultSetupToken,
   } = usePayment();
-  const { settings } = useSettings();
+  const { settings, paymentTokens } = useSettings();
   const { isLoading } = useLoader();
   const { notify } = useNotifications();
+  const { t } = useTranslation();
   const { enableVaulting, paypalMessages, ...restprops } = props;
   const save = useRef<HTMLInputElement>(null);
 
   const storeInVaultOnSuccess = settings?.storeInVaultOnSuccess;
+
+  const hasPaypalToken = useMemo(() => {
+    if (paymentTokens?.payment_tokens) {
+      return paymentTokens.payment_tokens.some(
+        (token) => token.payment_source.paypal,
+      );
+    }
+    return false;
+  }, [paymentTokens]);
 
   const style = useMemo(() => {
     if (restprops.style || !settings) {
@@ -45,12 +57,6 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
 
     return styles;
   }, [settings, restprops]);
-
-  const errorFunc = (err: Record<string, unknown>) => {
-    isLoading(false);
-    notify("Error", "an error occurred");
-    console.error(err);
-  };
 
   let actions: any;
 
@@ -77,20 +83,22 @@ export const PayPalMask: React.FC<CustomPayPalButtonsComponentProps> = (
         {...restprops}
         style={style}
         {...actions}
-        onError={errorFunc}
+        onError={(err) => errorFunc(err, isLoading, notify, t)}
       />
-      {(enableVaulting || storeInVaultOnSuccess) && (
-        <label>
-          <input
-            type="checkbox"
-            id="save"
-            name="save"
-            ref={save}
-            className="mr-1"
-          />
-          Save for future purchases
-        </label>
-      )}
+      {!vaultOnly &&
+        !hasPaypalToken &&
+        (enableVaulting || storeInVaultOnSuccess) && (
+          <label>
+            <input
+              type="checkbox"
+              id="save"
+              name="save"
+              ref={save}
+              className="mr-1"
+            />
+            Save for future purchases
+          </label>
+        )}
 
       {paypalMessages && <PayPalMessages {...paypalMessages} />}
     </>

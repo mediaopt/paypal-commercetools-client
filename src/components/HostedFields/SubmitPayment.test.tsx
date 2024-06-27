@@ -2,6 +2,14 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { SubmitPayment } from "./SubmitPayment";
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => {
+    return {
+      t: (str: string) => str,
+    };
+  },
+}));
+
 test("SubmitPayment is shown", () => {
   render(<SubmitPayment enableVaulting={false} handleSaveCard={(e) => {}} />);
   expect(screen).toBeDefined();
@@ -16,7 +24,7 @@ test("Card Holder Name is shown", () => {
 test("Save this card for future purchases is shown", () => {
   render(<SubmitPayment enableVaulting={true} handleSaveCard={(e) => {}} />);
   const linkElement = screen.getAllByText(
-    /Save this card for future purchases/i
+    /Save this card for future purchases/i,
   );
   expect(linkElement.length).toEqual(1);
 });
