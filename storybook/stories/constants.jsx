@@ -29,9 +29,8 @@ export const options = {
 };
 
 export const requestHeader = {
-  "Frontastic-Session":
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjYXJ0SWQiOiI1Nzk5NWIyYy1lZmEzLTRkYjItYWQyYi0wN2EyMzg1M2UxNjYifQ.asS8mWYpg11E1HPVMTZxtYSxwI6fUAcdLRuOQU4w13k",
-  "Commercetools-Frontend-Extension-Version": "devjonathanyeboah",
+  "Frontastic-Session": "your-session-id",
+  "Commercetools-Frontend-Extension-Version": "your-extension-version",
 };
 
 const baseUrl = "https://poc-mediaopt2.frontastic.rocks/frontastic/action/";
