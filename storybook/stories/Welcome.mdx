@@ -1,25 +1,39 @@
 import { Meta } from "@storybook/blocks";
 
+import { sessionTokenImage, storybookTokenImage } from "./images";
+
 <Meta title="Welcome" />
+
+# Introduction
+
+In here we show the payment methods available in the [PayPal commercetools API client npm package](https://www.npmjs.com/package/paypal-commercetools-client). The explanation how to use the client app and get payment methods to work is provided in the [documentation](https://www.npmjs.com/package/paypal-commercetools-client) of the package.
 
 # Get Started
 
 In order to start you need a running API hub. You can use your own API hub or [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) as a test environment.
 
-The storybook stories have been integrated with [paypal-commercetools-client](https://www.npmjs.com/package/paypal-commercetools-client) components and in the official documentation of this package you can see the general properties and specific properties based on each component. In these stories, we have the same structure as shown there. So it would be great to read the [documentation](https://www.npmjs.com/package/paypal-commercetools-client) of this package before continuing with the storybook stories.
+In this stories we follow the structure of general and specific properties based on each component as in official documentation. So it would be great to read the [documentation](https://www.npmjs.com/package/paypal-commercetools-client) of this package before continuing with the storybook stories.
 
 ## Payment Methods
 
-Some payment methods are not enabled by default. If you are working with your API hub, you need to enable them in your PayPal dashboard. Some methods are also country-sensitive, for example [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) does not demonstrate american payment methods, namely Venmo.
+Some payment methods are not enabled by default. If you are working with your API hub, you need to enable them in your PayPal dashboard. Some methods are also country-sensitive or amount-sensitive. For example [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) does not demonstrate american payment methods, namely Venmo, and does not provide payment upon invoice below 5 Euro, [as requested by the payment provider Ratepay](https://developer.paypal.com/docs/checkout/apm/pay-upon-invoice/).
 
 ## General Properties
 
 These properties will be shown on all components and you can read more about them on the [paypal-commercetools-client](https://www.npmjs.com/package/paypal-commercetools-client) documentation.
 
-## sessionKey and sessionValue
+# Using [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) as a test environment
 
-You can use the default sessionKey and sessionValue that are already in the stories for testing from [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/). However, if you see the error for creating the payment you need to take a new token from [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/). If you are using your own API Hub you need to enter the sessionKey and sessionValue based on your structure and then we send them in the header for authorization.
+In order to use [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) as a test environment you need to get a token from the API Hub. Go to the [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) and add any product to the cart. On the network tab of the browser console copy the token (frontastic-session) and requested-commercetools-frontend-extension-version and paste it in the storybook.
 
-### Getting a new token value
+At the [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/):
 
-In order to get a new token from our API Hub you need to go to [poc-mediaopt2.frontend.site](https://poc-mediaopt2.frontend.site/) and then add a product to the cart and on the network tab of the browser console copy the token and paste it in the storybook.
+<img src={sessionTokenImage} alt="FrontasticSessionToken" className="mb-4" />
+
+In storybook:
+
+<img src={storybookTokenImage} alt="storybookSessionToken" className="mb-4" />
+
+# Using your own API Hub
+
+If you are using your own API Hub you need to enter the sessionKey and sessionValue based on your structure and then we send them in the header for authorization.
