@@ -29,6 +29,6 @@
     "tailwindcss": "^3.3.3"
   },
   "dependencies": {
-    "braintree-commercetools-client": "^0.1.16"
+    "paypal-commercetools-client": "^0.1.38"
   }
 }
