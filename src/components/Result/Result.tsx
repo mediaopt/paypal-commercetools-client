@@ -13,7 +13,9 @@ export const Result: FC<React.PropsWithChildren<ResultProps>> = ({
 }) => {
   return (
     <div className={!success ? ERROR_TEXT_STYLE : SUCCESS_TEXT_STYLE}>
-      {message ?? "Thank you for your purchase!"}
+      {(message ?? success)
+        ? "Thank you for your purchase!"
+        : "Something went wrong, please try again"}
 
       <div>{children}</div>
     </div>
